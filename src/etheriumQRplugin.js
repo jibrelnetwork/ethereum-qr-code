@@ -1,11 +1,25 @@
-import DrawIcon from 'tokenIcon';
-import {tokenSchemaEIP67, tokenSchemaBitcoin} from 'utils';
+import DrawIcon from './tokenIcon';
+import {tokenSchemaEIP67, tokenSchemaBitcoin} from './utils';
+import QRCode from 'qrcodejs2';
 
 class etheriumQRplugin {
 
+    constructor(el){
+
+        if(!el) {
+            this.drawQrCodeContainer();
+            return;
+        }
+        try {
+            this.uiElement = document.querySelectorAll(el)[0];
+        }
+        catch(e){
+            console.log('Error, QR code container not found');
+        }
+    }
+
     generate(config) {
         this.parseRequest(config);
-        this.drawQrCodeContainer();
         let generatedCode = this.schemaGenerator(this.tokenAdress, this.tokenName, this.tokenAmount);
 
         new QRCode(this.uiElement, {
@@ -20,7 +34,7 @@ class etheriumQRplugin {
         this.tokenName = request.tokenName;
         this.tokenAdress = request.tokenAdress;
         this.tokenAmount = request.tokenAmount;
-        this.size = request.size || 128
+        this.size = request.size || 128;
         this.imgUrl = request.imgUrl || false;
         this.schemaGenerator = request.schema === 'bitcoin' ? tokenSchemaBitcoin : tokenSchemaEIP67;
     }
