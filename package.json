@@ -4,7 +4,9 @@
   "description": "utitlity library to deal with etherium adresses",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "webpack",
+    "demo": "cd demo && watch-http-server"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,11 @@
     "qrcodejs2": "0.0.2"
   },
   "devDependencies": {
-    "jest": "^20.0.4"
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
+    "jest": "^20.0.4",
+    "watch-http-server": "^0.7.6",
+    "webpack": "^3.4.1"
   }
 }
