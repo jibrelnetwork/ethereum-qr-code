@@ -24,5 +24,8 @@
   "homepage": "https://github.com/jibrelnetwork/ethereum-qr-code#readme",
   "dependencies": {
     "qrcodejs2": "0.0.2"
+  },
+  "devDependencies": {
+    "jest": "^20.0.4"
   }
 }
