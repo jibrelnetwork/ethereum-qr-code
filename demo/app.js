@@ -1,7 +1,7 @@
 $(document).ready(function(){
     
     const codeContainer = '#ethereum-qr-code';
-    const qr = new EtheriumQRplugin.etheriumQRplugin(codeContainer);
+    const qr = new EtheriumQRplugin();
     
     $('.qr-input').keyup(function(){
 
@@ -10,7 +10,7 @@ $(document).ready(function(){
         const size = $('#size').val();
         
         $('#ethereum-qr-code').empty();
-        qr.generate({
+        qr.toCanvas({
             tokenAdress: adress,
             tokenAmount: amount, 
             size: size

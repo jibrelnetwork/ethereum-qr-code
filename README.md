@@ -1,7 +1,10 @@
-https://github.com/ethereum/EIPs/issues/67
+Based on https://github.com/ethereum/EIPs/issues/67
 
+3 options os the string encoded possible:
 
- ethereum:<address>[?value=<value>][?gas=<suggestedGas>][?function=nameOfFunction(param)]
+```
+ethereum:<address>[?value=<value>][?gas=<suggestedGas>][?function=nameOfFunction(param)]
+```
 
 ## Getting started
 
@@ -14,7 +17,12 @@ import EtheriumQRplugin from 'ethereum-qr-code';
 
 // later in code
 const qr = new EtheriumQRplugin(codeContainer);
-const qrCode = qr.generate(adres, gas, amount);
+const qrCode = qr.toCanvas({
+    selector: '#my-qr-code',
+    adres,
+    gas,
+    amount
+});
 
 ```
 
@@ -25,34 +33,23 @@ const qrCode = qr.generate(adres, gas, amount);
 `to` | String | required
 The adress of the transaction
 
-
-2) from
-Опционально
-string
+`from` | String | optional
 Адрес откуда отправлять транзакцию. В случае контрактов это важно т.к. это единственный способ авторизации пользователя в контракте
 
-3) value
-Опционально
-Int
+`value` | Number | optional
 Количество пересылаемых ETH. Измеряется в ETH wei
 
-4) gas
-Опционально
-Int
+`gas` | Number | optional 
 Рекомендуемое количество газа. Измеряется в gas wei
 
-5) mode
-Опционально
-string
-Возможные опции: eth, function, erc20
-Другие опции невозможны, расширение списка опций - только в рамках EIP67
-Описание опций:
+`mode` | String | optional
+Possible values: eth, function, erc20
+
 eth - пересылка ETH  (default)
 function - вызов функции контракта
 erc20 - пересылка токенов, частный случай `contract`, предполагается что вызывается функция `transfer(address to, uint value)`
 
-6) functionSignature
-string
+`functionSignature` | String | optional
 В случае если mode==”function”, это поле обязательно и содержит сигнатуру функции
 Во всех остальных случаях наличие этого параметра должно вызывать ошибку
 Предполагается, что приложение клиента распарсит эту строку и даст пользователю поля для ввода данных для каждого из параметров функции
@@ -61,9 +58,8 @@ string
 `approve(address spender, uint value)`
 `balanceOf(address to)`
 
-7) functionArguments
-Опционально
-object
+`functionArguments` | Object | optional
+
 
 
 ## License 
