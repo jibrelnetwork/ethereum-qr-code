@@ -1,3 +1,6 @@
+/**
+ * Adding extra icon to the QR-code
+ */
 class DrawIcon {
  addIcon(overlay, dimentions, qrcodeWrapper, callback) {
         let canvas = document.createElement('canvas');

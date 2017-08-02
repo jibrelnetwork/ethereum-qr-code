@@ -1,8 +1,11 @@
 import DrawIcon from './tokenIcon';
-import {tokenSchemaEIP67, tokenSchemaBitcoin} from './utils';
+import stringFunctions from './utils';
 import QRCode from 'qrcodejs2';
 
-class etheriumQRplugin {
+/**
+ * Main plugin logic
+ */
+class EtheriumQRplugin {
 
     constructor(el){
 
@@ -36,7 +39,8 @@ class etheriumQRplugin {
         this.tokenAmount = request.tokenAmount;
         this.size = request.size || 128;
         this.imgUrl = request.imgUrl || false;
-        this.schemaGenerator = request.schema === 'bitcoin' ? tokenSchemaBitcoin : tokenSchemaEIP67;
+        
+        this.schemaGenerator = stringFunctions[request.mode]
     }
     drawTokenIcon(){
         if (this.imgUrl) {

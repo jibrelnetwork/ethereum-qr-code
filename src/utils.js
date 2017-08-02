@@ -1,6 +1,15 @@
-export const tokenSchemaEIP67 = (adress, gas, data) => {
+const tokenSchemaBasic = (adress, gas, data) => {
   return `ethereum:${adress}?gas=${gas}&data=${data}`;
 }
-export  const tokenSchemaBitcoin = (adress, token, amount, standart = 'erc20') => {
-  return `etheriumtoken:${standart}:${token}:${adress}:${amount}`;
+const tokenSchemaFunction = (adress, gas, data) => {
+  return `ethereum:${adress}?gas=${gas}&data=${data}`;
+}
+const tokenSchemaContract = (adress, gas, data) => {
+  return `ethereum:${adress}?gas=${gas}&data=${data}`;
+}
+
+export default {
+  eth: tokenSchemaBasic,
+  function: tokenSchemaFunction,
+  erc20: tokenSchemaContract
 }
