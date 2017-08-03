@@ -1,5 +1,5 @@
 import DrawIcon from './tokenIcon';
-import stringFunctions from './utils';
+import stringFunctions, {isAddress} from './utils';
 import QRCode from 'qrcode';
 
 
@@ -16,16 +16,19 @@ class EtheriumQRplugin {
      * @returns void
      */
     toCanvas(config) {
-        if(!config.selector) {
+        if (!config.selector) {
             throw new Error('The canvas element parent selector is required when calling `toCanvas`');
             return;
         }
-        this.generate(config).then(function(qrCodeDataUri){
+        this.generate(config).then(function (qrCodeDataUri) {
             let canvas = document.createElement('canvas');
             const canvasContainer = document.querySelector(config.selector);
             canvasContainer.appendChild(canvas);
             var ctx = canvas.getContext('2d');
             var img = new Image;
+            img.onload = function(){
+                ctx.drawImage(img,0,0);
+            };
             img.src = qrCodeDataUri;
         })
     }
@@ -43,19 +46,24 @@ class EtheriumQRplugin {
 
     generate(config) {
         this.parseRequest(config);
-        let generatedCode = this.schemaGenerator(this.to, this.gas, this.value, this.functionName, this.functionArguments);
-        let result = new Promise();
-        QRCode.toDataURL('I am a pony!', this.options, function (err, url) {
-            if(err) {
-                result.reject(err);
-            }
-            result.resolve(url)
-        })
+        let generatedCode = this.schemaGenerator(this.to,
+                                                this.gas,
+                                                this.value,
+                                                this.functionName,
+                                                this.functionArguments);
+        this._resultString = generatedCode;
+        let result = new Promise((resolve, reject) => {
+            QRCode.toDataURL(generatedCode, this.options, function (err, url) {
+                if (err) reject(err);
+                resolve(url)
+            })
+        });
+
         return result;
     }
     parseRequest(request) {
-        if (!request.to) {
-            throw new Error('The "to" parameter is required');
+        if (!request.to || !isAddress(request.to)) {
+            throw new Error('The "to" parameter with a valid Etherium adress is required');
             return;
         }
 
@@ -69,12 +77,12 @@ class EtheriumQRplugin {
         } else {
             this.mode = 'eth';
         }
-
+        this._resultString = '';
         this.to = request.to;
         this.from = request.from;
-        this.value = request.value;
-        this.gas = request.gas;
-        this.toJSON = request.toJSON ;
+        this.value = parseFloat(request.value) || 0;
+        this.gas = parseFloat(request.gas) || 10000;
+        this.toJSON = request.toJSON;
         this.size = request.size || 128;
         this.imgUrl = request.imgUrl || false;
         this.options = {
@@ -84,7 +92,7 @@ class EtheriumQRplugin {
             },
             scale: 4
         };
-        this.schemaGenerator = stringFunctions[request.mode];
+        this.schemaGenerator = stringFunctions[this.mode];
     }
     drawTokenIcon() {
         if (this.imgUrl) {
@@ -96,4 +104,4 @@ class EtheriumQRplugin {
     }
 }
 
-export default etheriumQRplugin;
+export default EtheriumQRplugin;
