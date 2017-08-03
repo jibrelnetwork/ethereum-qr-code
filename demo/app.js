@@ -1,19 +1,32 @@
 $(document).ready(function(){
     
-    const codeContainer = '#ethereum-qr-code';
-    const qr = new EtheriumQRplugin();
+    const qr = new EtheriumQRplugin.etheriumQRplugin();
     
     $('.qr-input').keyup(function(){
 
-        const adress = $('#adress').val();
+        const adress = $('#addess').val();
         const amount = $('#amount').val();
         const size = $('#size').val();
         
+        if(adress && adress.length) {
         $('#ethereum-qr-code').empty();
-        qr.toCanvas({
-            tokenAdress: adress,
-            tokenAmount: amount, 
-            size: size
-        })
+            qr.toCanvas({
+                to: adress,
+                value: amount, 
+                size: size,
+                selector: '#ethereum-qr-code',
+            })
+            console.log(qr._resultString);
+        }
     })
 })
+
+/**
+ *    qr.toDataUrl({
+                to: adress,
+                value: amount, 
+                size: size,
+            }).then(function(a){
+                console.log(a);
+            })
+ */
