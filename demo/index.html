@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
     <link href="jumbotron-narrow.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
 </head>
 
 <body>
@@ -18,6 +19,8 @@
 
         <div class="jumbotron">
             <div id="ethereum-qr-code"></div>
+            <textarea id="resulting-string"></textarea>
+            <p id="error-string"></p>
         </div>
 
         <div class="row marketing">
@@ -29,19 +32,19 @@
                         <label>Mode</label>
                         <div class="radio">
                             <label>
-                            <input type="radio" name="mode" id="optionsRadios1" value="eth" checked>
+                            <input type="radio" name="mode" class="qr-input-on-change" value="eth" checked>
                             eth, sending ether
                         </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="mode" id="optionsRadios2" value="function">
+                                <input type="radio" name="mode" class="qr-input-on-change" value="function">
                                 function, call a contact function with parameters
                             </label>
                         </div>
-                        <div class="radio disabled">
+                        <div class="radio">
                             <label>
-                                <input type="radio" name="mode" id="optionsRadios3" value="erc20">
+                                <input type="radio" name="mode" class="qr-input-on-change" value="erc20">
                                 erc20, transfer tokens; 'transfer(address to, uint value)' is called
                             </label>
                         </div>
@@ -57,6 +60,10 @@
                         <input type="text" id="amount" placeholder="e.g. 15" class="qr-input form-control">
                     </div>
                     <div class="form-group">
+                        <label>Gas, Number</label>
+                        <input type="text" id="gas" placeholder="e.g. 10000" class="qr-input form-control">
+                    </div>
+                    <div class="form-group">
                         <label>Size, px</label>
                         <input type="text" id="size" placeholder="e.g. 256" class="qr-input form-control">
                     </div>
@@ -68,6 +75,22 @@
                     <div class="form-group">
                         <label>functionArguments, JSON String</label>
                         <input type="text" id="functionArguments" placeholder="{'foo':'bar', 'baz': 42}" class="qr-input form-control">
+                    </div>
+
+                      <div class="form-group">
+                        <label>Mode</label>
+                        <div class="radio">
+                            <label>
+                            <input type="radio" class="qr-input-on-change" name="toJSON" value="false" checked>
+                            Use string
+                        </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" class="qr-input-on-change" name="toJSON" value="true">
+                                convert  to JSON
+                            </label>
+                        </div>
                     </div>
                 </form>
 

@@ -17,8 +17,9 @@ class EtheriumQRplugin {
      */
     toCanvas(config) {
         if (!config.selector) {
+            this.result.status = 'error';
+            this.result.value = 'The canvas element parent selector is required when calling `toCanvas`';
             throw new Error('The canvas element parent selector is required when calling `toCanvas`');
-            return;
         }
         this.generate(config).then(function (qrCodeDataUri) {
             let canvas = document.createElement('canvas');
@@ -46,43 +47,64 @@ class EtheriumQRplugin {
 
     generate(config) {
         this.parseRequest(config);
-        let generatedCode = this.schemaGenerator(this.to,
-                                                this.gas,
-                                                this.value,
-                                                this.functionName,
-                                                this.functionArguments);
-        this._resultString = generatedCode;
-        let result = new Promise((resolve, reject) => {
-            QRCode.toDataURL(generatedCode, this.options, function (err, url) {
+        const generatedValue = this.produceEncodedValue();
+        
+        this.result.status = 'success';
+        this.result.value = generatedValue;
+
+        return new Promise((resolve, reject) => {
+            QRCode.toDataURL(generatedValue, this.options, function (err, url) {
                 if (err) reject(err);
                 resolve(url)
             })
         });
-
-        return result;
+    }
+    produceEncodedValue(){
+        let generatedCode = this.schemaGenerator(this.to,
+                                                this.gas,
+                                                this.value,
+                                                this.functionSignature,
+                                                this.functionArguments);
+        const jsonRepresentation = {
+            to: this.to,
+            gas: this.gas,
+            value: this.value,
+            functionSignature: this.functionSignature,
+            functionArguments: this.functionArguments
+        };
+        return this.toJSON ? JSON.stringify(jsonRepresentation) : generatedCode;
     }
     parseRequest(request) {
+        this.result = {
+            status: ''
+        };
+
         if (!request.to || !isAddress(request.to)) {
+            this.result.status = 'error';
+            this.result.value = 'The "to" parameter with a valid Etherium adress is required';
             throw new Error('The "to" parameter with a valid Etherium adress is required');
-            return;
         }
 
         if (request.mode) {
             if (request.mode === 'function' && request.functionSignature && request.functionArguments) {
                 this.mode = 'function';
-            }
-            if (request.mode === 'erc20' && request.from) {
+                this.functionSignature = request.functionSignature;
+                this.functionArguments = request.functionArguments;
+            } else if (request.mode === 'erc20' && request.from) {
                 this.mode = 'erc20';
+            } else {
+                this.mode = 'eth';    
             }
         } else {
             this.mode = 'eth';
         }
-        this._resultString = '';
+
+        //todo use Object.assign
         this.to = request.to;
         this.from = request.from;
         this.value = parseFloat(request.value) || 0;
         this.gas = parseFloat(request.gas) || 10000;
-        this.toJSON = request.toJSON;
+        this.toJSON = request.toJSON ? request.toJSON === 'true' : false;
         this.size = request.size || 128;
         this.imgUrl = request.imgUrl || false;
         this.options = {

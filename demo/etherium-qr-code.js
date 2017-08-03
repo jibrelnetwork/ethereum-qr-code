@@ -1353,8 +1353,9 @@ var EtheriumQRplugin = function () {
          */
         value: function toCanvas(config) {
             if (!config.selector) {
+                this.result.status = 'error';
+                this.result.value = 'The canvas element parent selector is required when calling `toCanvas`';
                 throw new Error('The canvas element parent selector is required when calling `toCanvas`');
-                return;
             }
             this.generate(config).then(function (qrCodeDataUri) {
                 var canvas = document.createElement('canvas');
@@ -1388,41 +1389,64 @@ var EtheriumQRplugin = function () {
             var _this = this;
 
             this.parseRequest(config);
-            var generatedCode = this.schemaGenerator(this.to, this.gas, this.value, this.functionName, this.functionArguments);
-            this._resultString = generatedCode;
-            var result = new Promise(function (resolve, reject) {
-                _qrcode2.default.toDataURL(generatedCode, _this.options, function (err, url) {
+            var generatedValue = this.produceEncodedValue();
+
+            this.result.status = 'success';
+            this.result.value = generatedValue;
+
+            return new Promise(function (resolve, reject) {
+                _qrcode2.default.toDataURL(generatedValue, _this.options, function (err, url) {
                     if (err) reject(err);
                     resolve(url);
                 });
             });
-
-            return result;
+        }
+    }, {
+        key: 'produceEncodedValue',
+        value: function produceEncodedValue() {
+            var generatedCode = this.schemaGenerator(this.to, this.gas, this.value, this.functionSignature, this.functionArguments);
+            var jsonRepresentation = {
+                to: this.to,
+                gas: this.gas,
+                value: this.value,
+                functionSignature: this.functionSignature,
+                functionArguments: this.functionArguments
+            };
+            return this.toJSON ? JSON.stringify(jsonRepresentation) : generatedCode;
         }
     }, {
         key: 'parseRequest',
         value: function parseRequest(request) {
+            this.result = {
+                status: ''
+            };
+
             if (!request.to || !(0, _utils.isAddress)(request.to)) {
+                this.result.status = 'error';
+                this.result.value = 'The "to" parameter with a valid Etherium adress is required';
                 throw new Error('The "to" parameter with a valid Etherium adress is required');
-                return;
             }
 
             if (request.mode) {
                 if (request.mode === 'function' && request.functionSignature && request.functionArguments) {
                     this.mode = 'function';
-                }
-                if (request.mode === 'erc20' && request.from) {
+                    this.functionSignature = request.functionSignature;
+                    this.functionArguments = request.functionArguments;
+                } else if (request.mode === 'erc20' && request.from) {
                     this.mode = 'erc20';
+                } else {
+                    this.mode = 'eth';
                 }
             } else {
                 this.mode = 'eth';
             }
-            this._resultString = '';
+
+            //todo use Object.assign
             this.to = request.to;
             this.from = request.from;
             this.value = parseFloat(request.value) || 0;
             this.gas = parseFloat(request.gas) || 10000;
-            this.toJSON = request.toJSON;
+            this.toJSON = request.toJSON ? request.toJSON === 'true' : false;
             this.size = request.size || 128;
             this.imgUrl = request.imgUrl || false;
             this.options = {
@@ -1555,7 +1579,10 @@ var isAddress = exports.isAddress = function isAddress(address) {
         return true;
     } else {
         // Otherwise check each case
-        return isChecksumAddress(address);
+        return true;
+        //todo - need to add SHA 
+        //https://github.com/ethereum/go-ethereum/blob/aa9fff3e68b1def0a9a22009c233150bf9ba481f/jsre/ethereum_js.go
+        //return isChecksumAddress(address);
     }
 };
 

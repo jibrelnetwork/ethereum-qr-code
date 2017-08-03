@@ -31,7 +31,10 @@ export const isAddress = function (address) {
         return true;
     } else {
         // Otherwise check each case
-        return isChecksumAddress(address);
+        return true;
+        //todo - need to add SHA 
+        //https://github.com/ethereum/go-ethereum/blob/aa9fff3e68b1def0a9a22009c233150bf9ba481f/jsre/ethereum_js.go
+        //return isChecksumAddress(address);
     }
 };
 
