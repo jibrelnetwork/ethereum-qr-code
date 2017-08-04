@@ -6,7 +6,7 @@
     border-radius: 5px;
 }
 #ethereum-qr-code {
-    height: 300px;
+    height: 200px;
 }
 #error-string {
     color: red;
