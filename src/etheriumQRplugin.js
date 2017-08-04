@@ -16,22 +16,25 @@ class EtheriumQRplugin {
      * @returns void
      */
     toCanvas(config) {
-        if (!config.selector) {
-            this.result.status = 'error';
-            this.result.value = 'The canvas element parent selector is required when calling `toCanvas`';
-            throw new Error('The canvas element parent selector is required when calling `toCanvas`');
+        this.parseRequest(config);
+        const generatedValue = this.produceEncodedValue();
+        const parentEl = document.querySelector(config.selector);
+
+        if (!config.selector || parentEl === null) {
+            this.errorCallback('The canvas element parent selector is required when calling `toCanvas`');
         }
-        this.generate(config).then(function (qrCodeDataUri) {
-            let canvas = document.createElement('canvas');
-            const canvasContainer = document.querySelector(config.selector);
-            canvasContainer.appendChild(canvas);
-            var ctx = canvas.getContext('2d');
-            var img = new Image;
-            img.onload = function(){
-                ctx.drawImage(img,0,0);
-            };
-            img.src = qrCodeDataUri;
+
+        return new Promise((resolve, reject) => {
+             QRCode.toCanvas(generatedValue, this.options, (err, canvas) => {
+                if (err) reject(err);
+          
+                resolve(generatedValue);
+                parentEl.appendChild(canvas);
+                canvas.setAttribute('style', `width: ${this.size}px`);
+                successCallback(generatedValue);
+            })
         })
+
     }
     /**
      * 
@@ -42,22 +45,25 @@ class EtheriumQRplugin {
      * @returns Promise
      */
     toDataUrl(config) {
-        return this.generate(config)
-    }
-
-    generate(config) {
         this.parseRequest(config);
         const generatedValue = this.produceEncodedValue();
-        
-        this.result.status = 'success';
-        this.result.value = generatedValue;
 
         return new Promise((resolve, reject) => {
-            QRCode.toDataURL(generatedValue, this.options, function (err, url) {
+            QRCode.toDataURL(generatedValue, this.options, (err, url) => {
                 if (err) reject(err);
                 resolve(url)
+                this.successCallback(url);
             })
         });
+    }
+    errorCallback(){
+        this.result.status = 'error';
+        this.result.value = value;
+        throw new Error(value);
+    }
+    successCallback(value){
+        this.result.status = 'success';
+        this.result.value = value;
     }
     produceEncodedValue(){
         let generatedCode = this.schemaGenerator(this.to,
@@ -80,9 +86,7 @@ class EtheriumQRplugin {
         };
 
         if (!request.to || !isAddress(request.to)) {
-            this.result.status = 'error';
-            this.result.value = 'The "to" parameter with a valid Etherium adress is required';
-            throw new Error('The "to" parameter with a valid Etherium adress is required');
+            this.errorCallback('The "to" parameter with a valid Etherium adress is required');
         }
 
         if (request.mode) {
@@ -107,13 +111,12 @@ class EtheriumQRplugin {
         this.toJSON = request.toJSON ? request.toJSON === 'true' : false;
         this.size = request.size || 128;
         this.imgUrl = request.imgUrl || false;
-        this.options = {
+        this.options = Object.assign({
             color: {
                 dark: '#000000',
                 light: '#ffffff'
             },
-            scale: 4
-        };
+            scale: 5}, request.options);
         this.schemaGenerator = stringFunctions[this.mode];
     }
     drawTokenIcon() {
