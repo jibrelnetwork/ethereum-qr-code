@@ -14,6 +14,15 @@ export default {
   erc20: tokenSchemaContract
 }
 
+const validateArgument = (arg) => {
+    
+}
+
+export const validateSignature = (signature) => {
+    if(!signature.name || !signature.args) return false;
+    
+}
+
 /**
  * Checks if the given string is an address
  * from ethereum.stackexchange.com/questions/1374/how-can-i-check-if-an-ethereum-address-is-valid
