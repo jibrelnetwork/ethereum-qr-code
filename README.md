@@ -110,6 +110,17 @@ Possible values: eth, function, erc20
  If you want the pugin to generate the canvas tag with QR code and place in into you page DOM, you need to provide the DOM element selector.
 
 
+## Contact us
+
+We will be glad to hear from you via [https://join.slack.com/jibrelnetwork/signup](slack.com/jibrelnetwork)
+
+Follow us on Twitter: [https://twitter.com/JibrelNetwork](@JibrelNetwork).
+
+If you have a proposal or a came across some problems running the plugin please [submit an issue](https://github.com/jibrelnetwork/ethereum-qr-code/issues).
+
+
+Developed by Qubist Labs, 2017
+
 ## License 
 
-MIT
+[MIT](LICENSE.md)
