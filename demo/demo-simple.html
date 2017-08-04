@@ -16,6 +16,17 @@
 <body>
 
     <div class="container">
+
+         <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Simple demo</a></li>
+            <li role="presentation"><a href="demo-advanced.html">Advanced demo</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">ethereum-qr-code</h3>
+      </div>
+
         <div class="jumbotron">
             <div id="ethereum-qr-code-simple"></div>
             <textarea id="resulting-string"></textarea>
@@ -34,11 +45,8 @@
                                 to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',<br>
                                 value: 1,<br>
                                 gas: 42,<br>
-                                size:200,<br>
+                                size:180,<br>
                                 selector: '#ethereum-qr-code-simple',<br>
-                                functionSignature: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',<br>
-                                functionArguments: '57435734657345634563475634856745683458346534',<br>
-                                mode: 'function',<br>
                                 options: {<br>
                                     margin: 2<br>
                                 }<br>
@@ -48,7 +56,7 @@
                         qr.toCanvas(codeDetails);<br>
                     }<br>
 <br>
-                    $(document).ready(init);
+                    document.addEventListener("DOMContentLoaded", init);
                 </code>
 
             </div>
@@ -59,10 +67,7 @@
     <!-- /container -->
 
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="assets/js/etherium-qr-code.js"></script>
     <script src="assets/js/app-demo-simple.js"></script>
-
 </body>
-
 </html>

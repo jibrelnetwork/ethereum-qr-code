@@ -10,14 +10,16 @@ const updateQR = () => {
     const functionSignature = $('#functionName').val();
     const functionArguments = $('#functionArguments').val();
 
-    const mode= $('[name=mode]:checked').val()
-    const toJSON= $('[name=toJSON]:checked').val()
+    const mode = $('[name=mode]:checked').val()
+    const toJSON = $('[name=toJSON]:checked').val() === 'true';
 
-    if (to && to.length) {
+    
+    //clear UI
+    $('#resulting-string, #error-string').val('').text('');
+    $('#ethereum-qr-code').empty();
 
-        //calll a plugin
-        $('#resulting-string, #error-string').val('');
-        $('#ethereum-qr-code').empty();
+    //call a plugin
+    try {
         qr.toCanvas({
             to,
             value,
@@ -28,13 +30,15 @@ const updateQR = () => {
             functionArguments,
             toJSON,
             mode
-        }).then(function(value){
-            if(qr.result.status === 'success') $('#resulting-string').val(value);
-        }).catch(function(value){
-            if(qr.result.status === 'error') $('#error-string').val(qr.result.value);
-        });
+        }).then(function (result) {
+            $('#resulting-string').val(result.value);
+        })
+    } catch (e) {
+        $('#error-string').text(e);
+    }
 
-    }   
+
+
 }
 const init = () => {
     //instantiate the plugin

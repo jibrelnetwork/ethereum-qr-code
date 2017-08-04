@@ -1457,36 +1457,58 @@ var EtheriumQRplugin = function () {
     }, {
         key: 'parseRequest',
         value: function parseRequest(request) {
-            this.result = {
-                status: ''
-            };
 
-            if (!request.to || !(0, _utils.isAddress)(request.to)) {
-                this.errorCallback('The "to" parameter with a valid Etherium adress is required');
-            }
-
-            if (request.mode) {
-                if (request.mode === 'function' && (0, _utils.validateSignature)(request.functionSignature)) {
-                    this.mode = 'function';
-                    this.functionSignature = request.functionSignature;
-                } else if (request.mode === 'erc20' && request.from) {
-                    this.mode = 'erc20';
-                } else {
-                    this.mode = 'eth';
-                }
-            } else {
-                this.mode = 'eth';
-            }
-
+            this.validateToField(request.to);
+            this.validateAndSetMode(request);
+            this.assignPluguinValues(request);
+        }
+    }, {
+        key: 'assignPluguinValues',
+        value: function assignPluguinValues(request) {
             this.to = request.to;
-            this.from = request.from;
             this.value = parseFloat(request.value) || DEFAULTS.value;
             this.gas = parseInt(request.gas) || DEFAULTS.gas;
-            this.toJSON = request.toJSON ? request.toJSON === 'true' : false;
+            this.toJSON = !!request.toJSON;
             this.size = request.size || DEFAULTS.size;
             this.imgUrl = request.imgUrl || false;
             this.options = Object.assign(DEFAULTS.qrCodeOptions, request.options);
             this.schemaGenerator = _utils2.default[this.mode];
+        }
+    }, {
+        key: 'validateToField',
+        value: function validateToField(requestTo) {
+            if (!requestTo || !(0, _utils.isAddress)(requestTo)) {
+                this.errorCallback('The "to" parameter with a valid Etherium adress is required');
+            }
+        }
+    }, {
+        key: 'validateAndSetMode',
+        value: function validateAndSetMode(request) {
+            if (request.mode) {
+
+                if (request.mode === 'eth') {
+                    this.mode = 'eth';
+                    return;
+                }
+
+                if (request.mode === 'function' && request.functionSignature && (0, _utils.validateSignature)(request.functionSignature)) {
+                    this.mode = 'function';
+                    this.functionSignature = request.functionSignature;
+                    return;
+                } else {
+                    this.errorCallback('For the `function` mode, the `functionSignature` object is not provided or not valid');
+                }
+
+                if (request.mode === 'erc20' && request.from && (0, _utils.isAddress)(request.from)) {
+                    this.mode = 'erc20';
+                    this.from = request.from;
+                    return;
+                } else {
+                    this.errorCallback('For the `erc20` mode, the `from` object is not provided or not valid');
+                }
+            } else {
+                this.mode = 'eth';
+            }
         }
     }, {
         key: 'drawTokenIcon',
@@ -1502,9 +1524,7 @@ var EtheriumQRplugin = function () {
         }
     }, {
         key: 'errorCallback',
-        value: function errorCallback() {
-            this.result.status = 'error';
-            this.result.value = value;
+        value: function errorCallback(value) {
             throw new Error(value);
         }
     }]);
@@ -1597,9 +1617,23 @@ exports.default = {
     eth: tokenSchemaBasic,
     function: tokenSchemaFunction,
     erc20: tokenSchemaContract
+
+    //todo add other types
 };
+var validEthTypes = ['address', 'unit', 'int'];
+var validStrRegEx = /^[^\\\/&]*$/;
+
+var isValidString = function isValidString(str) {
+    return validStrRegEx.match(str);
+};
+
 var validateSignature = exports.validateSignature = function validateSignature(signature) {
-    functionArguments;
+    if (!signature.name || !isValidString(signature.name) || !signature.args || signature.args.length === 0) return false;
+    var allArgsCheck = false;
+    signature.args.forEach(function (arg) {
+        if (validEthTypes.indexOf(arg.type) === -1 || !isValidString(arg.name)) allArgsCheck = false;
+    });
+    return allArgsCheck;
 };
 
 /**

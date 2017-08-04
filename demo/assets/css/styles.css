@@ -8,4 +8,6 @@
 
 #error-string {
     color: red;
+        font-size: 12px;
+    margin-top: 30px;
 }
