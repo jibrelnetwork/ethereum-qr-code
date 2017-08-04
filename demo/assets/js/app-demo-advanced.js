@@ -28,11 +28,12 @@ const updateQR = () => {
             functionArguments,
             toJSON,
             mode
-        })
+        }).then(function(value){
+            if(qr.result.status === 'success') $('#resulting-string').val(value);
+        }).catch(function(value){
+            if(qr.result.status === 'error') $('#error-string').val(qr.result.value);
+        });
 
-        //set extra values, for demo purposes
-        if(qr.result.status === 'success') $('#resulting-string').val(qr.result.value);
-        if(qr.result.status === 'error') $('#error-string').val(qr.result.value);
     }   
 }
 const init = () => {
