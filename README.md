@@ -71,7 +71,7 @@ Mother if you only want an encode string
 
 Parameters are passed vie one configutation object. It has following fields:
 
- 1. `to` | String | required - The adress of the transaction
+ 1. `to` | String | **required** - The adress of the transaction
 
  2. `from` | String | optional - Adress where the transaction should be sent.
 
@@ -87,11 +87,13 @@ Parameters are passed vie one configutation object. It has following fields:
 
  6. `functionSignature` | String | optional - Becomes required in case of `mode = function`. Then the follwing string us encoded: `ethereum:<address>[?value=<value>][?gas=<gas>][?function=<functionSignature.name>(<functionSignature.args>)]`
 
- 7. `selector` | String | optional
+ 7. `toJSON`  | String | optional - When generating a QR encode adress as a formed string or a JSON object.
+
+ 8. `selector` | String | optional
 
  If you want the pugin to generate the canvas tag with QR code and place in into you page DOM, you need to provide the DOM element selector.
 
- 8. `options` | Object | optional
+ 9. `options` | Object | optional
 
 Allows to [override extra options](https://www.npmjs.com/package/qrcode#options-9) of the used qrcore plugin. Such as color, margin and scale. Be carefull with that `option.scale` because by default the value is selected by the plugin automatically based on the lanth of the data. If being set by hand may result in an error.
 
