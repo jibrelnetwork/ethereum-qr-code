@@ -4,12 +4,6 @@ Pugin is aimed to implement the convenient way to generate a [Etherium adress li
 On top of the string generation the QR code is generated based on this link. The [qrcode plugin](https://www.npmjs.com/package/qrcode) is used for this.
 
 
-3 options of the string encoded possible:
-
-```
-ethereum:<address>[?value=<value>][?gas=<suggestedGas>][?function=nameOfFunction(param)]
-```
-
 ## Getting started
 
  1. Install from NPM: `npm install ethereum-qr-code --save`
@@ -23,9 +17,8 @@ import EtheriumQRplugin from 'ethereum-qr-code';
 const qr = new EtheriumQRplugin(codeContainer);
 const qrCode = qr.toCanvas({
     selector: '#my-qr-code',
-    adres,
-    gas,
-    amount
+    to,
+    gas
 });
 
 ```
@@ -37,18 +30,18 @@ const qrCode = qr.toCanvas({
 `.toCanvas(config)`
 
 Generates the canvas tag with QR code. In this case the `selector` field becomes available.
-Returns a Promise that is resolved when the code is successfully generated.
+Returns a Promise that is an object that is resolved when the code is successfully generated.
 Example : 
 
 ```
 const qrCode = qr.toCanvas({
     selector: '#my-qr-code',
-    adres,
-    gas,
-    amount
+    to,
+    gas
 });
-qrCode.then(function(){
+qrCode.then(function(code){
     console.log('Your QR is generated!');
+    console.log(code.value);
 })
 ```
 
@@ -65,49 +58,42 @@ const qrCode = qr.toDataUrl({
     amount
 });
 qrCode.then(function(qrCodeDataUri){
-    console.log('Your QR id generated:', toDataUrl);
+    console.log('Your QR id generated:', code.value);
+    // 
 })
 ```
+
+`.toAdressString(config)`
+
+Mother if you only want an encode string
 
 ### Parameters
 
 Parameters are passed vie one configutation object. It has following fields:
 
- 1. `to` | String | required
-The adress of the transaction
+ 1. `to` | String | required - The adress of the transaction
 
- 2. `from` | String | optional
-Адрес откуда отправлять транзакцию. В случае контрактов это важно т.к. это единственный способ авторизации пользователя в контракте
+ 2. `from` | String | optional - Adress where the transaction should be sent.
 
- 3. `value` | Number | optional
-Количество пересылаемых ETH. Измеряется в ETH wei
+ 3. `value` | Number | optional - Amount of ETH sent. Measured in `wei`. Defaults to 0.
 
- 4. `gas` | Number | optional 
-Рекомендуемое количество газа. Измеряется в gas wei
+ 4. `gas` | Number | optional - Recomended amount of gas in `wei`. Defaults to 10000.
 
- 5. `mode` | String | optional
-Possible values: eth, function, erc20
+ 5. `mode` | String | optional - Adress type to generate. Possible values: eth, function, erc20
 
- - `eth` - пересылка ETH  (default)
- - `function` - вызов функции контракта
- - `erc20` - пересылка токенов, частный случай `contract`, предполагается что вызывается функция `transfer(address to, uint value)`
+ - `eth` - Ether transfer (default)
+ - `function` - Call function of a contract.
+ - `erc20` - Tokens transfer. Examples of using `mode = erc20`: `transfer(address to, uint value)`, `approve(address spender, uint value)`, `balanceOf(address to)`;
 
- 6. `functionSignature` | String | optional
-В случае если mode==”function”, это поле обязательно и содержит сигнатуру функции
-Во всех остальных случаях наличие этого параметра должно вызывать ошибку
-Предполагается, что приложение клиента распарсит эту строку и даст пользователю поля для ввода данных для каждого из параметров функции
-Примеры для erc20:
-`transfer(address to, uint value)`
-`approve(address spender, uint value)`
-`balanceOf(address to)`
+ 6. `functionSignature` | String | optional - Becomes required in case of `mode = function`. Then the follwing string us encoded: `ethereum:<address>[?value=<value>][?gas=<gas>][?function=<functionSignature.name>(<functionSignature.args>)]`
 
- 7. `functionArguments` | Object | optional
-
- Object map of all agrumets that must be forvided to a function stated in `functionSignature` parameter.
-
- 8. `selector` | String | optional
+ 7. `selector` | String | optional
 
  If you want the pugin to generate the canvas tag with QR code and place in into you page DOM, you need to provide the DOM element selector.
+
+ 8. `options` | Object | optional
+
+Allows to [override extra options](https://www.npmjs.com/package/qrcode#options-9) of the used qrcore plugin. Such as color, margin and scale. Be carefull with that `option.scale` because by default the value is selected by the plugin automatically based on the lanth of the data. If being set by hand may result in an error.
 
 
 ## Contact us
