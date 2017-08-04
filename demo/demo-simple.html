@@ -16,9 +16,8 @@
 <body>
 
     <div class="container">
-
         <div class="jumbotron">
-            <div id="ethereum-qr-code"></div>
+            <div id="ethereum-qr-code-simple"></div>
             <textarea id="resulting-string"></textarea>
         </div>
 
@@ -32,10 +31,17 @@
 <br>
                         //static config value<br>
                         const codeDetails = {<br>
-                            to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',<br>
-                            value: 1,<br>
-                            gas: 42,<br>
-                            selector: '#ethereum-qr-code'<br>
+                                to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',<br>
+                                value: 1,<br>
+                                gas: 42,<br>
+                                size:200,<br>
+                                selector: '#ethereum-qr-code-simple',<br>
+                                functionSignature: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',<br>
+                                functionArguments: '57435734657345634563475634856745683458346534',<br>
+                                mode: 'function',<br>
+                                options: {<br>
+                                    margin: 2<br>
+                                }<br>
                         };<br>
 <br>
                         //run the plugin<br>

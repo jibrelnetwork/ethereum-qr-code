@@ -5,9 +5,7 @@
     padding: 5px;
     border-radius: 5px;
 }
-#ethereum-qr-code {
-    height: 200px;
-}
+
 #error-string {
     color: red;
 }

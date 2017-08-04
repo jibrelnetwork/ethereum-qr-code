@@ -1352,21 +1352,25 @@ var EtheriumQRplugin = function () {
          * @returns void
          */
         value: function toCanvas(config) {
-            if (!config.selector) {
-                this.result.status = 'error';
-                this.result.value = 'The canvas element parent selector is required when calling `toCanvas`';
-                throw new Error('The canvas element parent selector is required when calling `toCanvas`');
+            var _this = this;
+
+            this.parseRequest(config);
+            var generatedValue = this.produceEncodedValue();
+            var parentEl = document.querySelector(config.selector);
+
+            if (!config.selector || parentEl === null) {
+                this.errorCallback('The canvas element parent selector is required when calling `toCanvas`');
             }
-            this.generate(config).then(function (qrCodeDataUri) {
-                var canvas = document.createElement('canvas');
-                var canvasContainer = document.querySelector(config.selector);
-                canvasContainer.appendChild(canvas);
-                var ctx = canvas.getContext('2d');
-                var img = new Image();
-                img.onload = function () {
-                    ctx.drawImage(img, 0, 0);
-                };
-                img.src = qrCodeDataUri;
+
+            return new Promise(function (resolve, reject) {
+                _qrcode2.default.toCanvas(generatedValue, _this.options, function (err, canvas) {
+                    if (err) reject(err);
+
+                    resolve(generatedValue);
+                    parentEl.appendChild(canvas);
+                    canvas.setAttribute('style', 'width: ' + _this.size + 'px');
+                    successCallback(generatedValue);
+                });
             });
         }
         /**
@@ -1381,25 +1385,31 @@ var EtheriumQRplugin = function () {
     }, {
         key: 'toDataUrl',
         value: function toDataUrl(config) {
-            return this.generate(config);
-        }
-    }, {
-        key: 'generate',
-        value: function generate(config) {
-            var _this = this;
+            var _this2 = this;
 
             this.parseRequest(config);
             var generatedValue = this.produceEncodedValue();
 
-            this.result.status = 'success';
-            this.result.value = generatedValue;
-
             return new Promise(function (resolve, reject) {
-                _qrcode2.default.toDataURL(generatedValue, _this.options, function (err, url) {
+                _qrcode2.default.toDataURL(generatedValue, _this2.options, function (err, url) {
                     if (err) reject(err);
                     resolve(url);
+                    _this2.successCallback(url);
                 });
             });
+        }
+    }, {
+        key: 'errorCallback',
+        value: function errorCallback() {
+            this.result.status = 'error';
+            this.result.value = value;
+            throw new Error(value);
+        }
+    }, {
+        key: 'successCallback',
+        value: function successCallback(value) {
+            this.result.status = 'success';
+            this.result.value = value;
         }
     }, {
         key: 'produceEncodedValue',
@@ -1422,9 +1432,7 @@ var EtheriumQRplugin = function () {
             };
 
             if (!request.to || !(0, _utils.isAddress)(request.to)) {
-                this.result.status = 'error';
-                this.result.value = 'The "to" parameter with a valid Etherium adress is required';
-                throw new Error('The "to" parameter with a valid Etherium adress is required');
+                this.errorCallback('The "to" parameter with a valid Etherium adress is required');
             }
 
             if (request.mode) {
@@ -1449,24 +1457,23 @@ var EtheriumQRplugin = function () {
             this.toJSON = request.toJSON ? request.toJSON === 'true' : false;
             this.size = request.size || 128;
             this.imgUrl = request.imgUrl || false;
-            this.options = {
+            this.options = Object.assign({
                 color: {
                     dark: '#000000',
                     light: '#ffffff'
                 },
-                scale: 4
-            };
+                scale: 5 }, request.options);
             this.schemaGenerator = _utils2.default[this.mode];
         }
     }, {
         key: 'drawTokenIcon',
         value: function drawTokenIcon() {
-            var _this2 = this;
+            var _this3 = this;
 
             if (this.imgUrl) {
                 var iconDraw = new _tokenIcon2.default();
                 iconDraw.addIcon(this.imgUrl, this.size, this.uiElement, function () {
-                    _this2.uiElement.parentNode.removeChild(_this2.uiElement);
+                    _this3.uiElement.parentNode.removeChild(_this3.uiElement);
                 });
             }
         }
