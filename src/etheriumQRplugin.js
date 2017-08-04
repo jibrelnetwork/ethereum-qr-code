@@ -1,19 +1,45 @@
 import DrawIcon from './tokenIcon';
-import stringFunctions, {isAddress} from './utils';
+import stringFunctions, {
+    isAddress,
+    validateSignature
+} from './utils';
 import QRCode from 'qrcode';
 
-
+const DEFAULTS = {
+    value: 0,
+    gas: 10000,
+    size: 128,
+    qrCodeOptions: {
+        color: {
+            dark: '#000000',
+            light: '#ffffff'
+        },
+        scale: 5
+    }
+}
 /**
  * Main plugin logic
  */
 class EtheriumQRplugin {
+     /**
+     * 
+     * Generates a data encode string
+     * 
+     * @public
+     * @param {Object} config 
+     * @returns String
+     */
+    toAdressString(config) {
+        this.parseRequest(config);
+        return this.produceEncodedValue();
+    }
     /**
      * 
-     * Draws QR code to canvas tag inside specific DOM selector
+     * Draws QR code to canvas tag inside specified DOM selector
      *
      * @public 
      * @param {Object} config 
-     * @returns void
+     * @returns Promise
      */
     toCanvas(config) {
         this.parseRequest(config);
@@ -25,20 +51,21 @@ class EtheriumQRplugin {
         }
 
         return new Promise((resolve, reject) => {
-             QRCode.toCanvas(generatedValue, this.options, (err, canvas) => {
+            QRCode.toCanvas(generatedValue, this.options, (err, canvas) => {
                 if (err) reject(err);
-          
-                resolve(generatedValue);
+
+                resolve({
+                    value: generatedValue
+                });
                 parentEl.appendChild(canvas);
                 canvas.setAttribute('style', `width: ${this.size}px`);
-                successCallback(generatedValue);
             })
         })
 
     }
     /**
      * 
-     * Returns a QR code generation promise
+     * Generates DataURL for a QR code
      * 
      * @public
      * @param {Object} config 
@@ -51,34 +78,31 @@ class EtheriumQRplugin {
         return new Promise((resolve, reject) => {
             QRCode.toDataURL(generatedValue, this.options, (err, url) => {
                 if (err) reject(err);
-                resolve(url)
-                this.successCallback(url);
+                resolve({
+                    dataURL: url,
+                    value: generatedValue
+                });
             })
         });
     }
-    errorCallback(){
-        this.result.status = 'error';
-        this.result.value = value;
-        throw new Error(value);
+
+    getStringGeneratedValue() {
+        return this.schemaGenerator(this.to,
+            this.gas,
+            this.value,
+            this.functionSignature);
     }
-    successCallback(value){
-        this.result.status = 'success';
-        this.result.value = value;
-    }
-    produceEncodedValue(){
-        let generatedCode = this.schemaGenerator(this.to,
-                                                this.gas,
-                                                this.value,
-                                                this.functionSignature,
-                                                this.functionArguments);
+    getJSONGeneratedValue() {
         const jsonRepresentation = {
             to: this.to,
             gas: this.gas,
             value: this.value,
-            functionSignature: this.functionSignature,
-            functionArguments: this.functionArguments
+            functionSignature: this.functionSignature
         };
-        return this.toJSON ? JSON.stringify(jsonRepresentation) : generatedCode;
+        return JSON.stringify(jsonRepresentation);
+    }
+    produceEncodedValue() {
+        return this.toJSON ? this.getJSONGeneratedValue() : this.getStringGeneratedValue();
     }
     parseRequest(request) {
         this.result = {
@@ -90,33 +114,26 @@ class EtheriumQRplugin {
         }
 
         if (request.mode) {
-            if (request.mode === 'function' && request.functionSignature && request.functionArguments) {
+            if (request.mode === 'function' && validateSignature(request.functionSignature)) {
                 this.mode = 'function';
                 this.functionSignature = request.functionSignature;
-                this.functionArguments = request.functionArguments;
             } else if (request.mode === 'erc20' && request.from) {
                 this.mode = 'erc20';
             } else {
-                this.mode = 'eth';    
+                this.mode = 'eth';
             }
         } else {
             this.mode = 'eth';
         }
 
-        //todo use Object.assign
         this.to = request.to;
         this.from = request.from;
-        this.value = parseFloat(request.value) || 0;
-        this.gas = parseFloat(request.gas) || 10000;
+        this.value = parseFloat(request.value) || DEFAULTS.value;
+        this.gas = parseInt(request.gas) || DEFAULTS.gas;
         this.toJSON = request.toJSON ? request.toJSON === 'true' : false;
-        this.size = request.size || 128;
+        this.size = request.size || DEFAULTS.size;
         this.imgUrl = request.imgUrl || false;
-        this.options = Object.assign({
-            color: {
-                dark: '#000000',
-                light: '#ffffff'
-            },
-            scale: 5}, request.options);
+        this.options = Object.assign(DEFAULTS.qrCodeOptions, request.options);
         this.schemaGenerator = stringFunctions[this.mode];
     }
     drawTokenIcon() {
@@ -126,6 +143,11 @@ class EtheriumQRplugin {
                 this.uiElement.parentNode.removeChild(this.uiElement);
             });
         }
+    }
+    errorCallback() {
+        this.result.status = 'error';
+        this.result.value = value;
+        throw new Error(value);
     }
 }
 
