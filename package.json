@@ -19,7 +19,7 @@
     "cryptocurrency"
   ],
   "author": "jibrel.network",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jibrelnetwork/ethereum-qr-code/issues"
   },
@@ -32,6 +32,7 @@
     "babel-loader": "^7.1.1",
     "babel-preset-env": "^1.6.0",
     "jest": "^20.0.4",
+    "uglifyjs-webpack-plugin": "^0.4.6",
     "watch-http-server": "^0.7.6",
     "webpack": "^3.4.1"
   }
