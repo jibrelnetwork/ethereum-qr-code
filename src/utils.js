@@ -14,13 +14,21 @@ export default {
   erc20: tokenSchemaContract
 }
 
-const validateArgument = (arg) => {
-    
-}
+//todo add other types
+const validEthTypes = [
+    'address', 'unit', 'int'
+];
+const validStrRegEx = /^[^\\\/&]*$/;
+
+const isValidString = str => validStrRegEx.match(str);
 
 export const validateSignature = (signature) => {
-    if(!signature.name || !signature.args) return false;
-    
+    if(!signature.name || !isValidString(signature.name) || !signature.args || signature.args.length === 0) return false;
+    let allArgsCheck = false;
+    signature.args.forEach(arg => {
+        if(validEthTypes.indexOf(arg.type) === -1 || !isValidString(arg.name)) allArgsCheck =false;
+    })
+    return allArgsCheck;
 }
 
 /**
