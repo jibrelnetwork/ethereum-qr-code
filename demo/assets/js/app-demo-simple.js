@@ -1,4 +1,8 @@
 const init = () => {
+
+    // highlight code , for demo purposes only!
+    highlightCodeBlocks();
+    
     //instantiate the plugin
     const qr = new EtheriumQRplugin.etheriumQRplugin();
 
@@ -18,7 +22,10 @@ const init = () => {
     qr.toCanvas(codeDetails).then(function(result){
         document.getElementById('resulting-string').value = result.value;
     })
-    
+
+
 }
 
 document.addEventListener("DOMContentLoaded", init);
+
+var highlightCodeBlocks =  function(event) {Array.prototype.forEach.call(document.getElementsByClassName('javascript'), function(block) {window.hljs.highlightBlock(block);})};

@@ -1,6 +1,6 @@
 #resulting-string {
     width: 400px;
-    height: 100px;
+    height: 50px;
     margin: 0 auto;
     padding: 5px;
     border-radius: 5px;
@@ -8,6 +8,21 @@
 
 #error-string {
     color: red;
-        font-size: 12px;
+    font-size: 12px;
     margin-top: 30px;
+}
+#ethereum-qr-code {
+    min-width: 200px;
+    min-height: 200px;
+    border: 3px dashed #fff;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.jumbotron {
+    text-align: center;
+}
+body > .container {
+    margin: 50px auto;
 }

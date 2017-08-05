@@ -47,6 +47,7 @@ const init = () => {
     //signup for input data update
     $('.qr-input').keyup(updateQR);
     $('.qr-input-on-change').change(updateQR);
+    updateQR();
 }
 
 $(document).ready(init);
