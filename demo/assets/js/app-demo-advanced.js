@@ -7,8 +7,7 @@ const updateQR = () => {
     const value = $('#amount').val();
     const gas = $('#gas').val();
     const size = $('#size').val();
-    const functionSignature = $('#functionName').val();
-    const functionArguments = $('#functionArguments').val();
+    const functionSignature = $('#functionSignature').val();
 
     const mode = $('[name=mode]:checked').val()
     const toJSON = $('[name=toJSON]:checked').val() === 'true';
@@ -25,11 +24,10 @@ const updateQR = () => {
             value,
             gas,
             size,
-            selector: '#ethereum-qr-code',
             functionSignature,
-            functionArguments,
             toJSON,
-            mode
+            mode,
+            selector: '#ethereum-qr-code'
         }).then(function (result) {
             $('#resulting-string').val(result.value);
         })
