@@ -27,11 +27,32 @@ const qrCode = qr.toCanvas({
 
 ### API
 
+`.toAdressString(config)`
+
+Just an encoder of your data to a string. Use if you only want an encode string, no QR code needed.
+
+**Example**
+
+```
+qr.toAdressString({
+“to”: 0x12345,
+“value”: 10000000,
+})
+//
+
+qr.toAdressString({
+    “to”: 0x12345,
+    “value”: 10000000,
+    “gas”: 21000,
+})
+//
+```
 `.toCanvas(config)`
 
 Generates the canvas tag with QR code. In this case the `selector` field becomes available.
 Returns a Promise that is an object that is resolved when the code is successfully generated.
-Example : 
+
+**Example**
 
 ```
 const qrCode = qr.toCanvas({
@@ -49,7 +70,8 @@ qrCode.then(function(code){
 
 More flexible method that returns a QR in a dataUrl.
 Method returns a Promise that is resolved when the code is successfully generated.
-Example : 
+
+**Example**
 
 ```
 const qrCode = qr.toDataUrl({
@@ -59,13 +81,8 @@ const qrCode = qr.toDataUrl({
 });
 qrCode.then(function(qrCodeDataUri){
     console.log('Your QR id generated:', code.value);
-    // 
 })
 ```
-
-`.toAdressString(config)`
-
-Mother if you only want an encode string
 
 ### Parameters
 
