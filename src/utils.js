@@ -1,17 +1,54 @@
-const tokenSchemaBasic = (adress, gas, data) => {
-  return `ethereum:${adress}?gas=${gas}&data=${data}`;
+const tokenSchemaBasic = ({
+    to,
+    gas,
+    value
+}) => {
+    let base = `ethereum:${to}`,
+        gasBlock = '',
+        valueBlock = '';
+    if (gas) gasBlock = `[?gas=${gas}]`;
+    if (value) valueBlock = `[?value=${value}]`;
+
+    return `ethereum:${to}${gasBlock}${valueBlock}`;
 }
-const tokenSchemaFunction = (adress, gas, value, functionName, functionArguments) => {
-  return ` ethereum:${adress}[?value=${value}][?gas=${gas}][?function=${functionName}(${functionArguments})]`;
+const tokenSchemaFunction = ({
+    to,
+    gas,
+    value,
+    functionSignature
+}) => {
+    let base = `ethereum:${to}`,
+        functionBlock = '',
+        gasBlock = '',
+        valueBlock = '';
+
+    if (functionSignature) {
+        let convertedArgs = '';
+        functionSignature.args.forEach((arg, index) => {
+            const isLast = index < functionSignature.args.length - 1 ? ',' : '';
+            convertedArgs += `${arg.type} ${arg.name}${isLast}`;
+        });
+        functionBlock = `[?function=${functionSignature.name}(${convertedArgs})]`
+    }
+    if (gas) gasBlock = `[?gas=${gas}]`;
+    if (value) valueBlock = `[?value=${value}]`;
+
+    return `ethereum:${to}${gasBlock}${valueBlock}${gasBlock}`;
 }
-const tokenSchemaContract = (adress, gas, contract) => {
-  return `ethereum:${adress}?gas=${gas}&contract=${contract}`;
+//todo add other params ??
+const tokenSchemaContract = ({
+    to,
+    gas,
+    contract
+}) => {
+    let base = `ethereum:${to}`;
+    return `ethereum:${to}?gas=${gas}`;
 }
 
 export default {
-  eth: tokenSchemaBasic,
-  function: tokenSchemaFunction,
-  erc20: tokenSchemaContract
+    eth: tokenSchemaBasic,
+    function: tokenSchemaFunction,
+    erc20: tokenSchemaContract
 }
 
 /**
@@ -26,10 +63,10 @@ const validStrRegEx = /^[^\\\/&]*$/;
 const isValidString = str => validStrRegEx.match(str);
 
 export const validateSignature = (signature) => {
-    if(!signature.name || !isValidString(signature.name) || !signature.args || signature.args.length === 0) return false;
+    if (!signature.name || !isValidString(signature.name) || !signature.args || signature.args.length === 0) return false;
     let allArgsCheck = false;
     signature.args.forEach(arg => {
-        if(validEthTypes.indexOf(arg.type) === -1 || !isValidString(arg.name)) allArgsCheck =false;
+        if (validEthTypes.indexOf(arg.type) === -1 || !isValidString(arg.name)) allArgsCheck = false;
     })
     return allArgsCheck;
 }
@@ -41,7 +78,7 @@ export const validateSignature = (signature) => {
  * @method isAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
-*/
+ */
 export const isAddress = function (address) {
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
         // check if it has the basic requirements of an address
@@ -64,12 +101,12 @@ export const isAddress = function (address) {
  * @method isChecksumAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
-*/
+ */
 export const isChecksumAddress = function (address) {
     // Check each case
-    address = address.replace('0x','');
+    address = address.replace('0x', '');
     var addressHash = sha3(address.toLowerCase());
-    for (var i = 0; i < 40; i++ ) {
+    for (var i = 0; i < 40; i++) {
         // the nth letter should be uppercase if the nth digit of casemap is 1
         if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
             return false;

@@ -21,7 +21,7 @@ const DEFAULTS = {
  * Main plugin logic
  */
 class EtheriumQRplugin {
-     /**
+    /**
      * 
      * Generates a data encode string
      * 
@@ -86,34 +86,24 @@ class EtheriumQRplugin {
         });
     }
 
-    getStringGeneratedValue() {
-        return this.schemaGenerator(this.to,
-            this.gas,
-            this.value,
-            this.functionSignature);
+    getString() {
+        return this.schemaGenerator(this.data);
     }
-    getJSONGeneratedValue() {
-        const jsonRepresentation = {
-            to: this.to,
-            gas: this.gas,
-            value: this.value,
-            functionSignature: this.functionSignature
-        };
-        return JSON.stringify(jsonRepresentation);
+    getJSON() {
+        return JSON.stringify(this.data);
     }
     produceEncodedValue() {
-        return this.toJSON ? this.getJSONGeneratedValue() : this.getStringGeneratedValue();
+        return this.toJSON ? this.getJSON() : this.getString();
     }
     parseRequest(request) {
-
         this.validateToField(request.to);
         this.validateAndSetMode(request);
         this.assignPluguinValues(request);
     }
     assignPluguinValues(request) {
-        this.to = request.to;
-        this.value = parseFloat(request.value) || DEFAULTS.value;
-        this.gas = parseInt(request.gas) || DEFAULTS.gas;
+        this.data = {};
+        this.data.to = request.to;
+        this.data.gas = parseInt(request.gas) || DEFAULTS.gas;
         this.toJSON = !!request.toJSON;
         this.size = request.size || DEFAULTS.size;
         this.imgUrl = request.imgUrl || false;
@@ -126,32 +116,29 @@ class EtheriumQRplugin {
         }
     }
     validateAndSetMode(request) {
-        if (request.mode) {
 
-            if(request.mode === 'eth') {
-                this.mode = 'eth';
-                return;
-            }
-
-            if (request.mode === 'function' && request.functionSignature && validateSignature(request.functionSignature)){
+        if (request.mode === 'function') {
+            if (request.functionSignature && validateSignature(request.functionSignature)) {
                 this.mode = 'function';
-                this.functionSignature = request.functionSignature;
+                this.data.functionSignature = request.functionSignature;
                 return;
             } else {
                 this.errorCallback('For the `function` mode, the `functionSignature` object is not provided or not valid');
             }
-                
-            if (request.mode === 'erc20' && request.from &&  isAddress(request.from)) {
+        }
+
+        if (request.mode === 'erc20') {
+            if (request.from && isAddress(request.from) && request.value) {
                 this.mode = 'erc20';
-                this.from = request.from;
+                this.data.from = request.from;
+                if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
                 return;
             } else {
                 this.errorCallback('For the `erc20` mode, the `from` object is not provided or not valid');
-
             }
-        } else {
-            this.mode = 'eth';
         }
+
+        this.mode = 'eth';
     }
     drawTokenIcon() {
         if (this.imgUrl) {
@@ -161,8 +148,8 @@ class EtheriumQRplugin {
             });
         }
     }
-    errorCallback(value) {
-        throw new Error(value);
+    errorCallback(errorText) {
+        throw new Error(errorText);
     }
 }
 
