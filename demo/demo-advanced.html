@@ -85,16 +85,16 @@
                         <label>Amount, Number</label>
                         <input type="text" id="amount" placeholder="e.g. 15" class="qr-input form-control">
                     </div>
+                     <div class="form-group type-dynamic type-erc20">
+                        <label>From, 0x... format</label>
+                        <input type="text" id="from" placeholder="0x12345678901234567890" class="qr-input form-control">
+                    </div>
                     <div class="form-group">
                         <label>Gas, Number</label>
                         <input type="text" id="gas" placeholder="e.g. 10000" class="qr-input form-control">
                     </div>
-                    <div class="form-group">
-                        <label>QR code image size, px</label>
-                        <input type="text" id="size" placeholder="e.g. 256" class="qr-input form-control">
-                    </div>
 
-                    <div class="form-group">
+                    <div class="form-group type-dynamic type-function">
                         <label>functionSignature, valid JSON</label>
                         <textarea id="functionSignature" placeholder="{'name': 'myMethod', args: ['foo':'bar', 'baz': 42]}" class="qr-input form-control"></textarea>
                     </div>
@@ -113,6 +113,11 @@
                                 Convert  to JSON first
                             </label>
                         </div>
+                    </div>
+                    <hr>
+                     <div class="form-group">
+                        <label>QR code image size, px</label>
+                        <input type="text" id="size" placeholder="e.g. 256" class="qr-input form-control">
                     </div>
                 </form>
 

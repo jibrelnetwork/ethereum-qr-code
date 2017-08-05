@@ -1361,13 +1361,13 @@ var EtheriumQRplugin = function () {
         key: 'toAdressString',
 
         /**
-        * 
-        * Generates a data encode string
-        * 
-        * @public
-        * @param {Object} config 
-        * @returns String
-        */
+         * 
+         * Generates a data encode string
+         * 
+         * @public
+         * @param {Object} config 
+         * @returns String
+         */
         value: function toAdressString(config) {
             this.parseRequest(config);
             return this.produceEncodedValue();
@@ -1436,18 +1436,12 @@ var EtheriumQRplugin = function () {
     }, {
         key: 'getStringGeneratedValue',
         value: function getStringGeneratedValue() {
-            return this.schemaGenerator(this.to, this.gas, this.value, this.functionSignature);
+            return this.schemaGenerator(this.data);
         }
     }, {
         key: 'getJSONGeneratedValue',
         value: function getJSONGeneratedValue() {
-            var jsonRepresentation = {
-                to: this.to,
-                gas: this.gas,
-                value: this.value,
-                functionSignature: this.functionSignature
-            };
-            return JSON.stringify(jsonRepresentation);
+            return JSON.stringify(this.data);
         }
     }, {
         key: 'produceEncodedValue',
@@ -1457,7 +1451,6 @@ var EtheriumQRplugin = function () {
     }, {
         key: 'parseRequest',
         value: function parseRequest(request) {
-
             this.validateToField(request.to);
             this.validateAndSetMode(request);
             this.assignPluguinValues(request);
@@ -1465,9 +1458,9 @@ var EtheriumQRplugin = function () {
     }, {
         key: 'assignPluguinValues',
         value: function assignPluguinValues(request) {
-            this.to = request.to;
-            this.value = parseFloat(request.value) || DEFAULTS.value;
-            this.gas = parseInt(request.gas) || DEFAULTS.gas;
+            this.data = {};
+            this.data.to = request.to;
+            this.data.gas = parseInt(request.gas) || DEFAULTS.gas;
             this.toJSON = !!request.toJSON;
             this.size = request.size || DEFAULTS.size;
             this.imgUrl = request.imgUrl || false;
@@ -1484,31 +1477,29 @@ var EtheriumQRplugin = function () {
     }, {
         key: 'validateAndSetMode',
         value: function validateAndSetMode(request) {
-            if (request.mode) {
 
-                if (request.mode === 'eth') {
-                    this.mode = 'eth';
-                    return;
-                }
-
-                if (request.mode === 'function' && request.functionSignature && (0, _utils.validateSignature)(request.functionSignature)) {
+            if (request.mode === 'function') {
+                if (request.functionSignature && (0, _utils.validateSignature)(request.functionSignature)) {
                     this.mode = 'function';
-                    this.functionSignature = request.functionSignature;
+                    this.data.functionSignature = request.functionSignature;
                     return;
                 } else {
                     this.errorCallback('For the `function` mode, the `functionSignature` object is not provided or not valid');
                 }
+            }
 
-                if (request.mode === 'erc20' && request.from && (0, _utils.isAddress)(request.from)) {
+            if (request.mode === 'erc20') {
+                if (request.from && (0, _utils.isAddress)(request.from) && request.value) {
                     this.mode = 'erc20';
-                    this.from = request.from;
+                    this.data.from = request.from;
+                    if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
                     return;
                 } else {
                     this.errorCallback('For the `erc20` mode, the `from` object is not provided or not valid');
                 }
-            } else {
-                this.mode = 'eth';
             }
+
+            this.mode = 'eth';
         }
     }, {
         key: 'drawTokenIcon',
@@ -1603,14 +1594,45 @@ exports.default = DrawIcon;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var tokenSchemaBasic = function tokenSchemaBasic(adress, gas, data) {
-    return 'ethereum:' + adress + '?gas=' + gas + '&data=' + data;
+var tokenSchemaBasic = function tokenSchemaBasic(_ref) {
+    var to = _ref.to,
+        gas = _ref.gas;
+
+    if (gas) return 'ethereum:' + to + '?gas=' + gas;
+    return 'ethereum:' + to;
 };
-var tokenSchemaFunction = function tokenSchemaFunction(adress, gas, value, functionName, functionArguments) {
-    return ' ethereum:' + adress + '[?value=' + value + '][?gas=' + gas + '][?function=' + functionName + '(' + functionArguments + ')]';
+var tokenSchemaFunction = function tokenSchemaFunction(_ref2) {
+    var to = _ref2.to,
+        gas = _ref2.gas,
+        value = _ref2.value,
+        functionSignature = _ref2.functionSignature;
+
+    var base = 'ethereum:' + to,
+        functionBlock = '',
+        gasBlock = '',
+        valueBlock = '';
+
+    if (functionSignature) {
+        var convertedArgs = '';
+        functionSignature.args.forEach(function (arg, index) {
+            var isLast = index < functionSignature.args.length - 1 ? ',' : '';
+            convertedArgs += arg.type + ' ' + arg.name + isLast;
+        });
+        functionBlock = '[?function=' + functionSignature.name + '(' + convertedArgs + ')]';
+    }
+    if (gas) gasBlock = '[?gas=' + gas + ']';
+    if (value) valueBlock = '[?value=' + value + ']';
+
+    return 'ethereum:' + to + gasBlock + valueBlock + gasBlock;
 };
-var tokenSchemaContract = function tokenSchemaContract(adress, gas, contract) {
-    return 'ethereum:' + adress + '?gas=' + gas + '&contract=' + contract;
+//todo add other params ??
+var tokenSchemaContract = function tokenSchemaContract(_ref3) {
+    var to = _ref3.to,
+        gas = _ref3.gas,
+        contract = _ref3.contract;
+
+    var base = 'ethereum:' + to;
+    return 'ethereum:' + to + '?gas=' + gas;
 };
 
 exports.default = {
@@ -1618,9 +1640,12 @@ exports.default = {
     function: tokenSchemaFunction,
     erc20: tokenSchemaContract
 
-    //todo add other types
+    /**
+     * Valid Solidity types
+     * as from http://solidity.readthedocs.io/en/develop/types.html
+     */
 };
-var validEthTypes = ['address', 'unit', 'int'];
+var validEthTypes = ['address', 'unit', 'int', 'bool', 'byte', 'string'];
 var validStrRegEx = /^[^\\\/&]*$/;
 
 var isValidString = function isValidString(str) {
@@ -1643,7 +1668,7 @@ var validateSignature = exports.validateSignature = function validateSignature(s
  * @method isAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
-*/
+ */
 var isAddress = exports.isAddress = function isAddress(address) {
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
         // check if it has the basic requirements of an address
@@ -1666,7 +1691,7 @@ var isAddress = exports.isAddress = function isAddress(address) {
  * @method isChecksumAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
-*/
+ */
 var isChecksumAddress = exports.isChecksumAddress = function isChecksumAddress(address) {
     // Check each case
     address = address.replace('0x', '');

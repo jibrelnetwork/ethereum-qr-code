@@ -17,6 +17,9 @@ const updateQR = () => {
     $('#resulting-string, #error-string').val('').text('');
     $('#ethereum-qr-code').empty();
 
+    $('.type-dynamic').hide();
+    $(`.type-${mode}`).show();
+
     //call a plugin
     try {
         qr.toCanvas({
