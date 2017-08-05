@@ -14,9 +14,12 @@ export default {
   erc20: tokenSchemaContract
 }
 
-//todo add other types
+/**
+ * Valid Solidity types
+ * as from http://solidity.readthedocs.io/en/develop/types.html
+ */
 const validEthTypes = [
-    'address', 'unit', 'int'
+    'address', 'unit', 'int', 'bool', 'byte', 'string'
 ];
 const validStrRegEx = /^[^\\\/&]*$/;
 
