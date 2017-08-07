@@ -3,6 +3,8 @@
 Pugin is aimed to implement the convenient way to generate a [Etherium adress link out of the provided parameters based on EIP67](https://github.com/ethereum/EIPs/issues/67).
 On top of the string generation the QR code is generated based on this link. The [qrcode plugin](https://www.npmjs.com/package/qrcode) is used for this.
 
+See the demos: [https://jibrelnetwork.github.io/ethereum-qr-code/](https://jibrelnetwork.github.io/ethereum-qr-code/)
+
 
 ## Getting started
 
@@ -31,7 +33,7 @@ const qrCode = qr.toCanvas({
 
 Just an encoder of your data to a string. Use if you only want an encode string, no QR code needed.
 
-**Example**
+Example:
 
 ```
 qr.toAdressString({
@@ -52,7 +54,7 @@ qr.toAdressString({
 Generates the canvas tag with QR code. In this case the `selector` field becomes available.
 Returns a Promise that is an object that is resolved when the code is successfully generated.
 
-**Example**
+Example:
 
 ```
 const qrCode = qr.toCanvas({
@@ -71,7 +73,7 @@ qrCode.then(function(code){
 More flexible method that returns a QR in a dataUrl.
 Method returns a Promise that is resolved when the code is successfully generated.
 
-**Example**
+Example:
 
 ```
 const qrCode = qr.toDataUrl({
