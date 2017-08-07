@@ -1,24 +1,7 @@
 import DrawIcon from './tokenIcon';
 import SchemaGenerator from './schemaGenerator';
-
-import stringFunctions, {
-    isAddress,
-    validateSignature
-} from './utils';
 import QRCode from 'qrcode';
-
-const DEFAULTS = {
-    value: 0,
-    gas: 10000,
-    size: 128,
-    qrCodeOptions: {
-        color: {
-            dark: '#000000',
-            light: '#ffffff'
-        },
-        scale: 5
-    }
-}
+import DEFAULTS from './defaults';
 
 /**
  * Main plugin logic
@@ -91,7 +74,7 @@ class EtheriumQRplugin {
     }
     produceEncodedValue(config) {
         this.assignPluguinValues(config)
-        const encodedString = new SchemaGenerator(config);
+        const encodedString = new SchemaGenerator(config).generate();
         return this.toJSON ? JSON.stringify(encodedString) : encodedString;
     }
 

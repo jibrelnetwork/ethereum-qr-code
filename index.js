@@ -1,4 +1,4 @@
-import etheriumQRplugin from './src/etheriumQRplugin';
+import etheriumQRplugin from './src/etheriumQrPlugin';
 
 export default etheriumQRplugin
 

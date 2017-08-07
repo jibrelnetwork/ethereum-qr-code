@@ -1,8 +1,16 @@
 
-export class SchemaGenerator {
+import stringFunctions, {
+    isAddress,
+    validateSignature
+} from './utils';
+import DEFAULTS from './defaults';
+
+export default class SchemaGenerator {
     constructor(request){
         this.data = {};
         this.parseRequest(request);
+    }
+    generate() {
         return this.schemaGenerator(this.data)
     }
     parseRequest(request) {
