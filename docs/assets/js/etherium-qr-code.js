@@ -75,7 +75,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -151,8 +151,8 @@ exports.toSJIS = function toSJIS (kanji) {
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Version = __webpack_require__(6)
-var Regex = __webpack_require__(7)
+var Version = __webpack_require__(7)
+var Regex = __webpack_require__(8)
 
 /**
  * Numeric mode encodes data from the decimal digit set (0 - 9)
@@ -854,6 +854,30 @@ exports.from = function from (value, defaultValue) {
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var DEFAULTS = {
+    value: 0,
+    gas: 10000,
+    size: 128,
+    qrCodeOptions: {
+        color: {
+            dark: '#000000',
+            light: '#ffffff'
+        },
+        scale: 5
+    }
+};
+exports.default = DEFAULTS;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var ECLevel = __webpack_require__(4)
 
 var EC_BLOCKS_TABLE = [
@@ -992,11 +1016,11 @@ exports.getTotalCodewordsCount = function getTotalCodewordsCount (version, error
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Utils = __webpack_require__(0)
-var ECCode = __webpack_require__(5)
+var ECCode = __webpack_require__(6)
 var ECLevel = __webpack_require__(4)
 var Mode = __webpack_require__(1)
 var isArray = __webpack_require__(3)
@@ -1171,7 +1195,7 @@ exports.getEncodedBits = function getEncodedBits (version) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 var numeric = '[0-9]+'
@@ -1206,7 +1230,7 @@ exports.testAlphanumeric = function testAlphanumeric (str) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 function hex2rgba (hex) {
@@ -1288,7 +1312,7 @@ exports.qrToImageData = function qrToImageData (imgData, qr, margin, scale, colo
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1299,17 +1323,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.etheriumQRplugin = undefined;
 
-var _etheriumQRplugin = __webpack_require__(10);
+var _etheriumQrPlugin = __webpack_require__(11);
 
-var _etheriumQRplugin2 = _interopRequireDefault(_etheriumQRplugin);
+var _etheriumQrPlugin2 = _interopRequireDefault(_etheriumQrPlugin);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _etheriumQRplugin2.default;
-exports.etheriumQRplugin = _etheriumQRplugin2.default;
+exports.default = _etheriumQrPlugin2.default;
+exports.etheriumQRplugin = _etheriumQrPlugin2.default;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1321,37 +1345,29 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _tokenIcon = __webpack_require__(11);
+var _tokenIcon = __webpack_require__(12);
 
 var _tokenIcon2 = _interopRequireDefault(_tokenIcon);
 
-var _utils = __webpack_require__(12);
+var _schemaGenerator = __webpack_require__(13);
 
-var _utils2 = _interopRequireDefault(_utils);
+var _schemaGenerator2 = _interopRequireDefault(_schemaGenerator);
 
-var _qrcode = __webpack_require__(13);
+var _qrcode = __webpack_require__(15);
 
 var _qrcode2 = _interopRequireDefault(_qrcode);
+
+var _defaults = __webpack_require__(5);
+
+var _defaults2 = _interopRequireDefault(_defaults);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var DEFAULTS = {
-    value: 0,
-    gas: 10000,
-    size: 128,
-    qrCodeOptions: {
-        color: {
-            dark: '#000000',
-            light: '#ffffff'
-        },
-        scale: 5
-    }
-    /**
-     * Main plugin logic
-     */
-};
+/**
+ * Main plugin logic
+ */
 var EtheriumQRplugin = function () {
     function EtheriumQRplugin() {
         _classCallCheck(this, EtheriumQRplugin);
@@ -1369,8 +1385,7 @@ var EtheriumQRplugin = function () {
          * @returns String
          */
         value: function toAdressString(config) {
-            this.parseRequest(config);
-            return this.produceEncodedValue();
+            return this.produceEncodedValue(config);
         }
         /**
          * 
@@ -1386,8 +1401,7 @@ var EtheriumQRplugin = function () {
         value: function toCanvas(config) {
             var _this = this;
 
-            this.parseRequest(config);
-            var generatedValue = this.produceEncodedValue();
+            var generatedValue = this.produceEncodedValue(config);
             var parentEl = document.querySelector(config.selector);
 
             if (!config.selector || parentEl === null) {
@@ -1420,8 +1434,7 @@ var EtheriumQRplugin = function () {
         value: function toDataUrl(config) {
             var _this2 = this;
 
-            this.parseRequest(config);
-            var generatedValue = this.produceEncodedValue();
+            var generatedValue = this.produceEncodedValue(config);
 
             return new Promise(function (resolve, reject) {
                 _qrcode2.default.toDataURL(generatedValue, _this2.options, function (err, url) {
@@ -1434,72 +1447,24 @@ var EtheriumQRplugin = function () {
             });
         }
     }, {
-        key: 'getStringGeneratedValue',
-        value: function getStringGeneratedValue() {
-            return this.schemaGenerator(this.data);
-        }
-    }, {
-        key: 'getJSONGeneratedValue',
-        value: function getJSONGeneratedValue() {
-            return JSON.stringify(this.data);
+        key: 'getJSON',
+        value: function getJSON() {
+            return JSON.stringify(getString());
         }
     }, {
         key: 'produceEncodedValue',
-        value: function produceEncodedValue() {
-            return this.toJSON ? this.getJSONGeneratedValue() : this.getStringGeneratedValue();
-        }
-    }, {
-        key: 'parseRequest',
-        value: function parseRequest(request) {
-            this.validateToField(request.to);
-            this.validateAndSetMode(request);
-            this.assignPluguinValues(request);
+        value: function produceEncodedValue(config) {
+            this.assignPluguinValues(config);
+            var encodedString = new _schemaGenerator2.default(config).generate();
+            return this.toJSON ? JSON.stringify(encodedString) : encodedString;
         }
     }, {
         key: 'assignPluguinValues',
         value: function assignPluguinValues(request) {
-            this.data = {};
-            this.data.to = request.to;
-            this.data.gas = parseInt(request.gas) || DEFAULTS.gas;
             this.toJSON = !!request.toJSON;
-            this.size = request.size || DEFAULTS.size;
+            this.size = request.size || _defaults2.default.size;
             this.imgUrl = request.imgUrl || false;
-            this.options = Object.assign(DEFAULTS.qrCodeOptions, request.options);
-            this.schemaGenerator = _utils2.default[this.mode];
-        }
-    }, {
-        key: 'validateToField',
-        value: function validateToField(requestTo) {
-            if (!requestTo || !(0, _utils.isAddress)(requestTo)) {
-                this.errorCallback('The "to" parameter with a valid Etherium adress is required');
-            }
-        }
-    }, {
-        key: 'validateAndSetMode',
-        value: function validateAndSetMode(request) {
-
-            if (request.mode === 'function') {
-                if (request.functionSignature && (0, _utils.validateSignature)(request.functionSignature)) {
-                    this.mode = 'function';
-                    this.data.functionSignature = request.functionSignature;
-                    return;
-                } else {
-                    this.errorCallback('For the `function` mode, the `functionSignature` object is not provided or not valid');
-                }
-            }
-
-            if (request.mode === 'erc20') {
-                if (request.from && (0, _utils.isAddress)(request.from) && request.value) {
-                    this.mode = 'erc20';
-                    this.data.from = request.from;
-                    if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
-                    return;
-                } else {
-                    this.errorCallback('For the `erc20` mode, the `from` object is not provided or not valid');
-                }
-            }
-
-            this.mode = 'eth';
+            this.options = Object.assign(_defaults2.default.qrCodeOptions, request.options);
         }
     }, {
         key: 'drawTokenIcon',
@@ -1515,8 +1480,8 @@ var EtheriumQRplugin = function () {
         }
     }, {
         key: 'errorCallback',
-        value: function errorCallback(value) {
-            throw new Error(value);
+        value: function errorCallback(errorText) {
+            throw new Error(errorText);
         }
     }]);
 
@@ -1526,7 +1491,7 @@ var EtheriumQRplugin = function () {
 exports.default = EtheriumQRplugin;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1585,7 +1550,101 @@ var DrawIcon = function () {
 exports.default = DrawIcon;
 
 /***/ }),
-/* 12 */
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _utils = __webpack_require__(14);
+
+var _utils2 = _interopRequireDefault(_utils);
+
+var _defaults = __webpack_require__(5);
+
+var _defaults2 = _interopRequireDefault(_defaults);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SchemaGenerator = function () {
+    function SchemaGenerator(request) {
+        _classCallCheck(this, SchemaGenerator);
+
+        this.data = {};
+        this.parseRequest(request);
+    }
+
+    _createClass(SchemaGenerator, [{
+        key: 'generate',
+        value: function generate() {
+            return this.schemaGenerator(this.data);
+        }
+    }, {
+        key: 'parseRequest',
+        value: function parseRequest(request) {
+            this.validateToField(request.to);
+            this.validateAndSetMode(request);
+            this.assignPluguinValues(request);
+        }
+    }, {
+        key: 'assignPluguinValues',
+        value: function assignPluguinValues(request) {
+            this.data = {};
+            this.data.to = request.to;
+            this.data.gas = parseInt(request.gas) || _defaults2.default.gas;
+            this.schemaGenerator = _utils2.default[this.mode];
+        }
+    }, {
+        key: 'validateToField',
+        value: function validateToField(requestTo) {
+            if (!requestTo || !(0, _utils.isAddress)(requestTo)) {
+                this.errorCallback('The "to" parameter with a valid Etherium adress is required');
+            }
+        }
+    }, {
+        key: 'validateAndSetMode',
+        value: function validateAndSetMode(request) {
+
+            if (request.mode === 'function') {
+                if (request.functionSignature && (0, _utils.validateSignature)(request.functionSignature)) {
+                    this.mode = 'function';
+                    this.data.functionSignature = request.functionSignature;
+                    return;
+                } else {
+                    this.errorCallback('For the `function` mode, the `functionSignature` object is not provided or not valid');
+                }
+            }
+
+            if (request.mode === 'erc20') {
+                if (request.from && (0, _utils.isAddress)(request.from) && request.value) {
+                    this.mode = 'erc20';
+                    this.data.from = request.from;
+                    if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
+                    return;
+                } else {
+                    this.errorCallback('For the `erc20` mode, the `from` object is not provided or not valid');
+                }
+            }
+
+            this.mode = 'eth';
+        }
+    }]);
+
+    return SchemaGenerator;
+}();
+
+exports.default = SchemaGenerator;
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1596,10 +1655,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 var tokenSchemaBasic = function tokenSchemaBasic(_ref) {
     var to = _ref.to,
-        gas = _ref.gas;
+        gas = _ref.gas,
+        value = _ref.value;
 
-    if (gas) return 'ethereum:' + to + '?gas=' + gas;
-    return 'ethereum:' + to;
+    var base = 'ethereum:' + to,
+        gasBlock = '',
+        valueBlock = '';
+    if (gas) gasBlock = '[?gas=' + gas + ']';
+    if (value) valueBlock = '[?value=' + value + ']';
+
+    return 'ethereum:' + to + gasBlock + valueBlock;
 };
 var tokenSchemaFunction = function tokenSchemaFunction(_ref2) {
     var to = _ref2.to,
@@ -1706,12 +1771,12 @@ var isChecksumAddress = exports.isChecksumAddress = function isChecksumAddress(a
 };
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var QRCode = __webpack_require__(14)
-var CanvasRenderer = __webpack_require__(30)
-var SvgRenderer = __webpack_require__(31)
+var QRCode = __webpack_require__(16)
+var CanvasRenderer = __webpack_require__(32)
+var SvgRenderer = __webpack_require__(33)
 
 function renderCanvas (renderFunc, canvas, text, opts, cb) {
   var argsNum = arguments.length - 1
@@ -1767,23 +1832,23 @@ exports.qrcodedraw = function () {
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
 var Utils = __webpack_require__(0)
 var ECLevel = __webpack_require__(4)
-var BitBuffer = __webpack_require__(15)
-var BitMatrix = __webpack_require__(16)
-var AlignmentPattern = __webpack_require__(17)
-var FinderPattern = __webpack_require__(18)
-var MaskPattern = __webpack_require__(19)
-var ECCode = __webpack_require__(5)
-var ReedSolomonEncoder = __webpack_require__(20)
-var Version = __webpack_require__(6)
-var FormatInfo = __webpack_require__(23)
+var BitBuffer = __webpack_require__(17)
+var BitMatrix = __webpack_require__(18)
+var AlignmentPattern = __webpack_require__(19)
+var FinderPattern = __webpack_require__(20)
+var MaskPattern = __webpack_require__(21)
+var ECCode = __webpack_require__(6)
+var ReedSolomonEncoder = __webpack_require__(22)
+var Version = __webpack_require__(7)
+var FormatInfo = __webpack_require__(25)
 var Mode = __webpack_require__(1)
-var Segments = __webpack_require__(24)
+var Segments = __webpack_require__(26)
 var isArray = __webpack_require__(3)
 
 /**
@@ -2267,7 +2332,7 @@ exports.create = function create (data, options) {
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports) {
 
 function BitBuffer () {
@@ -2310,7 +2375,7 @@ module.exports = BitBuffer
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
@@ -2385,7 +2450,7 @@ module.exports = BitMatrix
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2474,7 +2539,7 @@ exports.getPositions = function getPositions (version) {
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getSymbolSize = __webpack_require__(0).getSymbolSize
@@ -2502,7 +2567,7 @@ exports.getPositions = function getPositions (version) {
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports) {
 
 /**
@@ -2721,11 +2786,11 @@ exports.getBestMask = function getBestMask (data, setupFormatFunc) {
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
-var Polynomial = __webpack_require__(21)
+var Polynomial = __webpack_require__(23)
 
 function ReedSolomonEncoder (degree) {
   this.genPoly = undefined
@@ -2786,11 +2851,11 @@ module.exports = ReedSolomonEncoder
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
-var GF = __webpack_require__(22)
+var GF = __webpack_require__(24)
 
 /**
  * Multiplies two polynomials inside Galois Field
@@ -2856,7 +2921,7 @@ exports.generateECPolynomial = function generateECPolynomial (degree) {
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
@@ -2934,7 +2999,7 @@ exports.mul = function mul (x, y) {
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Utils = __webpack_require__(0)
@@ -2969,17 +3034,17 @@ exports.getEncodedBits = function getEncodedBits (errorCorrectionLevel, mask) {
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
-var NumericData = __webpack_require__(25)
-var AlphanumericData = __webpack_require__(26)
-var ByteData = __webpack_require__(27)
-var KanjiData = __webpack_require__(28)
-var Regex = __webpack_require__(7)
+var NumericData = __webpack_require__(27)
+var AlphanumericData = __webpack_require__(28)
+var ByteData = __webpack_require__(29)
+var KanjiData = __webpack_require__(30)
+var Regex = __webpack_require__(8)
 var Utils = __webpack_require__(0)
-var dijkstra = __webpack_require__(29)
+var dijkstra = __webpack_require__(31)
 
 /**
  * Returns UTF8 byte length
@@ -3305,7 +3370,7 @@ exports.rawSplit = function rawSplit (data) {
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
@@ -3354,7 +3419,7 @@ module.exports = NumericData
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
@@ -3419,7 +3484,7 @@ module.exports = AlphanumericData
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
@@ -3452,7 +3517,7 @@ module.exports = ByteData
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
@@ -3512,7 +3577,7 @@ module.exports = KanjiData
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3684,10 +3749,10 @@ if (true) {
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Utils = __webpack_require__(8)
+var Utils = __webpack_require__(9)
 
 function clearCanvas (ctx, canvas, size) {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -3753,10 +3818,10 @@ exports.renderToDataURL = function renderToDataURL (qrData, canvas, options) {
 
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Utils = __webpack_require__(8)
+var Utils = __webpack_require__(9)
 
 function getColorAttrib (color) {
   return 'fill="rgb(' + [color.r, color.g, color.b].join(',') + ')" ' +
