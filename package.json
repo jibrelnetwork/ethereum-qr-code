@@ -1,6 +1,6 @@
 {
   "name": "ethereum-qr-code",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "utitlity library to deal with etherium adresses",
   "main": "index.js",
   "scripts": {
