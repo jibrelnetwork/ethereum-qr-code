@@ -1,6 +1,6 @@
 {
   "name": "ethereum-qr-code",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "utitlity library to deal with etherium adresses",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "qr",
     "cryptocurrency"
   ],
-  "author": "jibrel.network",
+  "author": "jibrelnetwork",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jibrelnetwork/ethereum-qr-code/issues"
