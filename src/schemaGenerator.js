@@ -10,8 +10,11 @@ export default class SchemaGenerator {
         this.data = {};
         this.parseRequest(request);
     }
-    generate() {
+    generateString() {
         return this.schemaGenerator(this.data)
+    }
+    generateJSON() {
+        return JSON.stringify(this.data);
     }
     parseRequest(request) {
         this.validateToField(request.to);

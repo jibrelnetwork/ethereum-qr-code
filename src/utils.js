@@ -37,7 +37,7 @@ const tokenSchemaFunction = ({
     if (gas) gasBlock = `[?gas=${gas}]`;
     if (value) valueBlock = `[?value=${value}]`;
 
-    return `ethereum:${to}${gasBlock}${valueBlock}${gasBlock}${functionBlock}`;
+    return `ethereum:${to}${gasBlock}${valueBlock}${functionBlock}`;
 }
 //todo add other params ??
 const tokenSchemaContract = ({
@@ -70,10 +70,10 @@ const validEthTypes = [
 ];
 const validStrRegEx = /^[^\\\/&]*$/;
 
-const isValidString = str => validStrRegEx.match(str);
+const isValidString = str => str && str.length > 0 && str.match(validStrRegEx);
 
 export const validateSignature = (signature) => {
-    if (!signature.name || !isValidString(signature.name) || !signature.args || signature.args.length === 0) return false;
+    if (isValidString(signature.name) || !signature.args || signature.args.length === 0) return false;
     let allArgsCheck = false;
     signature.args.forEach(arg => {
         if (validEthTypes.indexOf(arg.type) === -1 || !isValidString(arg.name)) allArgsCheck = false;

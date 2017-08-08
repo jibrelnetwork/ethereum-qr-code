@@ -74,8 +74,8 @@ class EtheriumQRplugin {
     }
     produceEncodedValue(config) {
         this.assignPluguinValues(config)
-        const encodedString = new SchemaGenerator(config).generate();
-        return this.toJSON ? JSON.stringify(encodedString) : encodedString;
+        const encodedString = this.toJSON ? new SchemaGenerator(config).generateJSON() : new SchemaGenerator(config).generateString();
+        return encodedString;
     }
 
     assignPluguinValues(request) {
