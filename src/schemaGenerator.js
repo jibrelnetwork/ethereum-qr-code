@@ -22,11 +22,12 @@ export default class SchemaGenerator {
         this.data = {};
         this.data.to = request.to;
         this.data.gas = parseInt(request.gas) || DEFAULTS.gas;
+        if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
         this.schemaGenerator = stringFunctions[this.mode];
     }
     validateToField(requestTo) {
         if (!requestTo || !isAddress(requestTo)) {
-            this.errorCallback('The "to" parameter with a valid Etherium adress is required');
+            throw new Error('The "to" parameter with a valid Etherium adress is required');
         }
     }
 
@@ -38,7 +39,7 @@ export default class SchemaGenerator {
                 this.data.functionSignature = request.functionSignature;
                 return;
             } else {
-                this.errorCallback('For the `function` mode, the `functionSignature` object is not provided or not valid');
+                throw new Error('For the `function` mode, the `functionSignature` object is not provided or not valid');
             }
         }
 
@@ -46,10 +47,9 @@ export default class SchemaGenerator {
             if (request.from && isAddress(request.from) && request.value) {
                 this.mode = 'erc20';
                 this.data.from = request.from;
-                if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
                 return;
             } else {
-                this.errorCallback('For the `erc20` mode, the `from` object is not provided or not valid');
+                throw new Error('For the `erc20` mode, the `from` object is not provided or not valid');
             }
         }
 

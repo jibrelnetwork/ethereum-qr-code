@@ -11,6 +11,10 @@ const tokenSchemaBasic = ({
 
     return `ethereum:${to}${gasBlock}${valueBlock}`;
 }
+/**
+ * generate string: ethereum:${to}${gasBlock}${valueBlock}${gasBlock}`
+ * @param {*} param0 
+ */
 const tokenSchemaFunction = ({
     to,
     gas,
@@ -33,7 +37,7 @@ const tokenSchemaFunction = ({
     if (gas) gasBlock = `[?gas=${gas}]`;
     if (value) valueBlock = `[?value=${value}]`;
 
-    return `ethereum:${to}${gasBlock}${valueBlock}${gasBlock}`;
+    return `ethereum:${to}${gasBlock}${valueBlock}${gasBlock}${functionBlock}`;
 }
 //todo add other params ??
 const tokenSchemaContract = ({
@@ -41,8 +45,14 @@ const tokenSchemaContract = ({
     gas,
     contract
 }) => {
-    let base = `ethereum:${to}`;
-    return `ethereum:${to}?gas=${gas}`;
+    let base = `ethereum:${to}`,
+        gasBlock = '',
+        contractBlock = '';
+
+    if (gas) gasBlock = `[?gas=${gas}]`;
+    if (contract) contractBlock = `[?contract=${contract}]`;
+
+    return `ethereum:${to}${gasBlock}${contractBlock}`;
 }
 
 export default {

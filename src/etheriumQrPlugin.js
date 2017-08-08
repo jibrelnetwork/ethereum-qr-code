@@ -31,7 +31,7 @@ class EtheriumQRplugin {
         const parentEl = document.querySelector(config.selector);
 
         if (!config.selector || parentEl === null) {
-            this.errorCallback('The canvas element parent selector is required when calling `toCanvas`');
+            throw new Error('The canvas element parent selector is required when calling `toCanvas`');
         }
 
         return new Promise((resolve, reject) => {
@@ -80,7 +80,7 @@ class EtheriumQRplugin {
 
     assignPluguinValues(request) {
         this.toJSON = !!request.toJSON;
-        this.size = request.size || DEFAULTS.size;
+        this.size = (request.size && parseInt(request.size) > 0) ? parseInt(request.size) : DEFAULTS.size;
         this.imgUrl = request.imgUrl || false;
         this.options = Object.assign(DEFAULTS.qrCodeOptions, request.options);
     }
@@ -92,9 +92,6 @@ class EtheriumQRplugin {
                 this.uiElement.parentNode.removeChild(this.uiElement);
             });
         }
-    }
-    errorCallback(errorText) {
-        throw new Error(errorText);
     }
 }
 
