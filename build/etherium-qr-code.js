@@ -1405,7 +1405,7 @@ var EtheriumQRplugin = function () {
             var parentEl = document.querySelector(config.selector);
 
             if (!config.selector || parentEl === null) {
-                this.errorCallback('The canvas element parent selector is required when calling `toCanvas`');
+                throw new Error('The canvas element parent selector is required when calling `toCanvas`');
             }
 
             return new Promise(function (resolve, reject) {
@@ -1462,7 +1462,7 @@ var EtheriumQRplugin = function () {
         key: 'assignPluguinValues',
         value: function assignPluguinValues(request) {
             this.toJSON = !!request.toJSON;
-            this.size = request.size || _defaults2.default.size;
+            this.size = request.size && parseInt(request.size) > 0 ? parseInt(request.size) : _defaults2.default.size;
             this.imgUrl = request.imgUrl || false;
             this.options = Object.assign(_defaults2.default.qrCodeOptions, request.options);
         }
@@ -1477,11 +1477,6 @@ var EtheriumQRplugin = function () {
                     _this3.uiElement.parentNode.removeChild(_this3.uiElement);
                 });
             }
-        }
-    }, {
-        key: 'errorCallback',
-        value: function errorCallback(errorText) {
-            throw new Error(errorText);
         }
     }]);
 
@@ -1600,13 +1595,14 @@ var SchemaGenerator = function () {
             this.data = {};
             this.data.to = request.to;
             this.data.gas = parseInt(request.gas) || _defaults2.default.gas;
+            if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
             this.schemaGenerator = _utils2.default[this.mode];
         }
     }, {
         key: 'validateToField',
         value: function validateToField(requestTo) {
             if (!requestTo || !(0, _utils.isAddress)(requestTo)) {
-                this.errorCallback('The "to" parameter with a valid Etherium adress is required');
+                throw new Error('The "to" parameter with a valid Etherium adress is required');
             }
         }
     }, {
@@ -1619,7 +1615,7 @@ var SchemaGenerator = function () {
                     this.data.functionSignature = request.functionSignature;
                     return;
                 } else {
-                    this.errorCallback('For the `function` mode, the `functionSignature` object is not provided or not valid');
+                    throw new Error('For the `function` mode, the `functionSignature` object is not provided or not valid');
                 }
             }
 
@@ -1627,10 +1623,9 @@ var SchemaGenerator = function () {
                 if (request.from && (0, _utils.isAddress)(request.from) && request.value) {
                     this.mode = 'erc20';
                     this.data.from = request.from;
-                    if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
                     return;
                 } else {
-                    this.errorCallback('For the `erc20` mode, the `from` object is not provided or not valid');
+                    throw new Error('For the `erc20` mode, the `from` object is not provided or not valid');
                 }
             }
 
@@ -1666,6 +1661,10 @@ var tokenSchemaBasic = function tokenSchemaBasic(_ref) {
 
     return 'ethereum:' + to + gasBlock + valueBlock;
 };
+/**
+ * generate string: ethereum:${to}${gasBlock}${valueBlock}${gasBlock}`
+ * @param {*} param0 
+ */
 var tokenSchemaFunction = function tokenSchemaFunction(_ref2) {
     var to = _ref2.to,
         gas = _ref2.gas,
@@ -1688,7 +1687,7 @@ var tokenSchemaFunction = function tokenSchemaFunction(_ref2) {
     if (gas) gasBlock = '[?gas=' + gas + ']';
     if (value) valueBlock = '[?value=' + value + ']';
 
-    return 'ethereum:' + to + gasBlock + valueBlock + gasBlock;
+    return 'ethereum:' + to + gasBlock + valueBlock + gasBlock + functionBlock;
 };
 //todo add other params ??
 var tokenSchemaContract = function tokenSchemaContract(_ref3) {
@@ -1696,8 +1695,14 @@ var tokenSchemaContract = function tokenSchemaContract(_ref3) {
         gas = _ref3.gas,
         contract = _ref3.contract;
 
-    var base = 'ethereum:' + to;
-    return 'ethereum:' + to + '?gas=' + gas;
+    var base = 'ethereum:' + to,
+        gasBlock = '',
+        contractBlock = '';
+
+    if (gas) gasBlock = '[?gas=' + gas + ']';
+    if (contract) contractBlock = '[?contract=' + contract + ']';
+
+    return 'ethereum:' + to + gasBlock + contractBlock;
 };
 
 exports.default = {
