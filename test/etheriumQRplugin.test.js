@@ -1,11 +1,11 @@
-const EtheriumQRplugin = require('../src/schemaGenerator');
+const EtheriumQRplugin = require('../src/etheriumQrPlugin').default;
 
 let qr, invalidCodeDetails;
 
 const validCodeDetails = {
     to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
     value: 150,
-    gas: 42,
+    gas: 4200,
     size: 180,
     selector: '#ethereum-qr-code-simple',
     options: {
@@ -13,31 +13,43 @@ const validCodeDetails = {
     }
 };
 
+console.log(EtheriumQRplugin)
 
-xdescribe('main schemaGenerator class', () => {
+
+describe('main public EtheriumQRplugin class', () => {
 
     beforeEach(() => {
         qr = new EtheriumQRplugin();
     });
 
-
     it('should generate simple encoded string with required addess', () => {
 
-        const str = qr.toAdressString(toAdressString);
-        expect(str).toBe(true);
+        const str = qr.toAdressString(validCodeDetails);
+        expect(str).toBe('ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=4200][?value=150]')
     });
 
+       it('should generate JSON encoded string if `toJSON` it true', () => {
 
-    it('should generate canvas of a requested size', () => {
-        qr.toCanvas(validCodeDetails).then((result) => {
-            expect(true).toBe(true);
+        const str = qr.toAdressString(Object.assign({}, validCodeDetails, {
+            'toJSON': true
+        }));
+        
+       expect(str).toBe("{\"to\":\"0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8\",\"gas\":4200,\"value\":150}")
+    });
+
+    it('should generate DataURI and return string', () => {
+
+        return qr.toDataUrl(validCodeDetails).then((result) => {
+            return expect(result.value).toBe("ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=4200][?value=150]");
         })
     });
 
+
     it('should generate DataURI string with correct symbols', () => {
 
-        qr.toDataUrl(validCodeDetails).then((result) => {
-            expect(true).toBe(true);
+        return qr.toDataUrl(validCodeDetails).then((result) => {
+            //take first N symbols
+            return expect(result.dataURL.substr(0, 80)).toBe("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNCAYAAAAbvPRpAAAAAklEQVR4Ae");
         })
     });
 
