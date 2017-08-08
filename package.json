@@ -4,9 +4,9 @@
   "description": "utitlity library to deal with etherium adresses",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
     "build": "webpack",
-    "demo": "cd demo && watch-http-server"
+    "demo": "cd docs && watch-http-server -o"
   },
   "repository": {
     "type": "git",
