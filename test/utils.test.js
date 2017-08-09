@@ -64,10 +64,11 @@ test('the `eth` method should add value value if it`s present', () => {
 
 
 test('the `function` method should add function signature', () => {
-    const functionCaseData = {
+    const functionCaseData1 = {
         to: '0x1234567890',
         gas: 5600,
         functionSignature: {
+            'payable': false,
             'name': 'myFunc',
             'args': [{
                 'type': 'string',
@@ -79,7 +80,21 @@ test('the `function` method should add function signature', () => {
             }]
         }
     };
-    expect(util.default.function(functionCaseData)).toEqual('ethereum:0x1234567890[?gas=5600][?function=myFunc(string userName,address userAddress)]');
+
+     const functionCaseData2 = {
+        to: '0x1234567890',
+        gas: 12300,
+        functionSignature: {
+            'payable': true,
+            'name': 'myFunc',
+            'args': [{
+                'type': 'address',
+                'name': 'userAddress'
+            }]
+        }
+    };
+    expect(util.default.function(functionCaseData1)).toEqual('ethereum:0x1234567890[?gas=5600][?function=myFunc(string userName,address userAddress)]');
+    expect(util.default.function(functionCaseData2)).toEqual('ethereum:0x1234567890[?gas=12300][?function=myFunc payable(address userAddress)]');
 });
 
 test('the `erc20` method should add contact value if it`s present', () => {

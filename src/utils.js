@@ -27,12 +27,13 @@ const tokenSchemaFunction = ({
         valueBlock = '';
 
     if (functionSignature) {
-        let convertedArgs = '';
+        let convertedArgs = '',
+        payable = !!functionSignature.payable ? ' payable' : '';
         functionSignature.args.forEach((arg, index) => {
             const isLast = index < functionSignature.args.length - 1 ? ',' : '';
             convertedArgs += `${arg.type} ${arg.name}${isLast}`;
         });
-        functionBlock = `[?function=${functionSignature.name}(${convertedArgs})]`
+        functionBlock = `[?function=${functionSignature.name}${payable}(${convertedArgs})]`
     }
     if (gas) gasBlock = `[?gas=${gas}]`;
     if (value) valueBlock = `[?value=${value}]`;
@@ -73,7 +74,7 @@ const validStrRegEx = /^[^\\\/&]*$/;
 const isValidString = str => str && str.length > 0 && str.match(validStrRegEx);
 
 export const validateSignature = (signature) => {
-    if (isValidString(signature.name) || !signature.args || signature.args.length === 0) return false;
+    if (isValidString(signature.name) || signature.payable === undefined || !signature.args || signature.args.length === 0) return false;
     let allArgsCheck = false;
     signature.args.forEach(arg => {
         if (validEthTypes.indexOf(arg.type) === -1 || !isValidString(arg.name)) allArgsCheck = false;
