@@ -93,6 +93,7 @@ test('the `function` method should add function signature', () => {
             }]
         }
     };
+
     expect(util.default.function(functionCaseData1)).toEqual('ethereum:0x1234567890[?gas=5600][?function=myFunc(string userName,address userAddress)]');
     expect(util.default.function(functionCaseData2)).toEqual('ethereum:0x1234567890[?gas=12300][?function=myFunc payable(address userAddress)]');
 });

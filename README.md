@@ -104,7 +104,19 @@ Parameters are passed vie one configutation object. It has following fields:
  - `function` - Call function of a contract.
  - `erc20` - Tokens transfer. Examples of using `mode = erc20`: `transfer(address to, uint value)`, `approve(address spender, uint value)`, `balanceOf(address to)`;
 
- 6. `functionSignature` | String | optional - Becomes required in case of `mode = function`. Then the follwing string us encoded: `ethereum:<address>[?value=<value>][?gas=<gas>][?function=<functionSignature.name>(<functionSignature.args>)]`
+ 6. `functionSignature` | String | optional - Becomes required in case of `mode = function`. Then the follwing string us encoded: `ethereum:<address>[?value=<value>][?gas=<gas>][?function=<functionSignature.name> <>(<functionSignature.args>)]`
+
+ The example functionSignature object is:
+```
+functionSignature: {
+       'name': 'myFunc',    // String, may be '' (empty string) or a normal String
+       'payable': false,    // Boolean, required
+       'args': [{               
+               'name': 'adress',    // String, required
+               'type': 'uint'       // String, required
+           }]
+ },
+ ```
 
  7. `toJSON`  | String | optional - When generating a QR encode adress as a formed string or a JSON object.
 
