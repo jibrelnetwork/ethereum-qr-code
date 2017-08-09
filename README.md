@@ -1,6 +1,7 @@
-# Etherium adress QR generator
+# Ethereum Address QR Generator
 
-Pugin is aimed to implement the convenient way to generate a [Etherium adress link out of the provided parameters based on EIP67](https://github.com/ethereum/EIPs/issues/67).
+This plugin implements a convenient way to generate a [ethereum address link out of the provided parameters based on EIP67](https://github.com/ethereum/EIPs/issues/67).
+
 On top of the string generation the QR code is generated based on this link. The [qrcode plugin](https://www.npmjs.com/package/qrcode) is used for this.
 
 See the demos: [https://jibrelnetwork.github.io/ethereum-qr-code/](https://jibrelnetwork.github.io/ethereum-qr-code/)
@@ -13,10 +14,10 @@ See the demos: [https://jibrelnetwork.github.io/ethereum-qr-code/](https://jibre
  2. Use in your code
 
 ```
-import EtheriumQRplugin from 'ethereum-qr-code';
+import EthereumQRplugin from 'ethereum-qr-code';
 
 // later in code
-const qr = new EtheriumQRplugin(codeContainer);
+const qr = new EthereumQRplugin(codeContainer);
 const qrCode = qr.toCanvas({
     selector: '#my-qr-code',
     to,
