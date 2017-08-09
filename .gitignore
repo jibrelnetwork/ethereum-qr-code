@@ -1,1 +1,7 @@
 /node_modules
+
+# JetBrains PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
