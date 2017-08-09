@@ -27,12 +27,13 @@ const tokenSchemaFunction = ({
         valueBlock = '';
 
     if (functionSignature) {
-        let convertedArgs = '';
+        let convertedArgs = '',
+        payable = !!functionSignature.payable ? ' payable' : '';
         functionSignature.args.forEach((arg, index) => {
             const isLast = index < functionSignature.args.length - 1 ? ',' : '';
             convertedArgs += `${arg.type} ${arg.name}${isLast}`;
         });
-        functionBlock = `[?function=${functionSignature.name}(${convertedArgs})]`
+        functionBlock = `[?function=${functionSignature.name}${payable}(${convertedArgs})]`
     }
     if (gas) gasBlock = `[?gas=${gas}]`;
     if (value) valueBlock = `[?value=${value}]`;
@@ -61,22 +62,32 @@ export default {
     erc20: tokenSchemaContract
 }
 
-/**
- * Valid Solidity types
- * as from http://solidity.readthedocs.io/en/develop/types.html
- */
-const validEthTypes = [
-    'address', 'unit', 'int', 'bool', 'byte', 'string'
-];
 const validStrRegEx = /^[^\\\/&]*$/;
 
 const isValidString = str => str && str.length > 0 && str.match(validStrRegEx);
 
+/**
+ * the corect format e.g. is:
+ * 
+ * ..
+ * functionSignature: {
+ *      'name': 'myFunc',
+ *      'payable': false,
+ *      'args': [{
+ *              'name': 'adress',
+ *              'type': 'uint'
+ *          }]
+ * },
+ * ..
+ * 
+ */
 export const validateSignature = (signature) => {
-    if (isValidString(signature.name) || !signature.args || signature.args.length === 0) return false;
+    if (signature.name === null || typeof signature.name === 'undefined') return false;
+    if (signature.payable === null || typeof signature.payable === 'undefined') return false;
+    if (!signature.args || signature.args.length === 0) return false;
     let allArgsCheck = false;
     signature.args.forEach(arg => {
-        if (validEthTypes.indexOf(arg.type) === -1 || !isValidString(arg.name)) allArgsCheck = false;
+        if (!isValidString(arg.type) || !isValidString(arg.name)) allArgsCheck = false;
     })
     return allArgsCheck;
 }
