@@ -166,7 +166,7 @@ Parameters:
 
  4. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
 
- 5. `mode` | String | **required** - Mode of invocation. Possible values: `function`, `erc20__transfer`, `erc20__approve`, `erc20__transferFrom`
+ 5. `mode` | String | **required** - Mode of invocation. Expected value: `function`
 
  6. `functionSignature` | Object | **required** - Object that defines signature of invoked function. It is used only if `"mode" == "function"`
 
@@ -196,8 +196,8 @@ ERC20 tokens are very popular.
 To make it easier to send tokens between accounts we predefine function signatures for the methods from ERC20 specification:
 
   1. `"mode": "erc20__transfer"` - `function transfer(address to, uint value) returns (bool success)`
-  2. `"mode": "erc20__approve"` - `function approve(address _spender, uint _value) returns (bool success)`
-  3. `"mode": "erc20__transferFrom"` - `function transferFrom(address _from, address _to, uint _value) returns (bool success)`
+  2. `"mode": "erc20__approve"` - `function approve(address spender, uint value) returns (bool success)`
+  3. `"mode": "erc20__transferFrom"` - `function transferFrom(address from, address to, uint value) returns (bool success)`
 
 Example for `transfer` method:
 
@@ -216,7 +216,7 @@ Example for `transfer` method:
 }
 ```
 
-Functionally this is equivalent of the previous example.
+Functionally, this is equivalent to the previous example.
 
 Parameters:
 
@@ -226,9 +226,9 @@ Parameters:
 
  3. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
 
- 4. `mode` | String | **required** - Mode of invocation. Possible values: `function`, `erc20__transfer`, `erc20__approve`, `erc20__transferFrom`
+ 4. `mode` | String | **required** - Mode of invocation. Expected value: `erc20__transfer`, `erc20__approve`, `erc20__transferFrom`
 
- 7. `argumentsDefaults` | Array | optional - Array with default values for function arguments.
+ 5. `argumentsDefaults` | Array | optional - Array with default values for function arguments.
 
     1. `name` | String | **required** - Name of the argument. Should be equal to the name of one of arguments from `functionSignature`
 
