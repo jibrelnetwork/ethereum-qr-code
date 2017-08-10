@@ -132,7 +132,7 @@ Example for the method `transfer` of `ERC20` token:
   "functionSignature": {
     "name": "transfer",
     "payable": false,
-    "arguments": [
+    "args": [
       {
         "name": "to",
         "type": "address"
@@ -174,7 +174,7 @@ Parameters:
 
     2. `payable` | Boolean | **required** - Defines whether function is able to receive ETH or not. (`value` should be zero if `false`)
 
-    3. `arguments` | Array | **required** - Contains list of function`s arguments
+    3. `args` | Array | **required** - Contains list of function`s arguments
 
         1. `type` | String | **required** - Type of the argument: `uint`, `uint8`, `int32`, `address`, `bool` and so on.
 
