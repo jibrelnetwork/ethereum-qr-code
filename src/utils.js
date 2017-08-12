@@ -67,6 +67,17 @@ const validStrRegEx = /^[^\\\/&]*$/;
 
 const isValidString = str => str && str.length > 0 && str.match(validStrRegEx);
 
+export const validERC20Modes = [`erc20__transfer`, `erc20__approve`, `erc20__transferFrom`];
+
+const validateArgsDefaults = (argsDefaults, functionArgs) => {
+    if(!argsDefaults || argsDefaults.length !== functionArgs.length) return false;
+    let argsDefaultsIsValid = true;
+    functionArgs.forEach(arg => {
+        const correspondingEl = argsDefaults.find(a => a.name === arg.name);
+        if(!correspondingEl || !correspondingEl.value) argsDefaultsIsValid = false;
+    })
+    return argsDefaultsIsValid;
+}
 /**
  * the corect format e.g. is:
  * 
@@ -108,31 +119,6 @@ export const isAddress = function (address) {
     } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
         // If it's all small caps or all all caps, return true
         return true;
-    } else {
-        // Otherwise check each case
-        return true;
-        //todo - need to add SHA 
-        //https://github.com/ethereum/go-ethereum/blob/aa9fff3e68b1def0a9a22009c233150bf9ba481f/jsre/ethereum_js.go
-        //return isChecksumAddress(address);
-    }
-};
-
-/**
- * Checks if the given string is a checksummed address
- *
- * @method isChecksumAddress
- * @param {String} address the given HEX adress
- * @return {Boolean}
- */
-export const isChecksumAddress = function (address) {
-    // Check each case
-    address = address.replace('0x', '');
-    var addressHash = sha3(address.toLowerCase());
-    for (var i = 0; i < 40; i++) {
-        // the nth letter should be uppercase if the nth digit of casemap is 1
-        if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
-            return false;
-        }
-    }
+    } 
     return true;
 };
