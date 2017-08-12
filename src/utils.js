@@ -19,7 +19,8 @@ const tokenSchemaFunction = ({
     to,
     gas,
     value,
-    functionSignature
+    functionSignature,
+    argsDefaults
 }) => {
     let base = `ethereum:${to}`,
         functionBlock = '',

@@ -87,15 +87,16 @@ qrCode.then(function(qrCodeDataUri){
 })
 ```
 
-### URI scheme
+## URI schemes
 
 QR code generator supports URI for different use-cases:
-- Sending ETH
-- Invoke function of a contract
-- Sending `ERC20` tokens
+1. Sending ETH
+2. Invoke function of a contract
+3. Sending `ERC20` tokens
 
+We cover those 3 separate cases using a parameter called 'mode'. You can see details about each case below:
 
-#### Sending ETH
+### 1. Sending ETH
 
 URI scheme used to send ETH between accounts conforms early `EIP67` proposals and Bitcoin scheme.
 This made for backward compatibility.
@@ -112,8 +113,10 @@ Parameters:
 
  4. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
 
+ Other values are not needed.
 
-#### Invoke function of a contract
+
+### 2. Invoke function of a contract
 
 URI scheme to invoke contract's function uses JSON to encode all needed parameters.
 There is one significant field `mode` that specifies structure of entire JSON.
@@ -143,7 +146,7 @@ Example for the method `transfer` of `ERC20` token:
       }
     ]
   },
-  "argumentsDefaults": [
+  "argsDefaults": [
     {
       "name": "to",
       "value": "0xtokensrecipient"
@@ -183,14 +186,14 @@ Parameters:
         But QR codes are used to pass tx details between different wallets and GUI must be nice.
         Therefore unnamed input fields in GUI are not possible. Therefore this parameter is required.
 
- 7. `argumentsDefaults` | Array | optional - Array with default values for function arguments.
+ 7. `argsDefaults` | Array | optional - Array with default values for function arguments.
 
     1. `name` | String | **required** - Name of the argument. Should be equal to the name of one of arguments from `functionSignature`
 
     2. `value` | Any | **required** - Default value for the function argument
 
 
-#### Template for `ERC20` tokens
+### 3. Template for `ERC20` tokens
 
 ERC20 tokens are very popular.
 To make it easier to send tokens between accounts we predefine function signatures for the methods from ERC20 specification:
@@ -207,7 +210,7 @@ Example for `transfer` method:
   "from": "0xsenderaddress",
   "gas": 100000,
   "mode": "erc20__transfer",
-  "argumentsDefaults": [
+  "argsDefaults": [
     {
       "name": "to",
       "value": "0xtokensrecipient"
@@ -228,7 +231,7 @@ Parameters:
 
  4. `mode` | String | **required** - Mode of invocation. Expected value: `erc20__transfer`, `erc20__approve`, `erc20__transferFrom`
 
- 5. `argumentsDefaults` | Array | optional - Array with default values for function arguments.
+ 5. `argsDefaults` | Array | optional - Array with default values for function arguments.
 
     1. `name` | String | **required** - Name of the argument. Should be equal to the name of one of arguments from `functionSignature`
 

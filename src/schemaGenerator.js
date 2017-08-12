@@ -40,6 +40,7 @@ export default class SchemaGenerator {
             if (request.functionSignature && validateSignature(request.functionSignature)) {
                 this.mode = 'function';
                 this.data.functionSignature = request.functionSignature;
+                this.data.argsDefaults = request.argsDefaults;
                 return;
             } else {
                 throw new Error('For the `function` mode, the `functionSignature` object is not provided or not valid');
