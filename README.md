@@ -113,16 +113,21 @@ Parameters:
 
  4. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
 
- Other values are not needed.
 
+No other values are needed for this simple case.
+For 2 other types - there is one significant field `mode` that defines the structure of entire resulting JSON. URI scheme to invoke contract's function uses JSON to encode all needed parameters.
+Possible values of field `mode`: 
+- `function`
+- `erc20__transfer`
+- `erc20__approve`
+- `erc20__transferFrom`
+
+We'll go though those below.
 
 ### 2. Invoke function of a contract
 
-URI scheme to invoke contract's function uses JSON to encode all needed parameters.
-There is one significant field `mode` that specifies structure of entire JSON.
-Possible values of field `mode`: `function`, `erc20__transfer`, `erc20__approve`, `erc20__transferFrom`
+That is done by using `"mode: "function"`.
 
-Let's consider using `"mode: "function"`.
 Example for the method `transfer` of `ERC20` token:
 
 ```json
@@ -195,12 +200,13 @@ Parameters:
 
 ### 3. Template for `ERC20` tokens
 
-ERC20 tokens are very popular.
+The 3 extra subtypes were added since the ERC20 tokens are very popular.
+
 To make it easier to send tokens between accounts we predefine function signatures for the methods from ERC20 specification:
 
-  1. `"mode": "erc20__transfer"` - `function transfer(address to, uint value) returns (bool success)`
-  2. `"mode": "erc20__approve"` - `function approve(address spender, uint value) returns (bool success)`
-  3. `"mode": "erc20__transferFrom"` - `function transferFrom(address from, address to, uint value) returns (bool success)`
+  1. `"mode": "erc20__transfer"` will result in `function transfer(address to, uint value) returns (bool success)`
+  2. `"mode": "erc20__approve"` => `function approve(address spender, uint value) returns (bool success)`
+  3. `"mode": "erc20__transferFrom"` => `function transferFrom(address from, address to, uint value) returns (bool success)`
 
 Example for `transfer` method:
 

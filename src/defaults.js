@@ -1,6 +1,6 @@
 const DEFAULTS = {
     value: 0,
-    gas: 10000,
+    gas: 21000,
     size: 128,
     qrCodeOptions: {
         color: {
