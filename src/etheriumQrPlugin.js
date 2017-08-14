@@ -1,7 +1,9 @@
+import QRCode from 'qrcode';
+
+import DEFAULTS from './defaults';
 import DrawIcon from './tokenIcon';
 import SchemaGenerator from './schemaGenerator';
-import QRCode from 'qrcode';
-import DEFAULTS from './defaults';
+import readString from './codeParser';
 
 /**
  * Main plugin logic
@@ -68,6 +70,30 @@ class EtheriumQRplugin {
             })
         });
     }
+
+    /**
+     * implements backwards transformation encode query string to JSON
+     * 
+     * @param {String} valueString 
+     */
+    readStringToJSON(valueString){
+
+    }
+    /**
+     * may use https://github.com/edi9999/jsqrcode for readng the canvas data to JSON
+     * @param {*} dataURl 
+     */
+    // readImageToJSON(dataURl){
+    //   const qr = new QrCode();        
+    // qr.callback = function(error, result) {
+    //     if(error) {
+    //         console.log(error)
+    //         return;
+    //     }
+    //     console.log(result)
+    // }
+    //   qr.decode(dataURl);
+    // }
 
     getJSON() {
         return JSON.stringify( getString());
