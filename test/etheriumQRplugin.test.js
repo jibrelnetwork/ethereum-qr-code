@@ -13,9 +13,6 @@ const validCodeDetails = {
     }
 };
 
-console.log(EtheriumQRplugin)
-
-
 describe('main public EtheriumQRplugin class', () => {
 
     beforeEach(() => {

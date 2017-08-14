@@ -2,7 +2,7 @@ import stringFunctions, {
     isAddress,
     validateSignature,
     validateArgsDefaults,
-    validERC20Modes
+    listOfValidERC20Modes
 } from './utils';
 import DEFAULTS from './defaults';
 
@@ -36,11 +36,15 @@ export default class SchemaGenerator {
     }
 
     validateAndSetMode(request) {
-        if (request.mode === 'function') return checkFunctionMode(request);
-            
-        if (request.mode.indexOf('erc20')) return validateErc20Mode(request);
-
-        this.mode = 'eth';
+        if(request.mode === null || typeof request.mode === 'undefined'){
+            this.mode = 'eth';
+        } else if (request.mode && request.mode === 'function') {
+            return this.validateFunctionMode(request);
+        } else if (request.mode && request.mode.indexOf('erc20') > -1) {
+            return this.validateErc20Mode(request);
+        } else {
+            throw new Error('Invalid "mode" provided');
+        }
     }
 
     validateFunctionMode(request) {
@@ -61,9 +65,10 @@ export default class SchemaGenerator {
     }
 
     validateErc20Mode(request) {
-        if(validERC20Modes.indexOf(request.mode) == -1){
+        if (listOfValidERC20Modes.indexOf(request.mode) == -1) {
             throw new Error('Wrong `erc20__*` mode name provided');
         }
+
         if (request.from && isAddress(request.from) && request.value) {
             this.mode = 'erc20';
             this.data.from = request.from;

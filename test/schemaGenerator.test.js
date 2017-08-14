@@ -68,14 +68,17 @@ describe('the SchemaGenerator class', () => {
 
     });
 
-    it('should set mode to `eth` by default', () => {
+    it('should throw an error if the wrong type is provided', () => {
         
         invalidCodeDetails = Object.assign({}, validCodeDetails, {
             mode: 'functional' //!! mind the 'al'
         })
 
-        sg = new SchemaGenerator(invalidCodeDetails);
-        expect(sg.mode).toBe('eth');
+        function runWithIncorrectInput() {
+            new SchemaGenerator(invalidCodeDetails)
+        }
+
+       expect(runWithIncorrectInput).toThrow();
 
     });
 
@@ -99,8 +102,8 @@ describe('the SchemaGenerator class', () => {
       it('should throw error with invalid `from` field in `erc20` mode', () => {
         
         invalidCodeDetails = Object.assign({}, validCodeDetails, {
-            from:  984534589,
-            mode: 'erc20'
+            from:  '5345354',
+            mode: 'erc20__transfer'
         });
 
         function runWithIncorrectInput() {

@@ -1,3 +1,9 @@
+const validStrRegEx = /^[^\\\/&]*$/;
+
+const isValidString = str => str && str.length > 0 && str.match(validStrRegEx);
+
+export const listOfValidERC20Modes = [`erc20__transfer`, `erc20__approve`, `erc20__transferFrom`];
+
 const tokenSchemaBasic = ({
     to,
     gas,
@@ -63,12 +69,6 @@ export default {
     erc20: tokenSchemaContract
 }
 
-const validStrRegEx = /^[^\\\/&]*$/;
-
-const isValidString = str => str && str.length > 0 && str.match(validStrRegEx);
-
-export const validERC20Modes = [`erc20__transfer`, `erc20__approve`, `erc20__transferFrom`];
-
 const validateArgsDefaults = (argsDefaults, functionArgs) => {
     if(!argsDefaults || argsDefaults.length !== functionArgs.length) return false;
     let argsDefaultsIsValid = true;
@@ -89,8 +89,7 @@ const validateArgsDefaults = (argsDefaults, functionArgs) => {
  *              'name': 'adress',
  *              'type': 'uint'
  *          }]
- * },
- * ..
+ * },`
  * 
  */
 export const validateSignature = (signature) => {
@@ -107,18 +106,10 @@ export const validateSignature = (signature) => {
 /**
  * Checks if the given string is an address
  * from ethereum.stackexchange.com/questions/1374/how-can-i-check-if-an-ethereum-address-is-valid
+ * from https://github.com/ethereum/web3.js/blob/master/lib/utils/utils.js#L392
  * 
  * @method isAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
  */
-export const isAddress = function (address) {
-    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-        // check if it has the basic requirements of an address
-        return false;
-    } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
-        // If it's all small caps or all all caps, return true
-        return true;
-    } 
-    return true;
-};
+export const isAddress = (address) => /^0x[0-9a-f]{40}$/i.test(address);
