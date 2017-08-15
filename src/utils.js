@@ -18,7 +18,7 @@ const tokenSchemaBasic = ({
     return `ethereum:${to}${gasBlock}${valueBlock}`;
 }
 /**
- * generate string: ethereum:${to}${gasBlock}${valueBlock}${gasBlock}`
+ * generate string: ethereum:${to}${gasBlock}${valueBlock}`
  * @param {*} param0 
  */
 const tokenSchemaFunction = ({
