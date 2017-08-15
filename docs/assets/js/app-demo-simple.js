@@ -4,7 +4,7 @@ const init = () => {
     highlightCodeBlocks();
     
     //instantiate the plugin
-    const qr = new EtheriumQRplugin.etheriumQRplugin();
+    const qr = new EthereumQRplugin.ethereumQRplugin();
 
     //static config value
     const codeDetails = {

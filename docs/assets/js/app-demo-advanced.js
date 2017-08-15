@@ -43,7 +43,7 @@ const updateQR = () => {
 }
 const init = () => {
     //instantiate the plugin
-    qr = new EtheriumQRplugin.etheriumQRplugin();
+    qr = new EthereumQRplugin.ethereumQRplugin();
 
     //signup for input data update
     $('.qr-input').keyup(updateQR);

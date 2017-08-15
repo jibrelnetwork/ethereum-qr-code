@@ -8,7 +8,7 @@ import readString from './codeParser';
 /**
  * Main plugin logic
  */
-class EtheriumQRplugin {
+class EthereumQRplugin {
     /**
      * 
      * Generates a data encode string
@@ -121,4 +121,4 @@ class EtheriumQRplugin {
     }
 }
 
-export default EtheriumQRplugin;
+export default EthereumQRplugin;

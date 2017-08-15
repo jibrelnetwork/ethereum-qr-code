@@ -1,7 +1,7 @@
 {
   "name": "ethereum-qr-code",
   "version": "0.1.3",
-  "description": "utitlity library to deal with etherium adresses",
+  "description": "utitlity library to deal with ethereum adresses",
   "main": "index.js",
   "scripts": {
     "test": "jest --verbose",
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/jibrelnetwork/ethereum-qr-code.git"
   },
   "keywords": [
-    "etherium",
+    "ethereum",
     "qr-code",
     "qr",
     "cryptocurrency"

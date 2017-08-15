@@ -31,7 +31,7 @@ export default class SchemaGenerator {
     }
     validateToField(requestTo) {
         if (!requestTo || !isAddress(requestTo)) {
-            throw new Error('The "to" parameter with a valid Etherium adress is required');
+            throw new Error('The "to" parameter with a valid Ethereum adress is required');
         }
     }
 

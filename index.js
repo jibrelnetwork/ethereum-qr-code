@@ -1,5 +1,5 @@
-import etheriumQRplugin from './src/etheriumQrPlugin';
+import ethereumQRplugin from './src/ethereumQrPlugin';
 
-export default etheriumQRplugin
+export default ethereumQRplugin
 
-export { etheriumQRplugin }
+export { ethereumQRplugin }

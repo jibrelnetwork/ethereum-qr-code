@@ -1,4 +1,4 @@
-const EtheriumQRplugin = require('../src/etheriumQrPlugin').default;
+const EthereumQRplugin = require('../src/ethereumQrPlugin').default;
 
 let qr, invalidCodeDetails;
 
@@ -13,10 +13,10 @@ const validCodeDetails = {
     }
 };
 
-describe('main public EtheriumQRplugin class', () => {
+describe('main public EthereumQRplugin class', () => {
 
     beforeEach(() => {
-        qr = new EtheriumQRplugin();
+        qr = new EthereumQRplugin();
     });
 
     it('should generate simple encoded string with required addess', () => {

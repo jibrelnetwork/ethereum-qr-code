@@ -1,17 +1,17 @@
 /*!
- * Etherium adress QR generator 
+ * Ethereum adress QR generator 
  *  https://github.com/jibrelnetwork/ethereum-qr-code 
- *  file:build/etherium-qr-code.js
+ *  file:build/ethereum-qr-code.js
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("EtheriumQRplugin", [], factory);
+		define("EthereumQRplugin", [], factory);
 	else if(typeof exports === 'object')
-		exports["EtheriumQRplugin"] = factory();
+		exports["EthereumQRplugin"] = factory();
 	else
-		root["EtheriumQRplugin"] = factory();
+		root["EthereumQRplugin"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -1321,16 +1321,16 @@ exports.default = DEFAULTS;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.etheriumQRplugin = undefined;
+exports.ethereumQRplugin = undefined;
 
-var _etheriumQrPlugin = __webpack_require__(11);
+var _ethereumQrPlugin = __webpack_require__(11);
 
-var _etheriumQrPlugin2 = _interopRequireDefault(_etheriumQrPlugin);
+var _ethereumQrPlugin2 = _interopRequireDefault(_ethereumQrPlugin);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _etheriumQrPlugin2.default;
-exports.etheriumQRplugin = _etheriumQrPlugin2.default;
+exports.default = _ethereumQrPlugin2.default;
+exports.ethereumQRplugin = _ethereumQrPlugin2.default;
 
 /***/ }),
 /* 11 */
@@ -1372,12 +1372,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * Main plugin logic
  */
-var EtheriumQRplugin = function () {
-    function EtheriumQRplugin() {
-        _classCallCheck(this, EtheriumQRplugin);
+var EthereumQRplugin = function () {
+    function EthereumQRplugin() {
+        _classCallCheck(this, EthereumQRplugin);
     }
 
-    _createClass(EtheriumQRplugin, [{
+    _createClass(EthereumQRplugin, [{
         key: 'toAdressString',
 
         /**
@@ -1510,10 +1510,10 @@ var EtheriumQRplugin = function () {
         }
     }]);
 
-    return EtheriumQRplugin;
+    return EthereumQRplugin;
 }();
 
-exports.default = EtheriumQRplugin;
+exports.default = EthereumQRplugin;
 
 /***/ }),
 /* 12 */
@@ -3732,7 +3732,7 @@ var SchemaGenerator = function () {
         key: 'validateToField',
         value: function validateToField(requestTo) {
             if (!requestTo || !(0, _utils.isAddress)(requestTo)) {
-                throw new Error('The "to" parameter with a valid Etherium adress is required');
+                throw new Error('The "to" parameter with a valid Ethereum adress is required');
             }
         }
     }, {
@@ -3820,7 +3820,7 @@ var tokenSchemaBasic = function tokenSchemaBasic(_ref) {
     return 'ethereum:' + to + gasBlock + valueBlock;
 };
 /**
- * generate string: ethereum:${to}${gasBlock}${valueBlock}${gasBlock}`
+ * generate string: ethereum:${to}${gasBlock}${valueBlock}`
  * @param {*} param0 
  */
 var tokenSchemaFunction = function tokenSchemaFunction(_ref2) {

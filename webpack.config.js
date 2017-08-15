@@ -6,8 +6,8 @@ module.exports = {
      entry: './index.js',
      output: {
          path: __dirname,
-         filename: 'build/etherium-qr-code.js',
-        library: 'EtheriumQRplugin',
+         filename: 'build/ethereum-qr-code.js',
+        library: 'EthereumQRplugin',
         libraryTarget: 'umd',
         umdNamedDefine: true
      },
@@ -21,7 +21,7 @@ module.exports = {
     plugins: [
         //new UglifyJSPlugin(),
         new webpack.BannerPlugin({
-            banner: "Etherium adress QR generator \n https://github.com/jibrelnetwork/ethereum-qr-code \n file:[file]"
+            banner: "Ethereum adress QR generator \n https://github.com/jibrelnetwork/ethereum-qr-code \n file:[file]"
         })
     ]
  }
