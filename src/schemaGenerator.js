@@ -1,12 +1,13 @@
-
 import stringFunctions, {
     isAddress,
-    validateSignature
+    validateSignature,
+    validateArgsDefaults,
+    listOfValidERC20Modes
 } from './utils';
 import DEFAULTS from './defaults';
 
 export default class SchemaGenerator {
-    constructor(request){
+    constructor(request) {
         this.data = {};
         this.parseRequest(request);
     }
@@ -35,27 +36,45 @@ export default class SchemaGenerator {
     }
 
     validateAndSetMode(request) {
+        if(request.mode === null || typeof request.mode === 'undefined'){
+            this.mode = 'eth';
+        } else if (request.mode && request.mode === 'function') {
+            return this.validateFunctionMode(request);
+        } else if (request.mode && request.mode.indexOf('erc20') > -1) {
+            return this.validateErc20Mode(request);
+        } else {
+            throw new Error('Invalid "mode" provided');
+        }
+    }
 
-        if (request.mode === 'function') {
-            if (request.functionSignature && validateSignature(request.functionSignature)) {
-                this.mode = 'function';
-                this.data.functionSignature = request.functionSignature;
-                return;
-            } else {
-                throw new Error('For the `function` mode, the `functionSignature` object is not provided or not valid');
+    validateFunctionMode(request) {
+        if (request.functionSignature && validateSignature(request.functionSignature)) {
+            this.mode = 'function';
+            this.data.functionSignature = request.functionSignature;
+
+            if (request.argsDefaults) {
+                if (validateArgsDefaults(request.argsDefaults, request.functionSignature.args)) {
+                    this.data.argsDefaults = request.argsDefaults;
+                } else {
+                    throw new Error('For the `function` mode, the `argsDefaults` object is properly formatted');
+                }
             }
+        } else {
+            throw new Error('For the `function` mode, the `functionSignature` object is not provided or not valid');
+        }
+    }
+
+    validateErc20Mode(request) {
+        if (listOfValidERC20Modes.indexOf(request.mode) == -1) {
+            throw new Error('Wrong `erc20__*` mode name provided');
         }
 
-        if (request.mode === 'erc20') {
-            if (request.from && isAddress(request.from) && request.value) {
-                this.mode = 'erc20';
-                this.data.from = request.from;
-                return;
-            } else {
-                throw new Error('For the `erc20` mode, the `from` object is not provided or not valid');
-            }
+        if (request.from && isAddress(request.from) && request.value) {
+            this.mode = 'erc20';
+            this.data.from = request.from;
+            this.data.argsDefaults = request.argsDefaults;
+        } else {
+            throw new Error('For the `erc20` mode, the `from` object is not provided or not valid');
         }
-
-        this.mode = 'eth';
     }
 }

@@ -87,45 +87,172 @@ qrCode.then(function(qrCodeDataUri){
 })
 ```
 
-### Parameters
+## URI schemes
+
+QR code generator supports URI for different use-cases:
+1. Sending ETH
+2. Invoke function of a contract
+3. Sending `ERC20` tokens
+
+We cover those 3 separate cases using a parameter called 'mode'. You can see details about each case below:
+
+### 1. Sending ETH
+
+URI scheme used to send ETH between accounts conforms early `EIP67` proposals and Bitcoin scheme.
+This made for backward compatibility.
+
+`ethereum:<address>[?from=<sender_address>][?value=<ethamount>][?gas=<suggestedGas>]`
+
+Parameters:
+
+ 1. `to` | String | **required** - The address of the recipient account
+
+ 2. `from` | String | optional - Address of the tx sender. Defaults to current active account of the sender app
+
+ 3. `value` | Number | optional - Amount of ETH to send. Measured in `wei`. Defaults to 0.
+
+ 4. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
+
+
+No other values are needed for this simple case.
+For 2 other types - there is one significant field `mode` that defines the structure of entire resulting JSON. URI scheme to invoke contract's function uses JSON to encode all needed parameters.
+Possible values of field `mode`: 
+- `function`
+- `erc20__transfer`
+- `erc20__approve`
+- `erc20__transferFrom`
+
+We'll go though those below.
+
+### 2. Invoke function of a contract
+
+That is done by using `"mode: "function"`.
+
+Example for the method `transfer` of `ERC20` token:
+
+```json
+{
+  "to": "0xcontractaddress",
+  "from": "0xsenderaddress",
+  "value": 0,
+  "gas": 100000,
+  "mode": "function",
+  "functionSignature": {
+    "name": "transfer",
+    "payable": false,
+    "args": [
+      {
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "name": "value",
+        "type": "uint"
+      }
+    ]
+  },
+  "argsDefaults": [
+    {
+      "name": "to",
+      "value": "0xtokensrecipient"
+    },
+    {
+      "name": "value",
+      "value": 1000000000000000000
+    }
+  ]
+}
+```
+
+Parameters:
+
+ 1. `to` | String | **required** - The address of the recipient account
+
+ 2. `from` | String | optional - Address of the tx sender. Defaults to current active account of the sender user
+
+ 3. `value` | Number | optional - Amount of ETH to send. Measured in `wei`. Defaults to 0.
+
+ 4. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
+
+ 5. `mode` | String | **required** - Mode of invocation. Expected value: `function`
+
+ 6. `functionSignature` | Object | **required** - Object that defines signature of invoked function. It is used only if `"mode" == "function"`
+
+    1. `name` | String | **required** - Name of the invoked function
+
+    2. `payable` | Boolean | **required** - Defines whether function is able to receive ETH or not. (`value` should be zero if `false`)
+
+    3. `args` | Array | **required** - Contains list of function`s arguments
+
+        1. `type` | String | **required** - Type of the argument: `uint`, `uint8`, `int32`, `address`, `bool` and so on.
+
+        2. `name` | String | **required** - Name of the argument. Used to generate GUI for the transaction.
+        In fact, argument of Solidity function can be unnamed - this is OK if you develop a smart contract.
+        But QR codes are used to pass tx details between different wallets and GUI must be nice.
+        Therefore unnamed input fields in GUI are not possible. Therefore this parameter is required.
+
+ 7. `argsDefaults` | Array | optional - Array with default values for function arguments.
+
+    1. `name` | String | **required** - Name of the argument. Should be equal to the name of one of arguments from `functionSignature`
+
+    2. `value` | Any | **required** - Default value for the function argument
+
+
+### 3. Template for `ERC20` tokens
+
+The 3 extra subtypes were added since the ERC20 tokens are very popular.
+
+To make it easier to send tokens between accounts we predefine function signatures for the methods from ERC20 specification:
+
+  1. `"mode": "erc20__transfer"` will result in `function transfer(address to, uint value) returns (bool success)`
+  2. `"mode": "erc20__approve"` => `function approve(address spender, uint value) returns (bool success)`
+  3. `"mode": "erc20__transferFrom"` => `function transferFrom(address from, address to, uint value) returns (bool success)`
+
+Example for `transfer` method:
+
+```json
+{
+  "to": "0xcontractaddress",
+  "from": "0xsenderaddress",
+  "gas": 100000,
+  "mode": "erc20__transfer",
+  "argsDefaults": [
+    {
+      "name": "to",
+      "value": "0xtokensrecipient"
+    }
+  ]
+}
+```
+
+Functionally, this is equivalent to the previous example.
+
+Parameters:
+
+ 1. `to` | String | **required** - The address of the recipient account
+
+ 2. `from` | String | optional - Address of the tx sender. Defaults to current active account of the sender user
+
+ 3. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
+
+ 4. `mode` | String | **required** - Mode of invocation. Expected value: `erc20__transfer`, `erc20__approve`, `erc20__transferFrom`
+
+ 5. `argsDefaults` | Array | optional - Array with default values for function arguments.
+
+    1. `name` | String | **required** - Name of the argument. Should be equal to the name of one of arguments from `functionSignature`
+
+    2. `value` | Any | **required** - Default value for the function argument
+
+
+### Parameters of QR code generation
 
 Parameters are passed vie one configutation object. It has following fields:
 
- 1. `to` | String | **required** - The adress of the transaction
-
- 2. `from` | String | optional - Adress where the transaction should be sent.
-
- 3. `value` | Number | optional - Amount of ETH sent. Measured in `wei`. Defaults to 0.
-
- 4. `gas` | Number | optional - Recomended amount of gas in `wei`. Defaults to 10000.
-
- 5. `mode` | String | optional - Adress type to generate. Possible values: eth, function, erc20
-
- - `eth` - Ether transfer (default)
- - `function` - Call function of a contract.
- - `erc20` - Tokens transfer. Examples of using `mode = erc20`: `transfer(address to, uint value)`, `approve(address spender, uint value)`, `balanceOf(address to)`;
-
- 6. `functionSignature` | String | optional - Becomes required in case of `mode = function`. Then the follwing string us encoded: `ethereum:<address>[?value=<value>][?gas=<gas>][?function=<functionSignature.name> <>(<functionSignature.args>)]`
-
- The example functionSignature object is:
-```
-functionSignature: {
-       'name': 'myFunc',    // String, may be '' (empty string) or a normal String
-       'payable': false,    // Boolean, required
-       'args': [{               
-               'name': 'adress',    // String, required
-               'type': 'uint'       // String, required
-           }]
- },
- ```
-
- 7. `toJSON`  | String | optional - When generating a QR encode adress as a formed string or a JSON object.
-
- 8. `selector` | String | optional
+ 1. `selector` | String | optional
 
  If you want the pugin to generate the canvas tag with QR code and place in into you page DOM, you need to provide the DOM element selector.
 
- 9. `options` | Object | optional
+ 2. `options` | Object | optional
 
 Allows to [override extra options](https://www.npmjs.com/package/qrcode#options-9) of the used qrcore plugin. Such as color, margin and scale. Be carefull with that `option.scale` because by default the value is selected by the plugin automatically based on the lanth of the data. If being set by hand may result in an error.
 
