@@ -77,7 +77,7 @@ class EthereumQRplugin {
      * @param {String} valueString 
      */
     readStringToJSON(valueString){
-
+        return readString(valueString);
     }
     /**
      * may use https://github.com/edi9999/jsqrcode for readng the canvas data to JSON

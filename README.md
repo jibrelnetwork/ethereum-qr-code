@@ -87,6 +87,24 @@ qrCode.then(function(qrCodeDataUri){
 })
 ```
 
+
+`.readStringToJSON(string)`
+
+A method to convert the EIP67 string back to the JSON object.
+
+Example:
+
+```
+const paymentParams = qr.readStringToJSON(ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=4200][?value=150]');
+console.log(paymentParams);
+// {
+//  to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
+//  gas: '4200',
+//  value: '150'
+//  }
+//
+```
+
 ## URI schemes
 
 QR code generator supports URI for different use-cases:
