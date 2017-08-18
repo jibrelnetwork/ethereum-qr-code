@@ -4,7 +4,7 @@ const isValidString = str => str && str.length > 0 && str.match(validStrRegEx);
 
 export const listOfValidERC20Modes = [`erc20__transfer`, `erc20__approve`, `erc20__transferFrom`];
 
-const tokenSchemaBasic = ({
+export const tokenSchemaBasic = ({
     to,
     gas,
     value
@@ -47,27 +47,7 @@ const tokenSchemaFunction = ({
 
     return `ethereum:${to}${gasBlock}${valueBlock}${functionBlock}`;
 }
-//todo add other params ??
-const tokenSchemaContract = ({
-    to,
-    gas,
-    contract
-}) => {
-    let base = `ethereum:${to}`,
-        gasBlock = '',
-        contractBlock = '';
 
-    if (gas) gasBlock = `[?gas=${gas}]`;
-    if (contract) contractBlock = `[?contract=${contract}]`;
-
-    return `ethereum:${to}${gasBlock}${contractBlock}`;
-}
-
-export default {
-    eth: tokenSchemaBasic,
-    function: tokenSchemaFunction,
-    erc20: tokenSchemaContract
-}
 
 const validateArgsDefaults = (argsDefaults, functionArgs) => {
     if(!argsDefaults || argsDefaults.length !== functionArgs.length) return false;

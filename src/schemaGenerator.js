@@ -1,5 +1,6 @@
-import stringFunctions, {
+import {
     isAddress,
+    tokenSchemaBasic,
     validateSignature,
     validateArgsDefaults,
     listOfValidERC20Modes
@@ -12,9 +13,9 @@ export default class SchemaGenerator {
         this.parseRequest(request);
     }
     generateString() {
-        return this.schemaGenerator(this.data)
+        return (this.mode === 'eth') ? tokenSchemaBasic(this.data) : '';
     }
-    generateJSON() {
+    generateJSONString() {
         return JSON.stringify(this.data);
     }
     parseRequest(request) {
@@ -23,11 +24,9 @@ export default class SchemaGenerator {
         this.assignPluguinValues(request);
     }
     assignPluguinValues(request) {
-        this.data = {};
         this.data.to = request.to;
         this.data.gas = parseInt(request.gas) || DEFAULTS.gas;
         if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
-        this.schemaGenerator = stringFunctions[this.mode];
     }
     validateToField(requestTo) {
         if (!requestTo || !isAddress(requestTo)) {

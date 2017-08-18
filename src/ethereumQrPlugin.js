@@ -83,25 +83,31 @@ class EthereumQRplugin {
      * may use https://github.com/edi9999/jsqrcode for readng the canvas data to JSON
      * @param {*} dataURl 
      */
-    // readImageToJSON(dataURl){
-    //   const qr = new QrCode();        
-    // qr.callback = function(error, result) {
-    //     if(error) {
-    //         console.log(error)
-    //         return;
-    //     }
-    //     console.log(result)
-    // }
-    //   qr.decode(dataURl);
-    // }
+    /*
+        readImageToJSON(dataURl){
+        const qr = new QrCode();        
+        qr.callback = function(error, result) {
+            if(error) {
+                console.log(error)
+                return;
+            }
+            console.log(result)
+        }
+        qr.decode(dataURl);
+        }
+    */
 
     getJSON() {
         return JSON.stringify( getString());
     }
     produceEncodedValue(config) {
         this.assignPluguinValues(config)
-        const encodedString = this.toJSON ? new SchemaGenerator(config).generateJSON() : new SchemaGenerator(config).generateString();
-        return encodedString;
+        const schema = new SchemaGenerator(config);
+
+        // if(schema.mode === 'eth' && this.toJSON){
+        //     return JSON.stringify(schema.generateString())
+        // }
+        return (schema.mode === 'eth' && !this.toJSON) ? schema.generateString() : schema.generateJSONString() ;
     }
 
     assignPluguinValues(request) {
