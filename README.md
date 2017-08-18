@@ -30,7 +30,7 @@ const qrCode = qr.toCanvas({
 
 ### API
 
-`.toAdressString(config)`
+**`.toAdressString(config)`**
 
 Just an encoder of your data to a string. Use if you only want an encode string, no QR code needed.
 
@@ -38,19 +38,21 @@ Example:
 
 ```
 qr.toAdressString({
-“to”: 0x12345,
-“value”: 10000000,
+“to”: 0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8,
+“value”: 100,
 })
-//
+//ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=21000][?value=100]
 
 qr.toAdressString({
-    “to”: 0x12345,
-    “value”: 10000000,
-    “gas”: 21000,
+    “to”: 0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8,
+    “value”: 10,
+    “gas”: 42000,
 })
-//
+//ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=42000][?value=10]
 ```
-`.toCanvas(config)`
+
+
+**`.toCanvas(config)`**
 
 Generates the canvas tag with QR code. In this case the `selector` field becomes available.
 Returns a Promise that is an object that is resolved when the code is successfully generated.
@@ -69,7 +71,8 @@ qrCode.then(function(code){
 })
 ```
 
-`.toDataUrl(config)`
+
+**`.toDataUrl(config)`**
 
 More flexible method that returns a QR in a dataUrl.
 Method returns a Promise that is resolved when the code is successfully generated.
@@ -83,12 +86,12 @@ const qrCode = qr.toDataUrl({
     amount
 });
 qrCode.then(function(qrCodeDataUri){
-    console.log('Your QR id generated:', code.value);
+    console.log('Your QR id generated:', code.value); //'data:image/png;base64,iVBORw0KGgoA....'
 })
 ```
 
 
-`.readStringToJSON(string)`
+**`.readStringToJSON(string)`**
 
 A method to convert the EIP67 string back to the JSON object.
 
@@ -97,12 +100,13 @@ Example:
 ```
 const paymentParams = qr.readStringToJSON(ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=4200][?value=150]');
 console.log(paymentParams);
-// {
-//  to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
-//  gas: '4200',
-//  value: '150'
-//  }
-//
+/*
+{
+    to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
+    gas: '4200',
+    value: '150'
+  }
+*/
 ```
 
 ## URI schemes
