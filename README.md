@@ -276,7 +276,7 @@ Parameters are passed via one configuration object. It has following fields:
 
  2. `options` | Object | optional
 
-Allows to [override extra options](https://www.npmjs.com/package/qrcode#options-9) of the used qrcore plugin. Such as color, margin and scale. Use `option.scale` carefully, because by default the value is selected by the plugin automatically based on the lanth of the data. Manually setting may result in error.
+Allows to [override extra options](https://www.npmjs.com/package/qrcode#options-9) of the used qrcore plugin. Such as color, margin and scale. Use `option.scale` with caution. The plugin selects a default value based on the length of the data. Manually setting may result in an error.
 
 
 ## Contact us
