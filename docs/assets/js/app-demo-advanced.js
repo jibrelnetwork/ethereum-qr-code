@@ -34,7 +34,6 @@ const updateQR = () => {
             mode,
             selector: '#ethereum-qr-code'
         }).then(function (result) {
-            console.log(result)
             $('#resulting-string').val(result.value);
         })
     } catch (e) {

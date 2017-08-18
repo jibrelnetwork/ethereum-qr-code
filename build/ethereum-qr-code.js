@@ -1329,7 +1329,7 @@ var isValidString = function isValidString(str) {
 
 var listOfValidERC20Modes = exports.listOfValidERC20Modes = ['erc20__transfer', 'erc20__approve', 'erc20__transferFrom'];
 
-var tokenSchemaBasic = function tokenSchemaBasic(_ref) {
+var tokenSchemaBasic = exports.tokenSchemaBasic = function tokenSchemaBasic(_ref) {
     var to = _ref.to,
         gas = _ref.gas,
         value = _ref.value;
@@ -1372,28 +1372,6 @@ var tokenSchemaFunction = function tokenSchemaFunction(_ref2) {
 
     return 'ethereum:' + to + gasBlock + valueBlock + functionBlock;
 };
-//todo add other params ??
-var tokenSchemaContract = function tokenSchemaContract(_ref3) {
-    var to = _ref3.to,
-        gas = _ref3.gas,
-        contract = _ref3.contract;
-
-    var base = 'ethereum:' + to,
-        gasBlock = '',
-        contractBlock = '';
-
-    if (gas) gasBlock = '[?gas=' + gas + ']';
-    if (contract) contractBlock = '[?contract=' + contract + ']';
-
-    return 'ethereum:' + to + gasBlock + contractBlock;
-};
-
-exports.default = {
-    eth: tokenSchemaBasic,
-    function: tokenSchemaFunction,
-    erc20: tokenSchemaContract
-};
-
 
 var validateArgsDefaults = function validateArgsDefaults(argsDefaults, functionArgs) {
     if (!argsDefaults || argsDefaults.length !== functionArgs.length) return false;
@@ -1630,8 +1608,12 @@ var EthereumQRplugin = function () {
         key: 'produceEncodedValue',
         value: function produceEncodedValue(config) {
             this.assignPluguinValues(config);
-            var encodedString = this.toJSON ? new _schemaGenerator2.default(config).generateJSON() : new _schemaGenerator2.default(config).generateString();
-            return encodedString;
+            var schema = new _schemaGenerator2.default(config);
+
+            // if(schema.mode === 'eth' && this.toJSON){
+            //     return JSON.stringify(schema.generateString())
+            // }
+            return schema.mode === 'eth' ? schema.generateString() : schema.generateJSONString();
         }
     }, {
         key: 'assignPluguinValues',
@@ -3829,8 +3811,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _utils = __webpack_require__(10);
 
-var _utils2 = _interopRequireDefault(_utils);
-
 var _defaults = __webpack_require__(9);
 
 var _defaults2 = _interopRequireDefault(_defaults);
@@ -3850,11 +3830,11 @@ var SchemaGenerator = function () {
     _createClass(SchemaGenerator, [{
         key: 'generateString',
         value: function generateString() {
-            return this.schemaGenerator(this.data);
+            return this.mode === 'eth' ? (0, _utils.tokenSchemaBasic)(this.data) : '';
         }
     }, {
-        key: 'generateJSON',
-        value: function generateJSON() {
+        key: 'generateJSONString',
+        value: function generateJSONString() {
             return JSON.stringify(this.data);
         }
     }, {
@@ -3867,11 +3847,9 @@ var SchemaGenerator = function () {
     }, {
         key: 'assignPluguinValues',
         value: function assignPluguinValues(request) {
-            this.data = {};
             this.data.to = request.to;
             this.data.gas = parseInt(request.gas) || _defaults2.default.gas;
             if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
-            this.schemaGenerator = _utils2.default[this.mode];
         }
     }, {
         key: 'validateToField',
