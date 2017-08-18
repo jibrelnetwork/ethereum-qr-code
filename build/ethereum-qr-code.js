@@ -75,7 +75,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1319,11 +1319,145 @@ exports.default = DEFAULTS;
 
 
 Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var validStrRegEx = /^[^\\\/&]*$/;
+
+var isValidString = function isValidString(str) {
+    return str && str.length > 0 && str.match(validStrRegEx);
+};
+
+var listOfValidERC20Modes = exports.listOfValidERC20Modes = ['erc20__transfer', 'erc20__approve', 'erc20__transferFrom'];
+
+var tokenSchemaBasic = function tokenSchemaBasic(_ref) {
+    var to = _ref.to,
+        gas = _ref.gas,
+        value = _ref.value;
+
+    var base = 'ethereum:' + to,
+        gasBlock = '',
+        valueBlock = '';
+    if (gas) gasBlock = '[?gas=' + gas + ']';
+    if (value) valueBlock = '[?value=' + value + ']';
+
+    return 'ethereum:' + to + gasBlock + valueBlock;
+};
+/**
+ * generate string: ethereum:${to}${gasBlock}${valueBlock}`
+ * @param {*} param0 
+ */
+var tokenSchemaFunction = function tokenSchemaFunction(_ref2) {
+    var to = _ref2.to,
+        gas = _ref2.gas,
+        value = _ref2.value,
+        functionSignature = _ref2.functionSignature,
+        argsDefaults = _ref2.argsDefaults;
+
+    var base = 'ethereum:' + to,
+        functionBlock = '',
+        gasBlock = '',
+        valueBlock = '';
+
+    if (functionSignature) {
+        var convertedArgs = '',
+            payable = !!functionSignature.payable ? ' payable' : '';
+        functionSignature.args.forEach(function (arg, index) {
+            var isLast = index < functionSignature.args.length - 1 ? ',' : '';
+            convertedArgs += arg.type + ' ' + arg.name + isLast;
+        });
+        functionBlock = '[?function=' + functionSignature.name + payable + '(' + convertedArgs + ')]';
+    }
+    if (gas) gasBlock = '[?gas=' + gas + ']';
+    if (value) valueBlock = '[?value=' + value + ']';
+
+    return 'ethereum:' + to + gasBlock + valueBlock + functionBlock;
+};
+//todo add other params ??
+var tokenSchemaContract = function tokenSchemaContract(_ref3) {
+    var to = _ref3.to,
+        gas = _ref3.gas,
+        contract = _ref3.contract;
+
+    var base = 'ethereum:' + to,
+        gasBlock = '',
+        contractBlock = '';
+
+    if (gas) gasBlock = '[?gas=' + gas + ']';
+    if (contract) contractBlock = '[?contract=' + contract + ']';
+
+    return 'ethereum:' + to + gasBlock + contractBlock;
+};
+
+exports.default = {
+    eth: tokenSchemaBasic,
+    function: tokenSchemaFunction,
+    erc20: tokenSchemaContract
+};
+
+
+var validateArgsDefaults = function validateArgsDefaults(argsDefaults, functionArgs) {
+    if (!argsDefaults || argsDefaults.length !== functionArgs.length) return false;
+    var argsDefaultsIsValid = true;
+    functionArgs.forEach(function (arg) {
+        var correspondingEl = argsDefaults.find(function (a) {
+            return a.name === arg.name;
+        });
+        if (!correspondingEl || !correspondingEl.value) argsDefaultsIsValid = false;
+    });
+    return argsDefaultsIsValid;
+};
+/**
+ * the corect format e.g. is:
+ * 
+ * ..
+ * functionSignature: {
+ *      'name': 'myFunc',
+ *      'payable': false,
+ *      'args': [{
+ *              'name': 'adress',
+ *              'type': 'uint'
+ *          }]
+ * },`
+ * 
+ */
+var validateSignature = exports.validateSignature = function validateSignature(signature) {
+    if (signature.name === null || typeof signature.name === 'undefined') return false;
+    if (signature.payable === null || typeof signature.payable === 'undefined') return false;
+    if (!signature.args || signature.args.length === 0) return false;
+    var allArgsCheck = false;
+    signature.args.forEach(function (arg) {
+        if (!isValidString(arg.type) || !isValidString(arg.name)) allArgsCheck = false;
+    });
+    return allArgsCheck;
+};
+
+/**
+ * Checks if the given string is an address
+ * from ethereum.stackexchange.com/questions/1374/how-can-i-check-if-an-ethereum-address-is-valid
+ * from https://github.com/ethereum/web3.js/blob/master/lib/utils/utils.js#L392
+ * 
+ * @method isAddress
+ * @param {String} address the given HEX adress
+ * @return {Boolean}
+ */
+var isAddress = exports.isAddress = function isAddress(address) {
+    return (/^0x[0-9a-f]{40}$/i.test(address)
+    );
+};
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ethereumQRplugin = undefined;
 
-var _ethereumQrPlugin = __webpack_require__(11);
+var _ethereumQrPlugin = __webpack_require__(12);
 
 var _ethereumQrPlugin2 = _interopRequireDefault(_ethereumQrPlugin);
 
@@ -1333,7 +1467,7 @@ exports.default = _ethereumQrPlugin2.default;
 exports.ethereumQRplugin = _ethereumQrPlugin2.default;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1345,7 +1479,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _qrcode = __webpack_require__(12);
+var _qrcode = __webpack_require__(13);
 
 var _qrcode2 = _interopRequireDefault(_qrcode);
 
@@ -1353,11 +1487,11 @@ var _defaults = __webpack_require__(9);
 
 var _defaults2 = _interopRequireDefault(_defaults);
 
-var _tokenIcon = __webpack_require__(31);
+var _tokenIcon = __webpack_require__(32);
 
 var _tokenIcon2 = _interopRequireDefault(_tokenIcon);
 
-var _schemaGenerator = __webpack_require__(32);
+var _schemaGenerator = __webpack_require__(33);
 
 var _schemaGenerator2 = _interopRequireDefault(_schemaGenerator);
 
@@ -1459,7 +1593,9 @@ var EthereumQRplugin = function () {
 
     }, {
         key: 'readStringToJSON',
-        value: function readStringToJSON(valueString) {}
+        value: function readStringToJSON(valueString) {
+            return (0, _codeParser2.default)(valueString);
+        }
         /**
          * may use https://github.com/edi9999/jsqrcode for readng the canvas data to JSON
          * @param {*} dataURl 
@@ -1516,12 +1652,12 @@ var EthereumQRplugin = function () {
 exports.default = EthereumQRplugin;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var QRCode = __webpack_require__(13)
-var CanvasRenderer = __webpack_require__(29)
-var SvgRenderer = __webpack_require__(30)
+var QRCode = __webpack_require__(14)
+var CanvasRenderer = __webpack_require__(30)
+var SvgRenderer = __webpack_require__(31)
 
 function renderCanvas (renderFunc, canvas, text, opts, cb) {
   var argsNum = arguments.length - 1
@@ -1577,23 +1713,23 @@ exports.qrcodedraw = function () {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
 var Utils = __webpack_require__(0)
 var ECLevel = __webpack_require__(4)
-var BitBuffer = __webpack_require__(14)
-var BitMatrix = __webpack_require__(15)
-var AlignmentPattern = __webpack_require__(16)
-var FinderPattern = __webpack_require__(17)
-var MaskPattern = __webpack_require__(18)
+var BitBuffer = __webpack_require__(15)
+var BitMatrix = __webpack_require__(16)
+var AlignmentPattern = __webpack_require__(17)
+var FinderPattern = __webpack_require__(18)
+var MaskPattern = __webpack_require__(19)
 var ECCode = __webpack_require__(5)
-var ReedSolomonEncoder = __webpack_require__(19)
+var ReedSolomonEncoder = __webpack_require__(20)
 var Version = __webpack_require__(6)
-var FormatInfo = __webpack_require__(22)
+var FormatInfo = __webpack_require__(23)
 var Mode = __webpack_require__(1)
-var Segments = __webpack_require__(23)
+var Segments = __webpack_require__(24)
 var isArray = __webpack_require__(3)
 
 /**
@@ -2077,7 +2213,7 @@ exports.create = function create (data, options) {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 function BitBuffer () {
@@ -2120,7 +2256,7 @@ module.exports = BitBuffer
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
@@ -2195,7 +2331,7 @@ module.exports = BitMatrix
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2284,7 +2420,7 @@ exports.getPositions = function getPositions (version) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getSymbolSize = __webpack_require__(0).getSymbolSize
@@ -2312,7 +2448,7 @@ exports.getPositions = function getPositions (version) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 /**
@@ -2531,11 +2667,11 @@ exports.getBestMask = function getBestMask (data, setupFormatFunc) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
-var Polynomial = __webpack_require__(20)
+var Polynomial = __webpack_require__(21)
 
 function ReedSolomonEncoder (degree) {
   this.genPoly = undefined
@@ -2596,11 +2732,11 @@ module.exports = ReedSolomonEncoder
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
-var GF = __webpack_require__(21)
+var GF = __webpack_require__(22)
 
 /**
  * Multiplies two polynomials inside Galois Field
@@ -2666,7 +2802,7 @@ exports.generateECPolynomial = function generateECPolynomial (degree) {
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
@@ -2744,7 +2880,7 @@ exports.mul = function mul (x, y) {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Utils = __webpack_require__(0)
@@ -2779,17 +2915,17 @@ exports.getEncodedBits = function getEncodedBits (errorCorrectionLevel, mask) {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
-var NumericData = __webpack_require__(24)
-var AlphanumericData = __webpack_require__(25)
-var ByteData = __webpack_require__(26)
-var KanjiData = __webpack_require__(27)
+var NumericData = __webpack_require__(25)
+var AlphanumericData = __webpack_require__(26)
+var ByteData = __webpack_require__(27)
+var KanjiData = __webpack_require__(28)
 var Regex = __webpack_require__(7)
 var Utils = __webpack_require__(0)
-var dijkstra = __webpack_require__(28)
+var dijkstra = __webpack_require__(29)
 
 /**
  * Returns UTF8 byte length
@@ -3115,7 +3251,7 @@ exports.rawSplit = function rawSplit (data) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
@@ -3164,7 +3300,7 @@ module.exports = NumericData
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
@@ -3229,7 +3365,7 @@ module.exports = AlphanumericData
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
@@ -3262,7 +3398,7 @@ module.exports = ByteData
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
@@ -3322,7 +3458,7 @@ module.exports = KanjiData
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3494,7 +3630,7 @@ if (true) {
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Utils = __webpack_require__(8)
@@ -3563,7 +3699,7 @@ exports.renderToDataURL = function renderToDataURL (qrData, canvas, options) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Utils = __webpack_require__(8)
@@ -3611,7 +3747,7 @@ exports.render = function render (qrData, options) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3670,7 +3806,7 @@ var DrawIcon = function () {
 exports.default = DrawIcon;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3682,7 +3818,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _utils = __webpack_require__(33);
+var _utils = __webpack_require__(10);
 
 var _utils2 = _interopRequireDefault(_utils);
 
@@ -3789,140 +3925,6 @@ var SchemaGenerator = function () {
 exports.default = SchemaGenerator;
 
 /***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var validStrRegEx = /^[^\\\/&]*$/;
-
-var isValidString = function isValidString(str) {
-    return str && str.length > 0 && str.match(validStrRegEx);
-};
-
-var listOfValidERC20Modes = exports.listOfValidERC20Modes = ['erc20__transfer', 'erc20__approve', 'erc20__transferFrom'];
-
-var tokenSchemaBasic = function tokenSchemaBasic(_ref) {
-    var to = _ref.to,
-        gas = _ref.gas,
-        value = _ref.value;
-
-    var base = 'ethereum:' + to,
-        gasBlock = '',
-        valueBlock = '';
-    if (gas) gasBlock = '[?gas=' + gas + ']';
-    if (value) valueBlock = '[?value=' + value + ']';
-
-    return 'ethereum:' + to + gasBlock + valueBlock;
-};
-/**
- * generate string: ethereum:${to}${gasBlock}${valueBlock}`
- * @param {*} param0 
- */
-var tokenSchemaFunction = function tokenSchemaFunction(_ref2) {
-    var to = _ref2.to,
-        gas = _ref2.gas,
-        value = _ref2.value,
-        functionSignature = _ref2.functionSignature,
-        argsDefaults = _ref2.argsDefaults;
-
-    var base = 'ethereum:' + to,
-        functionBlock = '',
-        gasBlock = '',
-        valueBlock = '';
-
-    if (functionSignature) {
-        var convertedArgs = '',
-            payable = !!functionSignature.payable ? ' payable' : '';
-        functionSignature.args.forEach(function (arg, index) {
-            var isLast = index < functionSignature.args.length - 1 ? ',' : '';
-            convertedArgs += arg.type + ' ' + arg.name + isLast;
-        });
-        functionBlock = '[?function=' + functionSignature.name + payable + '(' + convertedArgs + ')]';
-    }
-    if (gas) gasBlock = '[?gas=' + gas + ']';
-    if (value) valueBlock = '[?value=' + value + ']';
-
-    return 'ethereum:' + to + gasBlock + valueBlock + functionBlock;
-};
-//todo add other params ??
-var tokenSchemaContract = function tokenSchemaContract(_ref3) {
-    var to = _ref3.to,
-        gas = _ref3.gas,
-        contract = _ref3.contract;
-
-    var base = 'ethereum:' + to,
-        gasBlock = '',
-        contractBlock = '';
-
-    if (gas) gasBlock = '[?gas=' + gas + ']';
-    if (contract) contractBlock = '[?contract=' + contract + ']';
-
-    return 'ethereum:' + to + gasBlock + contractBlock;
-};
-
-exports.default = {
-    eth: tokenSchemaBasic,
-    function: tokenSchemaFunction,
-    erc20: tokenSchemaContract
-};
-
-
-var validateArgsDefaults = function validateArgsDefaults(argsDefaults, functionArgs) {
-    if (!argsDefaults || argsDefaults.length !== functionArgs.length) return false;
-    var argsDefaultsIsValid = true;
-    functionArgs.forEach(function (arg) {
-        var correspondingEl = argsDefaults.find(function (a) {
-            return a.name === arg.name;
-        });
-        if (!correspondingEl || !correspondingEl.value) argsDefaultsIsValid = false;
-    });
-    return argsDefaultsIsValid;
-};
-/**
- * the corect format e.g. is:
- * 
- * ..
- * functionSignature: {
- *      'name': 'myFunc',
- *      'payable': false,
- *      'args': [{
- *              'name': 'adress',
- *              'type': 'uint'
- *          }]
- * },`
- * 
- */
-var validateSignature = exports.validateSignature = function validateSignature(signature) {
-    if (signature.name === null || typeof signature.name === 'undefined') return false;
-    if (signature.payable === null || typeof signature.payable === 'undefined') return false;
-    if (!signature.args || signature.args.length === 0) return false;
-    var allArgsCheck = false;
-    signature.args.forEach(function (arg) {
-        if (!isValidString(arg.type) || !isValidString(arg.name)) allArgsCheck = false;
-    });
-    return allArgsCheck;
-};
-
-/**
- * Checks if the given string is an address
- * from ethereum.stackexchange.com/questions/1374/how-can-i-check-if-an-ethereum-address-is-valid
- * from https://github.com/ethereum/web3.js/blob/master/lib/utils/utils.js#L392
- * 
- * @method isAddress
- * @param {String} address the given HEX adress
- * @return {Boolean}
- */
-var isAddress = exports.isAddress = function isAddress(address) {
-    return (/^0x[0-9a-f]{40}$/i.test(address)
-    );
-};
-
-/***/ }),
 /* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3932,8 +3934,32 @@ var isAddress = exports.isAddress = function isAddress(address) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.readString = undefined;
+
+var _utils = __webpack_require__(10);
+
+var adressBlockParams = ['gas', 'value'];
+var requiredElements = new RegExp(/[\[\]]/);
+
 var readString = exports.readString = function readString(str) {
-    if (!str) return {};
+    var result = {};
+    if (!str || str.substr(0, 9) !== 'ethereum:') return false;
+    if (str.length >= 51 && (0, _utils.isAddress)(str.substr(9, 42))) {
+        result.to = str.substr(9, 42);
+    }
+    if (str.length > 51 && requiredElements.test(str)) {
+
+        var exStr = str.substr(51).split(']');
+        exStr.forEach(function (element, i) {
+            adressBlockParams.forEach(function (segment) {
+                var segmentQueryPart = '[?' + segment + '=';
+                if (element.indexOf(segmentQueryPart) === 0) {
+                    result[segment] = element.substr(segmentQueryPart.length);
+                }
+            });
+        });
+    }
+    return result;
 };
 
 /***/ })
