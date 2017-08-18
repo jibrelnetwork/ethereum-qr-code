@@ -276,19 +276,19 @@ Parameters are passed via one configuration object. It has following fields:
 
  2. `options` | Object | optional
 
-Allows to [override extra options](https://www.npmjs.com/package/qrcode#options-9) of the used qrcore plugin. Such as color, margin and scale. Be carefull with that `option.scale` because by default the value is selected by the plugin automatically based on the lanth of the data. If being set by hand may result in an error.
+Allows to [override extra options](https://www.npmjs.com/package/qrcode#options-9) of the used qrcore plugin. Such as color, margin and scale. Use `option.scale` carefully, because by default the value is selected by the plugin automatically based on the lanth of the data. Manually setting may result in error.
 
 
 ## Contact us
 
-We will be glad to hear from you via [slack.com/jibrelnetwork](https://join.slack.com/jibrelnetwork/signup)
+Contact us via [slack.com/jibrelnetwork](https://join.slack.com/jibrelnetwork/signup)
 
-Follow us on Twitter: [@JibrelNetwork](https://twitter.com/JibrelNetwork).
+Or follow us on Twitter: [@JibrelNetwork](https://twitter.com/JibrelNetwork).
 
 If you have a proposal or a came across some problems running the plugin please [submit an issue](https://github.com/jibrelnetwork/ethereum-qr-code/issues).
 
 
-Developed by Qubist Labs, 2017
+Developed by Qubist Labs Inc. / Jibrel Network (2017)
 
 ## License 
 
