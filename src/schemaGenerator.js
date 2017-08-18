@@ -50,7 +50,7 @@ export default class SchemaGenerator {
     validateFunctionMode(request) {
         if (request.functionSignature && validateSignature(request.functionSignature)) {
             this.mode = 'function';
-            this.data.functionSignature = request.functionSignature;
+            this.data.functionSignature = JSON.parse(unescape(request.functionSignature));
 
             if (request.argsDefaults) {
                 if (validateArgsDefaults(request.argsDefaults, request.functionSignature.args)) {
@@ -69,12 +69,12 @@ export default class SchemaGenerator {
             throw new Error('Wrong `erc20__*` mode name provided');
         }
 
-        if (request.from && isAddress(request.from) && request.value) {
+        if (request.from && isAddress(request.from)) {
             this.mode = 'erc20';
             this.data.from = request.from;
             this.data.argsDefaults = request.argsDefaults;
         } else {
-            throw new Error('For the `erc20` mode, the `from` object is not provided or not valid');
+            throw new Error('For the `erc20__*` mode, the `from` object is not provided or not valid');
         }
     }
 }

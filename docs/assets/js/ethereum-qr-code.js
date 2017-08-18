@@ -1420,11 +1420,20 @@ var validateArgsDefaults = function validateArgsDefaults(argsDefaults, functionA
  * },`
  * 
  */
-var validateSignature = exports.validateSignature = function validateSignature(signature) {
+var validateSignature = exports.validateSignature = function validateSignature(signatureString) {
+
+    var signature = void 0;
+
+    try {
+        signature = JSON.parse(unescape(signatureString));
+    } catch (e) {
+        return false;
+    }
+
     if (signature.name === null || typeof signature.name === 'undefined') return false;
     if (signature.payable === null || typeof signature.payable === 'undefined') return false;
     if (!signature.args || signature.args.length === 0) return false;
-    var allArgsCheck = false;
+    var allArgsCheck = true;
     signature.args.forEach(function (arg) {
         if (!isValidString(arg.type) || !isValidString(arg.name)) allArgsCheck = false;
     });
@@ -3889,7 +3898,7 @@ var SchemaGenerator = function () {
         value: function validateFunctionMode(request) {
             if (request.functionSignature && (0, _utils.validateSignature)(request.functionSignature)) {
                 this.mode = 'function';
-                this.data.functionSignature = request.functionSignature;
+                this.data.functionSignature = JSON.parse(unescape(request.functionSignature));
 
                 if (request.argsDefaults) {
                     if ((0, _utils.validateArgsDefaults)(request.argsDefaults, request.functionSignature.args)) {
@@ -3909,12 +3918,12 @@ var SchemaGenerator = function () {
                 throw new Error('Wrong `erc20__*` mode name provided');
             }
 
-            if (request.from && (0, _utils.isAddress)(request.from) && request.value) {
+            if (request.from && (0, _utils.isAddress)(request.from)) {
                 this.mode = 'erc20';
                 this.data.from = request.from;
                 this.data.argsDefaults = request.argsDefaults;
             } else {
-                throw new Error('For the `erc20` mode, the `from` object is not provided or not valid');
+                throw new Error('For the `erc20__*` mode, the `from` object is not provided or not valid');
             }
         }
     }]);

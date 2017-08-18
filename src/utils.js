@@ -92,11 +92,20 @@ const validateArgsDefaults = (argsDefaults, functionArgs) => {
  * },`
  * 
  */
-export const validateSignature = (signature) => {
+export const validateSignature = (signatureString) => {
+    
+    let signature;
+
+    try {
+        signature = JSON.parse(unescape(signatureString));
+    } catch(e) {
+        return false;
+    }
+
     if (signature.name === null || typeof signature.name === 'undefined') return false;
     if (signature.payable === null || typeof signature.payable === 'undefined') return false;
     if (!signature.args || signature.args.length === 0) return false;
-    let allArgsCheck = false;
+    let allArgsCheck = true;
     signature.args.forEach(arg => {
         if (!isValidString(arg.type) || !isValidString(arg.name)) allArgsCheck = false;
     })
