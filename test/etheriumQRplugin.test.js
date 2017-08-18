@@ -21,13 +21,13 @@ describe('main public EthereumQRplugin class', () => {
 
     it('should generate simple encoded string with required addess', () => {
 
-        const str = qr.toAdressString(validCodeDetails);
+        const str = qr.toAddressString(validCodeDetails);
         expect(str).toBe('ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=4200][?value=150]')
     });
 
        it('should generate JSON encoded string if `toJSON` it true', () => {
 
-        const str = qr.toAdressString(Object.assign({}, validCodeDetails, {
+        const str = qr.toAddressString(Object.assign({}, validCodeDetails, {
             'toJSON': true
         }));
         

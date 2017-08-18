@@ -17,7 +17,7 @@ class EthereumQRplugin {
      * @param {Object} config 
      * @returns String
      */
-    toAdressString(config) {
+    toAddressString(config) {
         return this.produceEncodedValue(config);
     }
     /**

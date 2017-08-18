@@ -1499,7 +1499,7 @@ var EthereumQRplugin = function () {
     }
 
     _createClass(EthereumQRplugin, [{
-        key: 'toAdressString',
+        key: 'toAddressString',
 
         /**
          * 
@@ -1509,7 +1509,7 @@ var EthereumQRplugin = function () {
          * @param {Object} config 
          * @returns String
          */
-        value: function toAdressString(config) {
+        value: function toAddressString(config) {
             return this.produceEncodedValue(config);
         }
         /**
