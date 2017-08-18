@@ -32,7 +32,7 @@ const qrCode = qr.toCanvas({
 
 **`.toAddressString(config)`**
 
-Just an encoder to translate your data into a string. Use if you only want an encode string, no QR code needed.
+Just an encoder to translate your data into a string. Use if you want to generate a string.
 
 Example:
 
