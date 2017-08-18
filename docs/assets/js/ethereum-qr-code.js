@@ -1587,17 +1587,19 @@ var EthereumQRplugin = function () {
          * may use https://github.com/edi9999/jsqrcode for readng the canvas data to JSON
          * @param {*} dataURl 
          */
-        // readImageToJSON(dataURl){
-        //   const qr = new QrCode();        
-        // qr.callback = function(error, result) {
-        //     if(error) {
-        //         console.log(error)
-        //         return;
-        //     }
-        //     console.log(result)
-        // }
-        //   qr.decode(dataURl);
-        // }
+        /*
+            readImageToJSON(dataURl){
+            const qr = new QrCode();        
+            qr.callback = function(error, result) {
+                if(error) {
+                    console.log(error)
+                    return;
+                }
+                console.log(result)
+            }
+            qr.decode(dataURl);
+            }
+        */
 
     }, {
         key: 'getJSON',
@@ -1613,7 +1615,7 @@ var EthereumQRplugin = function () {
             // if(schema.mode === 'eth' && this.toJSON){
             //     return JSON.stringify(schema.generateString())
             // }
-            return schema.mode === 'eth' ? schema.generateString() : schema.generateJSONString();
+            return schema.mode === 'eth' && !this.toJSON ? schema.generateString() : schema.generateJSONString();
         }
     }, {
         key: 'assignPluguinValues',
@@ -3861,7 +3863,7 @@ var SchemaGenerator = function () {
     }, {
         key: 'validateAndSetMode',
         value: function validateAndSetMode(request) {
-            if (request.mode === null || typeof request.mode === 'undefined') {
+            if (request.mode === null || typeof request.mode === 'undefined' || request.mode === 'eth') {
                 this.mode = 'eth';
             } else if (request.mode && request.mode === 'function') {
                 return this.validateFunctionMode(request);

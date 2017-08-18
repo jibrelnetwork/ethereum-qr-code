@@ -35,7 +35,7 @@ export default class SchemaGenerator {
     }
 
     validateAndSetMode(request) {
-        if(request.mode === null || typeof request.mode === 'undefined'){
+        if(request.mode === null || typeof request.mode === 'undefined' || request.mode === 'eth'){
             this.mode = 'eth';
         } else if (request.mode && request.mode === 'function') {
             return this.validateFunctionMode(request);
