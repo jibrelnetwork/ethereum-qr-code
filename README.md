@@ -1,4 +1,4 @@
-# Ethereum Address QR Generator
+# Ethereum Address QR Code Generator
 
 This plugin provides a convenient way to generate an [ethereum address link out of the provided parameters based on EIP67](https://github.com/ethereum/EIPs/issues/67).
 
