@@ -1,10 +1,10 @@
 # Ethereum Address QR Generator
 
-This plugin implements a convenient way to generate a [ethereum address link out of the provided parameters based on EIP67](https://github.com/ethereum/EIPs/issues/67).
+This plugin provides a convenient way to generate a [ethereum address link out of the provided parameters based on EIP67](https://github.com/ethereum/EIPs/issues/67).
 
-On top of the string generation the QR code is generated based on this link. The [qrcode plugin](https://www.npmjs.com/package/qrcode) is used for this.
+The plugin generates the string based on the provided parameters and translates it into a QR code using the following [qrcode plugin](https://www.npmjs.com/package/qrcode).
 
-See the demos: [https://jibrelnetwork.github.io/ethereum-qr-code/](https://jibrelnetwork.github.io/ethereum-qr-code/)
+Demo: [https://jibrelnetwork.github.io/ethereum-qr-code/](https://jibrelnetwork.github.io/ethereum-qr-code/)
 
 
 ## Getting started
@@ -30,20 +30,20 @@ const qrCode = qr.toCanvas({
 
 ### API
 
-**`.toAdressString(config)`**
+**`.toAddressString(config)`**
 
-Just an encoder of your data to a string. Use if you only want an encode string, no QR code needed.
+Just an encoder to translate your data into a string. Use if you only want an encode string, no QR code needed.
 
 Example:
 
 ```
-qr.toAdressString({
+qr.toAddressString({
 “to”: 0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8,
 “value”: 100,
 })
 //ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=21000][?value=100]
 
-qr.toAdressString({
+qr.toAddressString({
     “to”: 0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8,
     “value”: 10,
     “gas”: 42000,
@@ -55,7 +55,7 @@ qr.toAdressString({
 **`.toCanvas(config)`**
 
 Generates the canvas tag with QR code. In this case the `selector` field becomes available.
-Returns a Promise that is an object that is resolved when the code is successfully generated.
+Returns a Promise object that is resolved when the code is successfully generated.
 
 Example:
 
@@ -111,17 +111,17 @@ console.log(paymentParams);
 
 ## URI schemes
 
-QR code generator supports URI for different use-cases:
+This QR code generator supports URI across different use-cases:
 1. Sending ETH
-2. Invoke function of a contract
+2. Invoking function of a contract
 3. Sending `ERC20` tokens
 
-We cover those 3 separate cases using a parameter called 'mode'. You can see details about each case below:
+We cover these 3 different cases using a parameter called 'mode'. The details are outlined below.
 
 ### 1. Sending ETH
 
 URI scheme used to send ETH between accounts conforms early `EIP67` proposals and Bitcoin scheme.
-This made for backward compatibility.
+This is built to be backward compatible.
 
 `ethereum:<address>[?from=<sender_address>][?value=<ethamount>][?gas=<suggestedGas>]`
 
@@ -268,7 +268,7 @@ Parameters:
 
 ### Parameters of QR code generation
 
-Parameters are passed vie one configutation object. It has following fields:
+Parameters are passed via one configuration object. It has following fields:
 
  1. `selector` | String | optional
 
@@ -281,9 +281,9 @@ Allows to [override extra options](https://www.npmjs.com/package/qrcode#options-
 
 ## Contact us
 
-We will be glad to hear from you via [https://join.slack.com/jibrelnetwork/signup](slack.com/jibrelnetwork)
+We will be glad to hear from you via [slack.com/jibrelnetwork](https://join.slack.com/jibrelnetwork/signup)
 
-Follow us on Twitter: [https://twitter.com/JibrelNetwork](@JibrelNetwork).
+Follow us on Twitter: [@JibrelNetwork](https://twitter.com/JibrelNetwork).
 
 If you have a proposal or a came across some problems running the plugin please [submit an issue](https://github.com/jibrelnetwork/ethereum-qr-code/issues).
 
