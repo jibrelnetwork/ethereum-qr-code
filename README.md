@@ -285,7 +285,7 @@ Contact us via [slack.com/jibrelnetwork](https://join.slack.com/jibrelnetwork/si
 
 Or follow us on Twitter: [@JibrelNetwork](https://twitter.com/JibrelNetwork).
 
-If you have a proposal or a came across some problems running the plugin please [submit an issue](https://github.com/jibrelnetwork/ethereum-qr-code/issues).
+If you have a proposal, feature request, or are having trouble running the plugin,  please [submit an issue](https://github.com/jibrelnetwork/ethereum-qr-code/issues).
 
 
 Developed by Qubist Labs Inc. / Jibrel Network (2017)
