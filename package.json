@@ -25,12 +25,16 @@
   },
   "homepage": "https://github.com/jibrelnetwork/ethereum-qr-code#readme",
   "dependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-plugin-import": "^2.7.0",
     "qrcode": "^0.9.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-preset-env": "^1.6.0",
+    "eslint": "^4.4.1",
     "jest": "^20.0.4",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "watch-http-server": "^0.7.6",
