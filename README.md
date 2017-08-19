@@ -1,4 +1,4 @@
-# Ethereum Address QR Generator
+# Ethereum Address QR Code Generator
 
 This plugin provides a convenient way to generate an [ethereum address link out of the provided parameters based on EIP67](https://github.com/ethereum/EIPs/issues/67).
 
@@ -32,7 +32,7 @@ const qrCode = qr.toCanvas({
 
 **`.toAddressString(config)`**
 
-Just an encoder to translate your data into a string. Use if you only want an encode string, no QR code needed.
+An encoder to translate your data into a string. Use if you want to generate a string.
 
 Example:
 
@@ -54,7 +54,7 @@ qr.toAddressString({
 
 **`.toCanvas(config)`**
 
-Generates the canvas tag with QR code. In this case the `selector` field becomes available.
+Generates the canvas tag with the QR code. In this case the `selector` field becomes available.
 Returns a Promise object that is resolved when the code is successfully generated.
 
 Example:
@@ -74,8 +74,8 @@ qrCode.then(function(code){
 
 **`.toDataUrl(config)`**
 
-More flexible method that returns a QR in a dataUrl.
-Method returns a Promise that is resolved when the code is successfully generated.
+A more flexible method that returns a QR in a dataUrl.
+This method returns a Promise that is resolved when the code is successfully generated.
 
 Example:
 
@@ -111,7 +111,7 @@ console.log(paymentParams);
 
 ## URI schemes
 
-This QR code generator supports URI across different use-cases:
+This QR code generator supports URI across three different use-cases:
 1. Sending ETH
 2. Invoking function of a contract
 3. Sending `ERC20` tokens
@@ -188,9 +188,9 @@ Example for the method `transfer` of `ERC20` token:
 
 Parameters:
 
- 1. `to` | String | **required** - The address of the recipient account
+ 1. `to` | String | **required** - Recipient address
 
- 2. `from` | String | optional - Address of the tx sender. Defaults to current active account of the sender user
+ 2. `from` | String | optional - Sender address. Defaults to current active user account
 
  3. `value` | Number | optional - Amount of ETH to send. Measured in `wei`. Defaults to 0.
 
@@ -222,7 +222,7 @@ Parameters:
 
 ### 3. Template for `ERC20` tokens
 
-The 3 extra subtypes were added since the ERC20 tokens are very popular.
+The 3 extra subtypes were added since ERC20 tokens are very popular.
 
 To make it easier to send tokens between accounts we predefine function signatures for the methods from ERC20 specification:
 
@@ -247,13 +247,13 @@ Example for `transfer` method:
 }
 ```
 
-Functionally, this is equivalent to the previous example.
+Functionally, this is similar to the previous example.
 
 Parameters:
 
- 1. `to` | String | **required** - The address of the recipient account
+ 1. `to` | String | **required** - Recipient address
 
- 2. `from` | String | optional - Address of the tx sender. Defaults to current active account of the sender user
+ 2. `from` | String | optional - Sender address. Defaults to current active account of the sender user
 
  3. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
 
@@ -272,7 +272,7 @@ Parameters are passed via one configuration object. It has following fields:
 
  1. `selector` | String | optional
 
- If you want the pugin to generate the canvas tag with QR code and place in into you page DOM, you need to provide the DOM element selector.
+ If you want the plugin to generate the canvas tag and place the QR code into your page DOM, you need to provide the DOM element selector.
 
  2. `options` | Object | optional
 

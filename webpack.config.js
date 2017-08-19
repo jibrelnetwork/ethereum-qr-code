@@ -1,6 +1,7 @@
 
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
+const version = require('./package.json').version;
 
 module.exports = {
      entry: './index.js',
@@ -21,7 +22,11 @@ module.exports = {
     plugins: [
         //new UglifyJSPlugin(),
         new webpack.BannerPlugin({
-            banner: "Ethereum adress QR generator \n https://github.com/jibrelnetwork/ethereum-qr-code \n file:[file]"
+            banner:
+`Ethereum adress QR Code generator
+v ${version} - ${new Date().toString()}
+https://github.com/jibrelnetwork/ethereum-qr-code
+file:[file]`
         })
     ]
  }
