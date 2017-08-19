@@ -139,7 +139,7 @@ Parameters:
 No other values are needed for this simple case.
 For 2 other types - there is one significant field `mode` that defines the structure of entire resulting JSON. URI scheme to invoke contract's function uses JSON to encode all needed parameters.
 Possible values of field `mode`: 
-- `function`
+- `contract_function`
 - `erc20__transfer`
 - `erc20__approve`
 - `erc20__transferFrom`
@@ -148,7 +148,7 @@ We'll go though those below.
 
 ### 2. Invoke function of a contract
 
-That is done by using `"mode: "function"`.
+That is done by using `"mode: "contract_function"`.
 
 Example for the method `transfer` of `ERC20` token:
 
@@ -158,7 +158,7 @@ Example for the method `transfer` of `ERC20` token:
   "from": "0xsenderaddress",
   "value": 0,
   "gas": 100000,
-  "mode": "function",
+  "mode": "contract_function",
   "functionSignature": {
     "name": "transfer",
     "payable": false,
@@ -196,7 +196,7 @@ Parameters:
 
  4. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
 
- 5. `mode` | String | **required** - Mode of invocation. Expected value: `function`
+ 5. `mode` | String | **required** - Mode of invocation. Expected value: `contract_function`
 
  6. `functionSignature` | Object | **required** - Object that defines signature of invoked function. It is used only if `"mode" == "function"`
 
@@ -204,7 +204,7 @@ Parameters:
 
     2. `payable` | Boolean | **required** - Defines whether function is able to receive ETH or not. (`value` should be zero if `false`)
 
-    3. `args` | Array | **required** - Contains list of function`s arguments
+    3. `args` | Array | **optional** - Contains list of function`s arguments. If this parameter is present - it must contain at least one element. If this parameter is not present - we assume that function do not have arguments. 
 
         1. `type` | String | **required** - Type of the argument: `uint`, `uint8`, `int32`, `address`, `bool` and so on.
 
@@ -213,7 +213,7 @@ Parameters:
         But QR codes are used to pass tx details between different wallets and GUI must be nice.
         Therefore unnamed input fields in GUI are not possible. Therefore this parameter is required.
 
- 7. `argsDefaults` | Array | optional - Array with default values for function arguments.
+ 7. `argsDefaults` | Array | optional - Array with default values for function arguments. If this parameter is present - it must contain at least one element. We do not require to provide defaults of all args. 
 
     1. `name` | String | **required** - Name of the argument. Should be equal to the name of one of arguments from `functionSignature`
 
