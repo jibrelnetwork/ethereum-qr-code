@@ -2,30 +2,29 @@ import QRCode from 'qrcode';
 
 import DEFAULTS from './defaults';
 import DrawIcon from './tokenIcon';
-import SchemaGenerator from './schemaGenerator';
-import readString from './codeParser';
+import { encodeEthereumUri, decodeEthereumUri } from './uri_processor';
 
 /**
  * Main plugin logic
  */
 class EthereumQRplugin {
     /**
-     * 
+     *
      * Generates a data encode string
-     * 
+     *
      * @public
-     * @param {Object} config 
+     * @param {Object} config
      * @returns String
      */
     toAddressString(config) {
         return this.produceEncodedValue(config);
     }
     /**
-     * 
+     *
      * Draws QR code to canvas tag inside specified DOM selector
      *
-     * @public 
-     * @param {Object} config 
+     * @public
+     * @param {Object} config
      * @returns Promise
      */
     toCanvas(config) {
@@ -50,11 +49,11 @@ class EthereumQRplugin {
 
     }
     /**
-     * 
+     *
      * Generates DataURL for a QR code
-     * 
+     *
      * @public
-     * @param {Object} config 
+     * @param {Object} config
      * @returns Promise
      */
     toDataUrl(config) {
@@ -73,19 +72,19 @@ class EthereumQRplugin {
 
     /**
      * implements backwards transformation encode query string to JSON
-     * 
-     * @param {String} valueString 
+     *
+     * @param {String} valueString
      */
     readStringToJSON(valueString){
-        return readString(valueString);
+        return decodeEthereumUri(valueString);
     }
     /**
      * may use https://github.com/edi9999/jsqrcode for readng the canvas data to JSON
-     * @param {*} dataURl 
+     * @param {*} dataURl
      */
     /*
         readImageToJSON(dataURl){
-        const qr = new QrCode();        
+        const qr = new QrCode();
         qr.callback = function(error, result) {
             if(error) {
                 console.log(error)
@@ -101,13 +100,9 @@ class EthereumQRplugin {
         return JSON.stringify( getString());
     }
     produceEncodedValue(config) {
-        this.assignPluguinValues(config)
-        const schema = new SchemaGenerator(config);
-
-        // if(schema.mode === 'eth' && this.toJSON){
-        //     return JSON.stringify(schema.generateString())
-        // }
-        return (schema.mode === 'eth' && !this.toJSON) ? schema.generateString() : schema.generateJSONString() ;
+        this.assignPluguinValues(config);
+        // todo split parameters of URI and parameters of image generation, it is much more natural
+        return encodeEthereumUri(config);
     }
 
     assignPluguinValues(request) {
