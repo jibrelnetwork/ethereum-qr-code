@@ -10,7 +10,7 @@ const init = () => {
     const codeDetails = {
         to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
         value: 1,
-        gas: 4200,
+        gas: 42000,
         size:180,
         selector: '#ethereum-qr-code-simple',
         options: {
