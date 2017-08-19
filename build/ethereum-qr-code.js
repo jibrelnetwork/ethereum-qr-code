@@ -1,7 +1,8 @@
 /*!
- * Ethereum adress QR generator 
- *  https://github.com/jibrelnetwork/ethereum-qr-code 
- *  file:build/ethereum-qr-code.js
+ * Ethereum adress QR Code generator
+ * v 0.1.4 - Sat Aug 19 2017 10:11:13 GMT+0200 (CEST)
+ * https://github.com/jibrelnetwork/ethereum-qr-code
+ * file:build/ethereum-qr-code.js
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
