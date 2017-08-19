@@ -136,21 +136,24 @@ Parameters:
  4. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
 
 
-No other values are needed for this simple case.
-For 2 other types - there is one significant field `mode` that defines the structure of entire resulting JSON. URI scheme to invoke contract's function uses JSON to encode all needed parameters.
-Possible values of field `mode`: 
+These are the only parameters needed for this use-case.
+
+For the other use-cases, the `mode` field allows for defining the structure of the resulting JSON. The URI scheme to invoke the contract's function uses JSON to encode the parameters specified.
+
+Possible inputs for the `mode` field: 
 - `contract_function`
 - `erc20__transfer`
 - `erc20__approve`
 - `erc20__transferFrom`
 
-We'll go though those below.
+These are explored in more detail below.
+
 
 ### 2. Invoke function of a contract
 
-That is done by using `"mode: "contract_function"`.
+That mode is utilized by specifying `"mode: "contract_function"`.
 
-Example for the method `transfer` of `ERC20` token:
+Example of the `transfer` method using an `ERC20` token:
 
 ```json
 {
