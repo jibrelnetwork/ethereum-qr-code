@@ -28,9 +28,9 @@ class EthereumQRplugin {
      */
   toCanvas(config, options) {
     const generatedValue = this.produceEncodedValue(config, options);
-    const parentEl = document.querySelector(config.selector);
+    const parentEl = document.querySelector(options.selector);
 
-    if (!config.selector || parentEl === null) {
+    if (!options.selector || parentEl === null) {
       throw new Error('The canvas element parent selector is required when calling `toCanvas`');
     }
 
