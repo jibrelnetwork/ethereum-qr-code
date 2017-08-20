@@ -52,7 +52,7 @@ qr.toAddressString({
 ```
 
 
-**`.toCanvas(config)`**
+**`.toCanvas(config, options)`**
 
 Generates the canvas tag with the QR code. In this case the `selector` field becomes available.
 Returns a Promise object that is resolved when the code is successfully generated.
@@ -61,9 +61,10 @@ Example:
 
 ```
 const qrCode = qr.toCanvas({
-    selector: '#my-qr-code',
     to,
     gas
+}, {
+  selector: '#my-qr-code',
 });
 qrCode.then(function(code){
     console.log('Your QR is generated!');
@@ -72,7 +73,7 @@ qrCode.then(function(code){
 ```
 
 
-**`.toDataUrl(config)`**
+**`.toDataUrl(config, options)`**
 
 A more flexible method that returns a QR in a dataUrl.
 This method returns a Promise that is resolved when the code is successfully generated.
@@ -269,9 +270,9 @@ Parameters:
     2. `value` | Any | **required** - Default value for the function argument
 
 
-### Parameters of QR code generation
+### Options argument - parameters of QR code generation
 
-Parameters are passed via one configuration object. It has following fields:
+Optional parameters are passed via configuration object as a second parameter to `toDataUrl` and `toCanvas` methods. It has following fields:
 
  1. `selector` | String | optional
 
@@ -280,6 +281,8 @@ Parameters are passed via one configuration object. It has following fields:
  2. `options` | Object | optional
 
 Allows to [override extra options](https://www.npmjs.com/package/qrcode#options-9) of the used qrcore plugin. Such as color, margin and scale. Use `option.scale` with caution. The plugin selects a default value based on the length of the data. Manually setting may result in an error.
+
+ 3. `size` | String | optional
 
 
 ## Contact us
