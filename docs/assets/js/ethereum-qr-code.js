@@ -1,6 +1,6 @@
 /*!
  * Ethereum adress QR Code generator
- * v 0.1.4 - Sat Aug 19 2017 10:11:13 GMT+0200 (CEST)
+ * v 0.1.4 - Sun Aug 20 2017 12:07:29 GMT+0200 (CEST)
  * https://github.com/jibrelnetwork/ethereum-qr-code
  * file:build/ethereum-qr-code.js
  */
@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1296,156 +1296,11 @@ exports.qrToImageData = function qrToImageData (imgData, qr, margin, scale, colo
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var DEFAULTS = {
-    value: 0,
-    gas: 21000,
-    size: 128,
-    qrCodeOptions: {
-        color: {
-            dark: '#000000',
-            light: '#ffffff'
-        },
-        scale: 5
-    }
-};
-exports.default = DEFAULTS;
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var validStrRegEx = /^[^\\\/&]*$/;
-
-var isValidString = function isValidString(str) {
-    return str && str.length > 0 && str.match(validStrRegEx);
-};
-
-var listOfValidERC20Modes = exports.listOfValidERC20Modes = ['erc20__transfer', 'erc20__approve', 'erc20__transferFrom'];
-
-var tokenSchemaBasic = exports.tokenSchemaBasic = function tokenSchemaBasic(_ref) {
-    var to = _ref.to,
-        gas = _ref.gas,
-        value = _ref.value;
-
-    var base = 'ethereum:' + to,
-        gasBlock = '',
-        valueBlock = '';
-    if (gas) gasBlock = '[?gas=' + gas + ']';
-    if (value) valueBlock = '[?value=' + value + ']';
-
-    return 'ethereum:' + to + gasBlock + valueBlock;
-};
-/**
- * generate string: ethereum:${to}${gasBlock}${valueBlock}`
- * @param {*} param0 
- */
-var tokenSchemaFunction = function tokenSchemaFunction(_ref2) {
-    var to = _ref2.to,
-        gas = _ref2.gas,
-        value = _ref2.value,
-        functionSignature = _ref2.functionSignature,
-        argsDefaults = _ref2.argsDefaults;
-
-    var base = 'ethereum:' + to,
-        functionBlock = '',
-        gasBlock = '',
-        valueBlock = '';
-
-    if (functionSignature) {
-        var convertedArgs = '',
-            payable = !!functionSignature.payable ? ' payable' : '';
-        functionSignature.args.forEach(function (arg, index) {
-            var isLast = index < functionSignature.args.length - 1 ? ',' : '';
-            convertedArgs += arg.type + ' ' + arg.name + isLast;
-        });
-        functionBlock = '[?function=' + functionSignature.name + payable + '(' + convertedArgs + ')]';
-    }
-    if (gas) gasBlock = '[?gas=' + gas + ']';
-    if (value) valueBlock = '[?value=' + value + ']';
-
-    return 'ethereum:' + to + gasBlock + valueBlock + functionBlock;
-};
-
-var validateArgsDefaults = function validateArgsDefaults(argsDefaults, functionArgs) {
-    if (!argsDefaults || argsDefaults.length !== functionArgs.length) return false;
-    var argsDefaultsIsValid = true;
-    functionArgs.forEach(function (arg) {
-        var correspondingEl = argsDefaults.find(function (a) {
-            return a.name === arg.name;
-        });
-        if (!correspondingEl || !correspondingEl.value) argsDefaultsIsValid = false;
-    });
-    return argsDefaultsIsValid;
-};
-/**
- * the corect format e.g. is:
- * 
- * ..
- * functionSignature: {
- *      'name': 'myFunc',
- *      'payable': false,
- *      'args': [{
- *              'name': 'adress',
- *              'type': 'uint'
- *          }]
- * },`
- * 
- */
-var validateSignature = exports.validateSignature = function validateSignature(signatureString) {
-
-    var signature = void 0;
-
-    try {
-        signature = JSON.parse(unescape(signatureString));
-    } catch (e) {
-        return false;
-    }
-
-    if (signature.name === null || typeof signature.name === 'undefined') return false;
-    if (signature.payable === null || typeof signature.payable === 'undefined') return false;
-    if (!signature.args || signature.args.length === 0) return false;
-    var allArgsCheck = true;
-    signature.args.forEach(function (arg) {
-        if (!isValidString(arg.type) || !isValidString(arg.name)) allArgsCheck = false;
-    });
-    return allArgsCheck;
-};
-
-/**
- * Checks if the given string is an address
- * from ethereum.stackexchange.com/questions/1374/how-can-i-check-if-an-ethereum-address-is-valid
- * from https://github.com/ethereum/web3.js/blob/master/lib/utils/utils.js#L392
- * 
- * @method isAddress
- * @param {String} address the given HEX adress
- * @return {Boolean}
- */
-var isAddress = exports.isAddress = function isAddress(address) {
-    return (/^0x[0-9a-f]{40}$/i.test(address)
-    );
-};
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ethereumQRplugin = undefined;
 
-var _ethereumQrPlugin = __webpack_require__(12);
+var _ethereumQrPlugin = __webpack_require__(10);
 
 var _ethereumQrPlugin2 = _interopRequireDefault(_ethereumQrPlugin);
 
@@ -1455,37 +1310,27 @@ exports.default = _ethereumQrPlugin2.default;
 exports.ethereumQRplugin = _ethereumQrPlugin2.default;
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _qrcode = __webpack_require__(13);
+var _qrcode = __webpack_require__(11);
 
 var _qrcode2 = _interopRequireDefault(_qrcode);
 
-var _defaults = __webpack_require__(9);
+var _defaults = __webpack_require__(30);
 
 var _defaults2 = _interopRequireDefault(_defaults);
 
-var _tokenIcon = __webpack_require__(32);
-
-var _tokenIcon2 = _interopRequireDefault(_tokenIcon);
-
-var _schemaGenerator = __webpack_require__(33);
-
-var _schemaGenerator2 = _interopRequireDefault(_schemaGenerator);
-
-var _codeParser = __webpack_require__(34);
-
-var _codeParser2 = _interopRequireDefault(_codeParser);
+var _uri_processor = __webpack_require__(31);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1495,163 +1340,131 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Main plugin logic
  */
 var EthereumQRplugin = function () {
-    function EthereumQRplugin() {
-        _classCallCheck(this, EthereumQRplugin);
+  function EthereumQRplugin() {
+    _classCallCheck(this, EthereumQRplugin);
+  }
+
+  _createClass(EthereumQRplugin, [{
+    key: 'toAddressString',
+
+    /**
+       *
+       * Generates a data encode string
+       *
+       * @public
+       * @param {Object} config
+       * @returns String
+       */
+    value: function toAddressString(config) {
+      return this.produceEncodedValue(config);
+    }
+    /**
+       *
+       * Draws QR code to canvas tag inside specified DOM selector
+       *
+       * @public
+       * @param {Object} config
+       * @returns Promise
+       */
+
+  }, {
+    key: 'toCanvas',
+    value: function toCanvas(config, options) {
+      var _this = this;
+
+      var generatedValue = this.produceEncodedValue(config, options);
+      var parentEl = document.querySelector(config.selector);
+
+      if (!config.selector || parentEl === null) {
+        throw new Error('The canvas element parent selector is required when calling `toCanvas`');
+      }
+
+      return new Promise(function (resolve, reject) {
+        _qrcode2.default.toCanvas(generatedValue, _this.options, function (err, canvas) {
+          if (err) reject(err);
+
+          resolve({
+            value: generatedValue
+          });
+          parentEl.appendChild(canvas);
+          canvas.setAttribute('style', 'width: ' + _this.size + 'px');
+        });
+      });
+    }
+    /**
+       *
+       * Generates DataURL for a QR code
+       *
+       * @public
+       * @param {Object} config
+       * @returns Promise
+       */
+
+  }, {
+    key: 'toDataUrl',
+    value: function toDataUrl(config, options) {
+      var _this2 = this;
+
+      var generatedValue = this.produceEncodedValue(config, options);
+
+      return new Promise(function (resolve, reject) {
+        _qrcode2.default.toDataURL(generatedValue, _this2.options, function (err, url) {
+          if (err) reject(err);
+          resolve({
+            dataURL: url,
+            value: generatedValue
+          });
+        });
+      });
     }
 
-    _createClass(EthereumQRplugin, [{
-        key: 'toAddressString',
+    /**
+     * implements backwards transformation encode query string to JSON
+     *
+     * @param {String} valueString
+     */
 
-        /**
-         * 
-         * Generates a data encode string
-         * 
-         * @public
-         * @param {Object} config 
-         * @returns String
-         */
-        value: function toAddressString(config) {
-            return this.produceEncodedValue(config);
-        }
-        /**
-         * 
-         * Draws QR code to canvas tag inside specified DOM selector
-         *
-         * @public 
-         * @param {Object} config 
-         * @returns Promise
-         */
+  }, {
+    key: 'readStringToJSON',
+    value: function readStringToJSON(valueString) {
+      return (0, _uri_processor.decodeEthereumUri)(valueString);
+    }
+  }, {
+    key: 'getJSON',
+    value: function getJSON() {
+      return JSON.stringify(this.readStringToJSON());
+    }
+  }, {
+    key: 'produceEncodedValue',
+    value: function produceEncodedValue(config, options) {
+      this.assignPluguinValues(options);
+      console.log((0, _uri_processor.decodeEthereumUri)((0, _uri_processor.encodeEthereumUri)(config)));
+      return this.toJSON && !config.mode ? (0, _uri_processor.decodeEthereumUri)((0, _uri_processor.encodeEthereumUri)(config)) : (0, _uri_processor.encodeEthereumUri)(config);
+    }
+  }, {
+    key: 'assignPluguinValues',
+    value: function assignPluguinValues() {
+      var request = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    }, {
-        key: 'toCanvas',
-        value: function toCanvas(config) {
-            var _this = this;
+      this.toJSON = !!request.toJSON;
+      this.size = request.size && parseInt(request.size, 10) > 0 ? parseInt(request.size, 10) : _defaults2.default.size;
+      this.imgUrl = request.imgUrl || false;
+      this.options = Object.assign(_defaults2.default.qrCodeOptions, request.options);
+    }
+  }]);
 
-            var generatedValue = this.produceEncodedValue(config);
-            var parentEl = document.querySelector(config.selector);
-
-            if (!config.selector || parentEl === null) {
-                throw new Error('The canvas element parent selector is required when calling `toCanvas`');
-            }
-
-            return new Promise(function (resolve, reject) {
-                _qrcode2.default.toCanvas(generatedValue, _this.options, function (err, canvas) {
-                    if (err) reject(err);
-
-                    resolve({
-                        value: generatedValue
-                    });
-                    parentEl.appendChild(canvas);
-                    canvas.setAttribute('style', 'width: ' + _this.size + 'px');
-                });
-            });
-        }
-        /**
-         * 
-         * Generates DataURL for a QR code
-         * 
-         * @public
-         * @param {Object} config 
-         * @returns Promise
-         */
-
-    }, {
-        key: 'toDataUrl',
-        value: function toDataUrl(config) {
-            var _this2 = this;
-
-            var generatedValue = this.produceEncodedValue(config);
-
-            return new Promise(function (resolve, reject) {
-                _qrcode2.default.toDataURL(generatedValue, _this2.options, function (err, url) {
-                    if (err) reject(err);
-                    resolve({
-                        dataURL: url,
-                        value: generatedValue
-                    });
-                });
-            });
-        }
-
-        /**
-         * implements backwards transformation encode query string to JSON
-         * 
-         * @param {String} valueString 
-         */
-
-    }, {
-        key: 'readStringToJSON',
-        value: function readStringToJSON(valueString) {
-            return (0, _codeParser2.default)(valueString);
-        }
-        /**
-         * may use https://github.com/edi9999/jsqrcode for readng the canvas data to JSON
-         * @param {*} dataURl 
-         */
-        /*
-            readImageToJSON(dataURl){
-            const qr = new QrCode();        
-            qr.callback = function(error, result) {
-                if(error) {
-                    console.log(error)
-                    return;
-                }
-                console.log(result)
-            }
-            qr.decode(dataURl);
-            }
-        */
-
-    }, {
-        key: 'getJSON',
-        value: function getJSON() {
-            return JSON.stringify(getString());
-        }
-    }, {
-        key: 'produceEncodedValue',
-        value: function produceEncodedValue(config) {
-            this.assignPluguinValues(config);
-            var schema = new _schemaGenerator2.default(config);
-
-            // if(schema.mode === 'eth' && this.toJSON){
-            //     return JSON.stringify(schema.generateString())
-            // }
-            return schema.mode === 'eth' && !this.toJSON ? schema.generateString() : schema.generateJSONString();
-        }
-    }, {
-        key: 'assignPluguinValues',
-        value: function assignPluguinValues(request) {
-            this.toJSON = !!request.toJSON;
-            this.size = request.size && parseInt(request.size) > 0 ? parseInt(request.size) : _defaults2.default.size;
-            this.imgUrl = request.imgUrl || false;
-            this.options = Object.assign(_defaults2.default.qrCodeOptions, request.options);
-        }
-    }, {
-        key: 'drawTokenIcon',
-        value: function drawTokenIcon() {
-            var _this3 = this;
-
-            if (this.imgUrl) {
-                var iconDraw = new _tokenIcon2.default();
-                iconDraw.addIcon(this.imgUrl, this.size, this.uiElement, function () {
-                    _this3.uiElement.parentNode.removeChild(_this3.uiElement);
-                });
-            }
-        }
-    }]);
-
-    return EthereumQRplugin;
+  return EthereumQRplugin;
 }();
 
 exports.default = EthereumQRplugin;
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var QRCode = __webpack_require__(14)
-var CanvasRenderer = __webpack_require__(30)
-var SvgRenderer = __webpack_require__(31)
+var QRCode = __webpack_require__(12)
+var CanvasRenderer = __webpack_require__(28)
+var SvgRenderer = __webpack_require__(29)
 
 function renderCanvas (renderFunc, canvas, text, opts, cb) {
   var argsNum = arguments.length - 1
@@ -1707,23 +1520,23 @@ exports.qrcodedraw = function () {
 
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
 var Utils = __webpack_require__(0)
 var ECLevel = __webpack_require__(4)
-var BitBuffer = __webpack_require__(15)
-var BitMatrix = __webpack_require__(16)
-var AlignmentPattern = __webpack_require__(17)
-var FinderPattern = __webpack_require__(18)
-var MaskPattern = __webpack_require__(19)
+var BitBuffer = __webpack_require__(13)
+var BitMatrix = __webpack_require__(14)
+var AlignmentPattern = __webpack_require__(15)
+var FinderPattern = __webpack_require__(16)
+var MaskPattern = __webpack_require__(17)
 var ECCode = __webpack_require__(5)
-var ReedSolomonEncoder = __webpack_require__(20)
+var ReedSolomonEncoder = __webpack_require__(18)
 var Version = __webpack_require__(6)
-var FormatInfo = __webpack_require__(23)
+var FormatInfo = __webpack_require__(21)
 var Mode = __webpack_require__(1)
-var Segments = __webpack_require__(24)
+var Segments = __webpack_require__(22)
 var isArray = __webpack_require__(3)
 
 /**
@@ -2207,7 +2020,7 @@ exports.create = function create (data, options) {
 
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports) {
 
 function BitBuffer () {
@@ -2250,7 +2063,7 @@ module.exports = BitBuffer
 
 
 /***/ }),
-/* 16 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
@@ -2325,7 +2138,7 @@ module.exports = BitMatrix
 
 
 /***/ }),
-/* 17 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2414,7 +2227,7 @@ exports.getPositions = function getPositions (version) {
 
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getSymbolSize = __webpack_require__(0).getSymbolSize
@@ -2442,7 +2255,7 @@ exports.getPositions = function getPositions (version) {
 
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports) {
 
 /**
@@ -2661,11 +2474,11 @@ exports.getBestMask = function getBestMask (data, setupFormatFunc) {
 
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
-var Polynomial = __webpack_require__(21)
+var Polynomial = __webpack_require__(19)
 
 function ReedSolomonEncoder (degree) {
   this.genPoly = undefined
@@ -2726,11 +2539,11 @@ module.exports = ReedSolomonEncoder
 
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
-var GF = __webpack_require__(22)
+var GF = __webpack_require__(20)
 
 /**
  * Multiplies two polynomials inside Galois Field
@@ -2796,7 +2609,7 @@ exports.generateECPolynomial = function generateECPolynomial (degree) {
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
@@ -2874,7 +2687,7 @@ exports.mul = function mul (x, y) {
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Utils = __webpack_require__(0)
@@ -2909,17 +2722,17 @@ exports.getEncodedBits = function getEncodedBits (errorCorrectionLevel, mask) {
 
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
-var NumericData = __webpack_require__(25)
-var AlphanumericData = __webpack_require__(26)
-var ByteData = __webpack_require__(27)
-var KanjiData = __webpack_require__(28)
+var NumericData = __webpack_require__(23)
+var AlphanumericData = __webpack_require__(24)
+var ByteData = __webpack_require__(25)
+var KanjiData = __webpack_require__(26)
 var Regex = __webpack_require__(7)
 var Utils = __webpack_require__(0)
-var dijkstra = __webpack_require__(29)
+var dijkstra = __webpack_require__(27)
 
 /**
  * Returns UTF8 byte length
@@ -3245,7 +3058,7 @@ exports.rawSplit = function rawSplit (data) {
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
@@ -3294,7 +3107,7 @@ module.exports = NumericData
 
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
@@ -3359,7 +3172,7 @@ module.exports = AlphanumericData
 
 
 /***/ }),
-/* 27 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2)
@@ -3392,7 +3205,7 @@ module.exports = ByteData
 
 
 /***/ }),
-/* 28 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Mode = __webpack_require__(1)
@@ -3452,7 +3265,7 @@ module.exports = KanjiData
 
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3624,7 +3437,7 @@ if (true) {
 
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Utils = __webpack_require__(8)
@@ -3693,7 +3506,7 @@ exports.renderToDataURL = function renderToDataURL (qrData, canvas, options) {
 
 
 /***/ }),
-/* 31 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Utils = __webpack_require__(8)
@@ -3741,7 +3554,7 @@ exports.render = function render (qrData, options) {
 
 
 /***/ }),
-/* 32 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3750,206 +3563,372 @@ exports.render = function render (qrData, options) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var DEFAULTS = {
+  size: 128,
+  qrCodeOptions: {
+    color: {
+      dark: '#000000',
+      light: '#ffffff'
+    },
+    scale: 5
+  }
+};
+exports.default = DEFAULTS;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Supported modes
+ */
+
+var uriModes = exports.uriModes = {
+  contractFunction: 'contract_function',
+  erc20Transfer: 'erc20__transfer',
+  erc20Approve: 'erc20__approve',
+  erc20TransferFrom: 'erc20__transferFrom'
+};
 
 /**
- * Adding extra icon to the QR-code
+ * Basic validators
  */
-var DrawIcon = function () {
-  function DrawIcon() {
-    _classCallCheck(this, DrawIcon);
+
+/**
+ * Checks if the given string is an address
+ * from ethereum.stackexchange.com/questions/1374/how-can-i-check-if-an-ethereum-address-is-valid
+ * from https://github.com/ethereum/web3.js/blob/master/lib/utils/utils.js#L392
+ *
+ * @method isValidAddress
+ * @param {String} address the given HEX address
+ * @return {Boolean}
+ */
+var isValidAddress = function isValidAddress(address) {
+  return (/^0x[0-9a-f]{40}$/i.test(address)
+  );
+};
+
+var isValidEthValue = function isValidEthValue(value) {
+  return Number.isInteger(value) && value >= 0;
+};
+var isValidGasAmount = function isValidGasAmount(gas) {
+  return Number.isInteger(gas) && gas >= 0;
+};
+var isValidContractFunctionName = function isValidContractFunctionName(str) {
+  return str.length > 0 && /^[a-z0-9\-_]*$/i.test(str);
+};
+var isValidSolidityType = function isValidSolidityType(str) {
+  return str.length > 0 && /^[a-z0-9]*$/.test(str);
+};
+var isValidFunctionArgumentName = function isValidFunctionArgumentName(str) {
+  return str.length > 0 && /^[a-z0-9\-_]*$/i.test(str);
+};
+
+var isValueDefined = function isValueDefined(val) {
+  return val !== null && typeof val !== 'undefined';
+};
+var isValidOptionalParam = function isValidOptionalParam(param, contentCheckFunc) {
+  return param === null || typeof param === 'undefined' || contentCheckFunc(param) === true;
+};
+var isValidRequiredParam = function isValidRequiredParam(param, contentCheckFunc) {
+  return param !== null && typeof param !== 'undefined' && contentCheckFunc(param) === true;
+};
+var validateAllowedProperties = function validateAllowedProperties(testObj, allowedProperties) {
+  Object.keys(testObj).forEach(function (propertyName) {
+    if (Object.prototype.hasOwnProperty.call(testObj, propertyName)) {
+      if (allowedProperties.indexOf(propertyName) === -1) {
+        throw new Error('Not allowed property found: ' + propertyName + '! Allowed properties: ' + allowedProperties);
+      }
+    }
+  });
+};
+
+/**
+ * Complex validators of URI
+ */
+
+/**
+ * Check correctness of function signature
+ */
+var validateFunctionSignature = function validateFunctionSignature(signature) {
+  if (isValidRequiredParam(signature.name, isValidContractFunctionName) === false) {
+    throw new Error('Invalid function name: ' + signature.name);
+  }
+  if (signature.payable !== true && signature.payable !== false) {
+    throw new Error('Invalid "payable" mark: ' + signature.payable);
+  }
+  if (signature.args === null || typeof signature.args === 'undefined') {
+    return;
+  }
+  if (Array.isArray(signature.args) === false) {
+    throw new Error('Function "args" should be an array: ' + signature.args);
+  }
+  if (signature.args.length === 0) {
+    throw new Error('Function "args" is an empty array. Do not use this property if function does not have arguments');
+  }
+  signature.args.forEach(function (functionArg) {
+    validateAllowedProperties(functionArg, ['name', 'type']);
+    if (isValidRequiredParam(functionArg.name, isValidFunctionArgumentName) === false) {
+      throw new Error('Invalid "name" of function argument: ' + functionArg.name);
+    }
+    if (isValidRequiredParam(functionArg.type, isValidSolidityType) === false) {
+      throw new Error('Invalid "type" of function argument: ' + functionArg.name);
+    }
+  });
+};
+
+/**
+ * Check correctness of default args for function arguments
+ */
+var validateArgsDefaults = function validateArgsDefaults(argsDefaults, functionArgs) {
+  if (argsDefaults === null || typeof argsDefaults === 'undefined') {
+    return;
+  }
+  if (Array.isArray(argsDefaults) === false) {
+    throw new Error('"argsDefaults" should be an array: ' + argsDefaults);
+  }
+  if (argsDefaults.length === 0) {
+    throw new Error('"argsDefaults" is an empty array. Do not use this property if you do not have default values');
   }
 
-  _createClass(DrawIcon, [{
-    key: 'addIcon',
-    value: function addIcon(overlay, dimentions, qrcodeWrapper, callback) {
-      var _this = this;
+  if (functionArgs === null || typeof functionArgs === 'undefined') {
+    throw new Error('"argsDefaults" provided while function does not have arguments: ' + argsDefaults);
+  }
 
-      var canvas = document.createElement('canvas');
-      this.context = canvas.getContext('2d');
-      this.size = dimentions, this.qrcode = qrcodeWrapper.childNodes[0];
-
-      document.body.appendChild(canvas);
-
-      canvas.width = dimentions;
-      canvas.height = dimentions;
-
-      this.context.imageSmoothingEnabled = false;
-      this.context.mozImageSmoothingEnabled = false;
-      this.context.webkitImageSmoothingEnabled = false;
-
-      this.context.drawImage(this.qrcode, 0, 0, this.size, this.size);
-
-      var image = new Image();
-      image.src = overlay;
-      image.onload = function () {
-        var offsetX = (_this.size - image.width) / 2;
-        var offsetY = (_this.size - image.height) / 2;
-        _this.context.drawImage(image, offsetX, offsetY, image.width, image.height);
-        callback();
-      };
+  argsDefaults.forEach(function (argDefault) {
+    validateAllowedProperties(argDefault, ['name', 'value']);
+    if (isValidRequiredParam(argDefault.name, isValidFunctionArgumentName) === false) {
+      throw new Error('Invalid "name" of function argument in "argsDefaults": ' + argDefault.name);
     }
-  }]);
-
-  return DrawIcon;
-}();
-
-exports.default = DrawIcon;
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _utils = __webpack_require__(10);
-
-var _defaults = __webpack_require__(9);
-
-var _defaults2 = _interopRequireDefault(_defaults);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var SchemaGenerator = function () {
-    function SchemaGenerator(request) {
-        _classCallCheck(this, SchemaGenerator);
-
-        this.data = {};
-        this.parseRequest(request);
+    if (isValueDefined(argDefault.value) === false) {
+      // we do not check arg value, out of the scope of this library
+      throw new Error('Value of the function argument is not provided: ' + argDefault.value);
     }
+    var matchedArg = functionArgs.find(function (arg) {
+      return arg.name === argDefault.name;
+    });
+    if (matchedArg === null || typeof matchedArg === 'undefined') {
+      throw new Error('"name" of the function argument with default value does not fit function signature: ' + argDefault.name);
+    }
+  });
+};
 
-    _createClass(SchemaGenerator, [{
-        key: 'generateString',
-        value: function generateString() {
-            return this.mode === 'eth' ? (0, _utils.tokenSchemaBasic)(this.data) : '';
-        }
-    }, {
-        key: 'generateJSONString',
-        value: function generateJSONString() {
-            return JSON.stringify(this.data);
-        }
-    }, {
-        key: 'parseRequest',
-        value: function parseRequest(request) {
-            this.validateToField(request.to);
-            this.validateAndSetMode(request);
-            this.assignPluguinValues(request);
-        }
-    }, {
-        key: 'assignPluguinValues',
-        value: function assignPluguinValues(request) {
-            this.data.to = request.to;
-            this.data.gas = parseInt(request.gas) || _defaults2.default.gas;
-            if (parseFloat(request.value)) this.data.value = parseFloat(request.value);
-        }
-    }, {
-        key: 'validateToField',
-        value: function validateToField(requestTo) {
-            if (!requestTo || !(0, _utils.isAddress)(requestTo)) {
-                throw new Error('The "to" parameter with a valid Ethereum adress is required');
-            }
-        }
-    }, {
-        key: 'validateAndSetMode',
-        value: function validateAndSetMode(request) {
-            if (request.mode === null || typeof request.mode === 'undefined' || request.mode === 'eth') {
-                this.mode = 'eth';
-            } else if (request.mode && request.mode === 'function') {
-                return this.validateFunctionMode(request);
-            } else if (request.mode && request.mode.indexOf('erc20') > -1) {
-                return this.validateErc20Mode(request);
-            } else {
-                throw new Error('Invalid "mode" provided');
-            }
-        }
-    }, {
-        key: 'validateFunctionMode',
-        value: function validateFunctionMode(request) {
-            if (request.functionSignature && (0, _utils.validateSignature)(request.functionSignature)) {
-                this.mode = 'function';
-                this.data.functionSignature = JSON.parse(unescape(request.functionSignature));
+var validateUriSchemaBasic = function validateUriSchemaBasic(data) {
+  validateAllowedProperties(data, ['to', 'from', 'value', 'gas']);
+  if (isValidRequiredParam(data.to, isValidAddress) === false) {
+    throw new Error('Property "to" is not an valid Ethereum address: ' + data.to);
+  }
+  if (isValidOptionalParam(data.from, isValidAddress) === false) {
+    throw new Error('Property "from" is not an valid Ethereum address: ' + data.from);
+  }
+  if (isValidOptionalParam(data.value, isValidEthValue) === false) {
+    throw new Error('Property "value" is not an valid Ethereum amount: ' + data.value);
+  }
+  if (isValidOptionalParam(data.gas, isValidGasAmount) === false) {
+    throw new Error('Property "gas" is not an valid gas amount: ' + data.gas);
+  }
+};
 
-                if (request.argsDefaults) {
-                    if ((0, _utils.validateArgsDefaults)(request.argsDefaults, request.functionSignature.args)) {
-                        this.data.argsDefaults = request.argsDefaults;
-                    } else {
-                        throw new Error('For the `function` mode, the `argsDefaults` object is properly formatted');
-                    }
-                }
-            } else {
-                throw new Error('For the `function` mode, the `functionSignature` object is not provided or not valid');
-            }
-        }
-    }, {
-        key: 'validateErc20Mode',
-        value: function validateErc20Mode(request) {
-            if (_utils.listOfValidERC20Modes.indexOf(request.mode) == -1) {
-                throw new Error('Wrong `erc20__*` mode name provided');
-            }
+var validateUriSchemaFunction = function validateUriSchemaFunction(data) {
+  validateAllowedProperties(data, ['to', 'from', 'value', 'gas', 'mode', 'functionSignature', 'argsDefaults']);
+  if (isValidRequiredParam(data.to, isValidAddress) === false) {
+    throw new Error('Property "to" is not an valid Ethereum address: ' + data.to);
+  }
+  if (isValidOptionalParam(data.from, isValidAddress) === false) {
+    throw new Error('Property "from" is not an valid Ethereum address: ' + data.from);
+  }
+  if (isValidOptionalParam(data.value, isValidEthValue) === false) {
+    throw new Error('Property "value" is not an valid Ethereum amount: ' + data.value);
+  }
+  if (isValidOptionalParam(data.gas, isValidGasAmount) === false) {
+    throw new Error('Property "gas" is not an valid gas amount: ' + data.gas);
+  }
+  if (data.mode !== uriModes.contractFunction) {
+    throw new Error('Chosen URI mode is not supported: ' + data.mode);
+  }
+  if (isValueDefined(data.functionSignature) === false) {
+    throw new Error('Property "functionSignature" is not defined');
+  }
+  validateFunctionSignature(data.functionSignature);
+  if (isValueDefined(data.argsDefaults)) {
+    validateArgsDefaults(data.argsDefaults, data.functionSignature.args);
+  }
+};
 
-            if (request.from && (0, _utils.isAddress)(request.from)) {
-                this.mode = 'erc20';
-                this.data.from = request.from;
-                this.data.argsDefaults = request.argsDefaults;
-            } else {
-                throw new Error('For the `erc20__*` mode, the `from` object is not provided or not valid');
-            }
-        }
+var validateUriSchemaERC20Transfer = function validateUriSchemaERC20Transfer(data) {
+  validateAllowedProperties(data, ['to', 'from', 'gas', 'mode', 'argsDefaults']);
+  if (isValidRequiredParam(data.to, isValidAddress) === false) {
+    throw new Error('Property "to" is not an valid Ethereum address: ' + data.to);
+  }
+  if (isValidOptionalParam(data.from, isValidAddress) === false) {
+    throw new Error('Property "from" is not an valid Ethereum address: ' + data.from);
+  }
+  if (isValidOptionalParam(data.value, isValidEthValue) === false) {
+    throw new Error('Property "value" is not an valid Ethereum amount: ' + data.value);
+  }
+  if (isValidOptionalParam(data.gas, isValidGasAmount) === false) {
+    throw new Error('Property "gas" is not an valid gas amount: ' + data.gas);
+  }
+  if (data.mode !== uriModes.erc20Transfer) {
+    throw new Error('Chosen URI mode is not supported: ' + data.mode);
+  }
+  if (isValueDefined(data.argsDefaults)) {
+    validateArgsDefaults(data.argsDefaults, [{
+      name: 'to',
+      type: 'address'
+    }, {
+      name: 'value',
+      type: 'uint'
     }]);
+  }
+};
 
-    return SchemaGenerator;
-}();
+var validateUriSchemaERC20Approve = function validateUriSchemaERC20Approve(data) {
+  validateAllowedProperties(data, ['to', 'from', 'gas', 'mode', 'argsDefaults']);
+  if (isValidRequiredParam(data.to, isValidAddress) === false) {
+    throw new Error('Property "to" is not an valid Ethereum address: ' + data.to);
+  }
+  if (isValidOptionalParam(data.from, isValidAddress) === false) {
+    throw new Error('Property "from" is not an valid Ethereum address: ' + data.from);
+  }
+  if (isValidOptionalParam(data.value, isValidEthValue) === false) {
+    throw new Error('Property "value" is not an valid Ethereum amount: ' + data.value);
+  }
+  if (isValidOptionalParam(data.gas, isValidGasAmount) === false) {
+    throw new Error('Property "gas" is not an valid gas amount: ' + data.gas);
+  }
+  if (data.mode !== uriModes.erc20Approve) {
+    throw new Error('Chosen URI mode is not supported: ' + data.mode);
+  }
+  if (isValueDefined(data.argsDefaults)) {
+    validateArgsDefaults(data.argsDefaults, [{
+      name: 'spender',
+      type: 'address'
+    }, {
+      name: 'value',
+      type: 'uint'
+    }]);
+  }
+};
 
-exports.default = SchemaGenerator;
+var validateUriSchemaERC20TransferFrom = function validateUriSchemaERC20TransferFrom(data) {
+  validateAllowedProperties(data, ['to', 'from', 'gas', 'mode', 'argsDefaults']);
+  if (isValidRequiredParam(data.to, isValidAddress) === false) {
+    throw new Error('Property "to" is not an valid Ethereum address: ' + data.to);
+  }
+  if (isValidOptionalParam(data.from, isValidAddress) === false) {
+    throw new Error('Property "from" is not an valid Ethereum address: ' + data.from);
+  }
+  if (isValidOptionalParam(data.value, isValidEthValue) === false) {
+    throw new Error('Property "value" is not an valid Ethereum amount: ' + data.value);
+  }
+  if (isValidOptionalParam(data.gas, isValidGasAmount) === false) {
+    throw new Error('Property "gas" is not an valid gas amount: ' + data.gas);
+  }
+  if (data.mode !== uriModes.erc20TransferFrom) {
+    throw new Error('Chosen URI mode is not supported: ' + data.mode);
+  }
+  if (isValueDefined(data.argsDefaults)) {
+    validateArgsDefaults(data.argsDefaults, [{
+      name: 'from',
+      type: 'address'
+    }, {
+      name: 'to',
+      type: 'address'
+    }, {
+      name: 'value',
+      type: 'uint'
+    }]);
+  }
+};
 
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
+var validateEthereumUri = exports.validateEthereumUri = function validateEthereumUri(data) {
+  if (isValueDefined(data.mode) === false) {
+    return validateUriSchemaBasic(data);
+  } else if (data.mode === uriModes.contractFunction) {
+    return validateUriSchemaFunction(data);
+  } else if (data.mode === uriModes.erc20Transfer) {
+    return validateUriSchemaERC20Transfer(data);
+  } else if (data.mode === uriModes.erc20Approve) {
+    return validateUriSchemaERC20Approve(data);
+  } else if (data.mode === uriModes.erc20TransferFrom) {
+    return validateUriSchemaERC20TransferFrom(data);
+  }
+  throw new Error('Not supported URI mode: ' + data.mode);
+};
 
-"use strict";
+/**
+ * Encoders
+ */
 
+var encodeEthSend = function encodeEthSend(data) {
+  var fromBlock = isValueDefined(data.from) ? '?from=' + data.from : '';
+  var valueBlock = isValueDefined(data.value) ? '?value=' + data.value : '';
+  var gasBlock = isValueDefined(data.gas) ? '?gas=' + data.gas : '';
+  return 'ethereum:' + data.to + fromBlock + valueBlock + gasBlock;
+};
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.readString = undefined;
+var encodeEthereumUri = exports.encodeEthereumUri = function encodeEthereumUri(data) {
+  validateEthereumUri(data); // throws if data has wrong format
 
-var _utils = __webpack_require__(10);
+  if (isValueDefined(data.mode) === false) {
+    return encodeEthSend(data);
+  }
+  return JSON.stringify(data);
+};
 
-var adressBlockParams = ['gas', 'value'];
-var requiredElements = new RegExp(/[\[\]]/);
+/**
+ * Decoders
+ */
 
-var readString = exports.readString = function readString(str) {
-    var result = {};
-    if (!str || str.substr(0, 9) !== 'ethereum:') return false;
-    if (str.length >= 51 && (0, _utils.isAddress)(str.substr(9, 42))) {
-        result.to = str.substr(9, 42);
-    }
-    if (str.length > 51 && requiredElements.test(str)) {
+var decodeEthSend = function decodeEthSend(encodedStr) {
+  // todo add "from" field
+  // valid string should like this: 'ethereum:0xf661e08b763d4906457d54c302669ec5e8a24e37?from=0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98?value=10000000?gas=21000'
+  // i.e. square brackets in URI - only to mark value as optional in the doc
+  // bitcoin example  -  bitcoin:1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2?amount=1
 
-        var exStr = str.substr(51).split(']');
-        exStr.forEach(function (element, i) {
-            adressBlockParams.forEach(function (segment) {
-                var segmentQueryPart = '[?' + segment + '=';
-                if (element.indexOf(segmentQueryPart) === 0) {
-                    result[segment] = element.substr(segmentQueryPart.length);
-                }
-            });
-        });
-    }
-    return result;
+  var addressBlockParams = ['gas', 'value'];
+  var requiredElements = new RegExp(/[[\]]/);
+
+  var result = {};
+  if (!encodedStr || encodedStr.substr(0, 9) !== 'ethereum:') {
+    return false;
+  }
+  if (encodedStr.length >= 51 && isValidAddress(encodedStr.substr(9, 42))) {
+    result.to = encodedStr.substr(9, 42);
+  }
+  if (encodedStr.length > 51 && requiredElements.test(encodedStr)) {
+    var exStr = encodedStr.substr(51).split(']');
+    exStr.forEach(function (element) {
+      addressBlockParams.forEach(function (segment) {
+        var segmentQueryPart = '[?' + segment + '=';
+        if (element.indexOf(segmentQueryPart) === 0) {
+          result[segment] = element.substr(segmentQueryPart.length);
+        }
+      });
+    });
+  }
+  return result;
+};
+
+var decodeEthereumUri = exports.decodeEthereumUri = function decodeEthereumUri(encodedStr) {
+  var data = void 0;
+  try {
+    data = JSON.parse(encodedStr);
+  } catch (e) {
+    // this is not a JSON, try to parse legacy format ETH send
+  }
+  if (typeof data === 'undefined') {
+    data = decodeEthSend(encodedStr);
+  }
+  validateEthereumUri(data); // throws if data has wrong format
+  return data;
 };
 
 /***/ })

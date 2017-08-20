@@ -54,11 +54,12 @@
                         //instantiate the plugin<br>
                         const qr = new EthereumQRplugin();<br>
 <br>
-                        //static config value<br>
-                        const codeDetails = {<br>
+                        const sendDetails = {<br>
                         &nbsp;to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',<br>
                         &nbsp;value: 1,<br>
-                        &nbsp;gas: 42000,<br>
+                        &nbsp;gas: 42000<br>
+                        };<br>
+                        const configDetails = {<br>
                         &nbsp;size:180,<br>
                         &nbsp;selector: '#ethereum-qr-code-simple',<br>
                         &nbsp;options: {<br>
@@ -67,7 +68,7 @@
                         };<br>
 <br>
                         //run the plugin<br>
-                        qr.toCanvas(codeDetails);<br>
+                        qr.toCanvas(sendDetails, configDetails);<br>
                 </code>
 
             </div>
