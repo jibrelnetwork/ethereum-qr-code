@@ -1,3 +1,4 @@
 build/*.js
 docs/*.js
+test/*.js
 *.config.js
