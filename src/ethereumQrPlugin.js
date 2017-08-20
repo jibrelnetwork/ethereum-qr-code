@@ -76,24 +76,7 @@ class EthereumQRplugin {
   readStringToJSON(valueString) {
     return decodeEthereumUri(valueString);
   }
-  /**
-     * may use https://github.com/edi9999/jsqrcode for readng the canvas data to JSON
-     * @param {*} dataURl
-     */
-  /*
-        readImageToJSON(dataURl){
-        const qr = new QrCode();
-        qr.callback = function(error, result) {
-            if(error) {
-                console.log(error)
-                return;
-            }
-            console.log(result)
-        }
-        qr.decode(dataURl);
-        }
-    */
-
+ 
   getJSON() {
     return JSON.stringify(this.readStringToJSON());
   }
