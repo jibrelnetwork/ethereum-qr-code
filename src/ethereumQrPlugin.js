@@ -26,8 +26,8 @@ class EthereumQRplugin {
      * @param {Object} config
      * @returns Promise
      */
-  toCanvas(config) {
-    const generatedValue = this.produceEncodedValue(config);
+  toCanvas(config, options) {
+    const generatedValue = this.produceEncodedValue(config, options);
     const parentEl = document.querySelector(config.selector);
 
     if (!config.selector || parentEl === null) {
@@ -54,8 +54,8 @@ class EthereumQRplugin {
      * @param {Object} config
      * @returns Promise
      */
-  toDataUrl(config) {
-    const generatedValue = this.produceEncodedValue(config);
+  toDataUrl(config, options) {
+    const generatedValue = this.produceEncodedValue(config, options);
 
     return new Promise((resolve, reject) => {
       QRCode.toDataURL(generatedValue, this.options, (err, url) => {
@@ -69,24 +69,22 @@ class EthereumQRplugin {
   }
 
   /**
-     * implements backwards transformation encode query string to JSON
-     *
-     * @param {String} valueString
-     */
+   * implements backwards transformation encode query string to JSON
+   *
+   * @param {String} valueString
+   */
   readStringToJSON(valueString) {
     return decodeEthereumUri(valueString);
   }
- 
   getJSON() {
     return JSON.stringify(this.readStringToJSON());
   }
-  produceEncodedValue(config) {
-    this.assignPluguinValues(config);
-    // todo split parameters of URI and parameters of image generation, it is much more natural
+  produceEncodedValue(config, options) {
+    this.assignPluguinValues(options);
     return encodeEthereumUri(config);
   }
 
-  assignPluguinValues(request) {
+  assignPluguinValues(request = {}) {
     this.toJSON = !!request.toJSON;
     this.size = (request.size && parseInt(request.size, 10) > 0) ? parseInt(request.size, 10) : DEFAULTS.size;
     this.imgUrl = request.imgUrl || false;

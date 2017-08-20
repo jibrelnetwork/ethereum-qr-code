@@ -1,53 +1,39 @@
 const EthereumQRplugin = require('../src/ethereumQrPlugin').default;
 
-let qr, invalidCodeDetails;
+let qr;
+let invalidCodeDetails;
 
 const validCodeDetails = {
-    to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
-    value: 150,
-    gas: 4200,
+  to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
+  value: 150,
+  gas: 4200
+};
+
+const validConfigDetails = {
     size: 180,
     selector: '#ethereum-qr-code-simple',
     options: {
-        margin: 2
-    }
-};
+      margin: 2,
+    },
+  };
 
 describe('main public EthereumQRplugin class', () => {
+  beforeEach(() => {
+    qr = new EthereumQRplugin();
+  });
 
-    beforeEach(() => {
-        qr = new EthereumQRplugin();
-    });
+  it('should generate simple encoded string with required addess', () => {
+    const str = qr.toAddressString(validCodeDetails);
+    expect(str).toBe('ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=150?gas=4200');
+  });
 
-    it('should generate simple encoded string with required addess', () => {
-
-        const str = qr.toAddressString(validCodeDetails);
-        expect(str).toBe('ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=4200][?value=150]')
-    });
-
-       it('should generate JSON encoded string if `toJSON` it true', () => {
-
-        const str = qr.toAddressString(Object.assign({}, validCodeDetails, {
-            'toJSON': true
-        }));
-        
-       expect(str).toBe("{\"to\":\"0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8\",\"gas\":4200,\"value\":150}")
-    });
-
-    it('should generate DataURI and return string', () => {
-
-        return qr.toDataUrl(validCodeDetails).then((result) => {
-            return expect(result.value).toBe("ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=4200][?value=150]");
-        })
-    });
+  it('should generate DataURI and return string', () => qr.toDataUrl(validCodeDetails, validConfigDetails).then((result) => {
+    return expect(result.value).toBe("ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=150?gas=4200");
+}));
 
 
-    it('should generate DataURI string with correct symbols', () => {
-
-        return qr.toDataUrl(validCodeDetails).then((result) => {
+  it('should generate DataURI string with correct symbols', () => qr.toDataUrl(validCodeDetails, validConfigDetails).then((result) => {
             //take first N symbols
             return expect(result.dataURL.substr(0, 80)).toBe("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNCAYAAAAbvPRpAAAAAklEQVR4Ae");
-        })
-    });
-
+        }));
 });
