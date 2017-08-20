@@ -1,14 +1,13 @@
 import QRCode from 'qrcode';
 
 import DEFAULTS from './defaults';
-import DrawIcon from './tokenIcon';
 import { encodeEthereumUri, decodeEthereumUri } from './uri_processor';
 
 /**
  * Main plugin logic
  */
 class EthereumQRplugin {
-    /**
+  /**
      *
      * Generates a data encode string
      *
@@ -16,10 +15,10 @@ class EthereumQRplugin {
      * @param {Object} config
      * @returns String
      */
-    toAddressString(config) {
-        return this.produceEncodedValue(config);
-    }
-    /**
+  toAddressString(config) {
+    return this.produceEncodedValue(config);
+  }
+  /**
      *
      * Draws QR code to canvas tag inside specified DOM selector
      *
@@ -27,28 +26,27 @@ class EthereumQRplugin {
      * @param {Object} config
      * @returns Promise
      */
-    toCanvas(config) {
-        const generatedValue = this.produceEncodedValue(config);
-        const parentEl = document.querySelector(config.selector);
+  toCanvas(config) {
+    const generatedValue = this.produceEncodedValue(config);
+    const parentEl = document.querySelector(config.selector);
 
-        if (!config.selector || parentEl === null) {
-            throw new Error('The canvas element parent selector is required when calling `toCanvas`');
-        }
-
-        return new Promise((resolve, reject) => {
-            QRCode.toCanvas(generatedValue, this.options, (err, canvas) => {
-                if (err) reject(err);
-
-                resolve({
-                    value: generatedValue
-                });
-                parentEl.appendChild(canvas);
-                canvas.setAttribute('style', `width: ${this.size}px`);
-            })
-        })
-
+    if (!config.selector || parentEl === null) {
+      throw new Error('The canvas element parent selector is required when calling `toCanvas`');
     }
-    /**
+
+    return new Promise((resolve, reject) => {
+      QRCode.toCanvas(generatedValue, this.options, (err, canvas) => {
+        if (err) reject(err);
+
+        resolve({
+          value: generatedValue,
+        });
+        parentEl.appendChild(canvas);
+        canvas.setAttribute('style', `width: ${this.size}px`);
+      });
+    });
+  }
+  /**
      *
      * Generates DataURL for a QR code
      *
@@ -56,33 +54,33 @@ class EthereumQRplugin {
      * @param {Object} config
      * @returns Promise
      */
-    toDataUrl(config) {
-        const generatedValue = this.produceEncodedValue(config);
+  toDataUrl(config) {
+    const generatedValue = this.produceEncodedValue(config);
 
-        return new Promise((resolve, reject) => {
-            QRCode.toDataURL(generatedValue, this.options, (err, url) => {
-                if (err) reject(err);
-                resolve({
-                    dataURL: url,
-                    value: generatedValue
-                });
-            })
+    return new Promise((resolve, reject) => {
+      QRCode.toDataURL(generatedValue, this.options, (err, url) => {
+        if (err) reject(err);
+        resolve({
+          dataURL: url,
+          value: generatedValue,
         });
-    }
+      });
+    });
+  }
 
-    /**
+  /**
      * implements backwards transformation encode query string to JSON
      *
      * @param {String} valueString
      */
-    readStringToJSON(valueString){
-        return decodeEthereumUri(valueString);
-    }
-    /**
+  readStringToJSON(valueString) {
+    return decodeEthereumUri(valueString);
+  }
+  /**
      * may use https://github.com/edi9999/jsqrcode for readng the canvas data to JSON
      * @param {*} dataURl
      */
-    /*
+  /*
         readImageToJSON(dataURl){
         const qr = new QrCode();
         qr.callback = function(error, result) {
@@ -96,30 +94,21 @@ class EthereumQRplugin {
         }
     */
 
-    getJSON() {
-        return JSON.stringify( getString());
-    }
-    produceEncodedValue(config) {
-        this.assignPluguinValues(config);
-        // todo split parameters of URI and parameters of image generation, it is much more natural
-        return encodeEthereumUri(config);
-    }
+  getJSON() {
+    return JSON.stringify(this.readStringToJSON());
+  }
+  produceEncodedValue(config) {
+    this.assignPluguinValues(config);
+    // todo split parameters of URI and parameters of image generation, it is much more natural
+    return encodeEthereumUri(config);
+  }
 
-    assignPluguinValues(request) {
-        this.toJSON = !!request.toJSON;
-        this.size = (request.size && parseInt(request.size) > 0) ? parseInt(request.size) : DEFAULTS.size;
-        this.imgUrl = request.imgUrl || false;
-        this.options = Object.assign(DEFAULTS.qrCodeOptions, request.options);
-    }
-
-    drawTokenIcon() {
-        if (this.imgUrl) {
-            const iconDraw = new DrawIcon();
-            iconDraw.addIcon(this.imgUrl, this.size, this.uiElement, () => {
-                this.uiElement.parentNode.removeChild(this.uiElement);
-            });
-        }
-    }
+  assignPluguinValues(request) {
+    this.toJSON = !!request.toJSON;
+    this.size = (request.size && parseInt(request.size, 10) > 0) ? parseInt(request.size, 10) : DEFAULTS.size;
+    this.imgUrl = request.imgUrl || false;
+    this.options = Object.assign(DEFAULTS.qrCodeOptions, request.options);
+  }
 }
 
 export default EthereumQRplugin;
