@@ -300,15 +300,24 @@ export const encodeEthereumUri = (data) => {
 /**
  * Decoders
  */
-
 const decodeEthSend = (encodedStr) => {
-  // todo add "from" field
-  // valid string should like this: 'ethereum:0xf661e08b763d4906457d54c302669ec5e8a24e37?from=0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98?value=10000000?gas=21000'
-  // i.e. square brackets in URI - only to mark value as optional in the doc
-  // bitcoin example  -  bitcoin:1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2?amount=1
-
-  const addressBlockParams = ['gas', 'value'];
-  const requiredElements = new RegExp(/[[\]]/);
+  const addressBlockParams = {
+    gas: {
+      convert: function(value){
+        return parseInt(value, 10);
+      },
+    },
+    value: {
+      convert: function(value){
+        return parseInt(value, 10);
+      },
+    },
+    from: {
+      convert: function(value){
+        return value;
+      },
+    },
+  };
 
   const result = {};
   if (!encodedStr || encodedStr.substr(0, 9) !== 'ethereum:') {
@@ -317,15 +326,14 @@ const decodeEthSend = (encodedStr) => {
   if (encodedStr.length >= 51 && isValidAddress(encodedStr.substr(9, 42))) {
     result.to = encodedStr.substr(9, 42);
   }
-  if (encodedStr.length > 51 && requiredElements.test(encodedStr)) {
-    const exStr = encodedStr.substr(51).split(']');
-    exStr.forEach((element) => {
-      addressBlockParams.forEach((segment) => {
-        const segmentQueryPart = `[?${segment}=`;
-        if (element.indexOf(segmentQueryPart) === 0) {
-          result[segment] = element.substr(segmentQueryPart.length);
-        }
-      });
+  if (encodedStr.length > 51) {
+    const uriSegments = encodedStr.substr(51).split('?');
+    uriSegments.shift();
+    uriSegments.forEach((segment) => {
+      const parts = segment.split('=');
+      if (Object.keys(addressBlockParams).indexOf(parts[0]) > -1) {
+        result[parts[0]] = addressBlockParams[parts[0]].convert(parts[1]);
+      }
     });
   }
   return result;
