@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest --verbose",
     "build": "webpack",
+    "lint": "eslint --ext .js src",
     "demo": "cd docs && watch-http-server -o"
   },
   "repository": {
