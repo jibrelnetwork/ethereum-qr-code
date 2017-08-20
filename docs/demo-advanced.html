@@ -58,13 +58,13 @@
                         <label>Mode</label>
                         <div class="radio">
                             <label>
-                            <input type="radio" name="mode" class="qr-input-on-change" value="" checked>
+                            <input type="radio" name="mode" class="qr-input-on-change" value="basic" checked>
                             <strong>eth</strong> - default, sending ether
                         </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="mode" class="qr-input-on-change" value="function">
+                                <input type="radio" name="mode" class="qr-input-on-change" value="contract_function">
                                 <strong>function</strong> - call a contact function with custom parameters
                             </label>
                         </div>
@@ -91,29 +91,44 @@
                         <input type="text" id="gas" placeholder="e.g. 10000" class="qr-input form-control">
                     </div>
                     <hr>
-                    <div class="form-group type-dynamic type-erc20__transfer">
+                    <div class="form-group type-dynamic type-erc20__transfer type-basic">
                         <label>From, 0x... format</label>
                         <input type="text" id="from" placeholder="0x12345678901234567890" class="qr-input form-control">
                     </div>
 
-                    <div class="form-group type-dynamic type-function">
+                    <div class="form-group type-dynamic type-contract_function">
                         <label>functionSignature, valid JSON</label>
-                        <textarea id="functionSignature" placeholder="{'name': 'myMethod', args: ['foo':'bar', 'baz': 42]}" class="qr-input form-control"></textarea>
-                        <br>Example:  <br><code>
-                             { <br>
-                                &nbsp;"name": "requestMoney",<br>
-                                &nbsp;"payable": false,<br>
-                                &nbsp;"args": [<br>
-                                &nbsp;&nbsp;{ "name": "to",<br>
-                                &nbsp;&nbsp;"type": "address" },<br>
-                                &nbsp;&nbsp;{ "name": "value",<br>
-                                &nbsp;&nbsp;"type": "uint" }<br>
-                                &nbsp;]<br>
-                                }<br>
+                        <textarea id="functionSignature" placeholder="{'name': 'myMethod', args: [{'name':'bar', 'type': 'int'}]}" class="qr-input form-control"></textarea>
+                        <br>Example (copy to textarea):  <br><code>
+                            { <br>
+                               &nbsp;"name": "requestMoney",<br>
+                               &nbsp;"payable": false,<br>
+                               &nbsp;"args": [<br>
+                               &nbsp;&nbsp;{ "name": "to",<br>
+                               &nbsp;&nbsp;"type": "address" },<br>
+                               &nbsp;&nbsp;{ "name": "value",<br>
+                               &nbsp;&nbsp;"type": "uint" }<br>
+                               &nbsp;]<br>
+                               }<br>
+                       </code>
+                    </div>
+
+                    <div class="form-group type-dynamic type-erc20__transfer">
+                        <label>argsDefaults, valid JSON</label>
+                        <textarea id="argsDefaults" placeholder="[{'name':'bar', 'value': 42}]" class="qr-input form-control"></textarea>
+                        <br>Example (copy to textarea):  <br><code>
+                            [{<br>
+                            &nbsp;"name": "to",<br>
+                            &nbsp;"value": "0xtokensrecipient"<br>
+                            },<br>
+                            {<br>
+                            &nbsp;"name": "value",<br>
+                            &nbsp;"value": 1000000000000000000<br>
+                            }]<br>
                         </code>
                     </div>
 
-                    <div class="form-group type-dynamic type-eth">
+                    <div class="form-group type-dynamic type-basic">
                         <label>Data to encode</label>
                         <div class="radio">
                             <label>
@@ -140,9 +155,9 @@
 
     </div>
     <!-- /container -->
-
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script src="assets/js/ethereum-qr-code.js"></script>
     <script src="assets/js/app-demo-advanced.js"></script>
     <script src="assets/js/twitter-simple-button.js"></script>

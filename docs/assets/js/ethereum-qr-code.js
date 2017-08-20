@@ -1,6 +1,6 @@
 /*!
  * Ethereum adress QR Code generator
- * v 0.1.4 - Sun Aug 20 2017 12:07:29 GMT+0200 (CEST)
+ * v 0.1.4 - Sun Aug 20 2017 20:00:24 GMT+0200 (CEST)
  * https://github.com/jibrelnetwork/ethereum-qr-code
  * file:build/ethereum-qr-code.js
  */
@@ -1373,9 +1373,9 @@ var EthereumQRplugin = function () {
       var _this = this;
 
       var generatedValue = this.produceEncodedValue(config, options);
-      var parentEl = document.querySelector(config.selector);
+      var parentEl = document.querySelector(options.selector);
 
-      if (!config.selector || parentEl === null) {
+      if (!options.selector || parentEl === null) {
         throw new Error('The canvas element parent selector is required when calling `toCanvas`');
       }
 
@@ -1438,8 +1438,7 @@ var EthereumQRplugin = function () {
     key: 'produceEncodedValue',
     value: function produceEncodedValue(config, options) {
       this.assignPluguinValues(options);
-      console.log((0, _uri_processor.decodeEthereumUri)((0, _uri_processor.encodeEthereumUri)(config)));
-      return this.toJSON && !config.mode ? (0, _uri_processor.decodeEthereumUri)((0, _uri_processor.encodeEthereumUri)(config)) : (0, _uri_processor.encodeEthereumUri)(config);
+      return (0, _uri_processor.encodeEthereumUri)(config);
     }
   }, {
     key: 'assignPluguinValues',
@@ -3886,15 +3885,24 @@ var encodeEthereumUri = exports.encodeEthereumUri = function encodeEthereumUri(d
 /**
  * Decoders
  */
-
 var decodeEthSend = function decodeEthSend(encodedStr) {
-  // todo add "from" field
-  // valid string should like this: 'ethereum:0xf661e08b763d4906457d54c302669ec5e8a24e37?from=0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98?value=10000000?gas=21000'
-  // i.e. square brackets in URI - only to mark value as optional in the doc
-  // bitcoin example  -  bitcoin:1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2?amount=1
-
-  var addressBlockParams = ['gas', 'value'];
-  var requiredElements = new RegExp(/[[\]]/);
+  var addressBlockParams = {
+    gas: {
+      convert: function convert(value) {
+        return parseInt(value, 10);
+      }
+    },
+    value: {
+      convert: function convert(value) {
+        return parseInt(value, 10);
+      }
+    },
+    from: {
+      convert: function convert(value) {
+        return value;
+      }
+    }
+  };
 
   var result = {};
   if (!encodedStr || encodedStr.substr(0, 9) !== 'ethereum:') {
@@ -3903,15 +3911,14 @@ var decodeEthSend = function decodeEthSend(encodedStr) {
   if (encodedStr.length >= 51 && isValidAddress(encodedStr.substr(9, 42))) {
     result.to = encodedStr.substr(9, 42);
   }
-  if (encodedStr.length > 51 && requiredElements.test(encodedStr)) {
-    var exStr = encodedStr.substr(51).split(']');
-    exStr.forEach(function (element) {
-      addressBlockParams.forEach(function (segment) {
-        var segmentQueryPart = '[?' + segment + '=';
-        if (element.indexOf(segmentQueryPart) === 0) {
-          result[segment] = element.substr(segmentQueryPart.length);
-        }
-      });
+  if (encodedStr.length > 51) {
+    var uriSegments = encodedStr.substr(51).split('?');
+    uriSegments.shift();
+    uriSegments.forEach(function (segment) {
+      var parts = segment.split('=');
+      if (Object.keys(addressBlockParams).indexOf(parts[0]) > -1) {
+        result[parts[0]] = addressBlockParams[parts[0]].convert(parts[1]);
+      }
     });
   }
   return result;

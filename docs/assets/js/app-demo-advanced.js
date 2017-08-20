@@ -1,35 +1,65 @@
-let qr;
+/*  eslint no-undef: 0 */
 
+let qr;
 const updateQR = () => {
+  let functionSignature;
+  let argsDefaults;
+  let config;
+
   // read the values of the form
   const to = $('#addess').val();
-  const value = $('#amount').val();
-  const gas = $('#gas').val();
+  const value = parseInt($('#amount').val(), 10) || undefined;
+  const gas = parseInt($('#gas').val(), 10) || undefined;
   const size = $('#size').val();
-  const from = $('#from').val();
-  const functionSignature = escape($('#functionSignature').val());
-
+  const from = $('#from').val() || undefined;
   const mode = $('[name=mode]:checked').val();
   const toJSON = $('[name=toJSON]:checked').val() === 'true';
 
+  try {
+    functionSignature = JSON.parse($('#functionSignature').val());
+    argsDefaults = JSON.parse($('#argsDefaults').val());
+  } catch (e) {
+    // empty ot invalid JSON
+  }
 
   // clear UI
   $('#resulting-string, #error-string').val('').text('');
   $('#ethereum-qr-code').empty();
-
   $('.type-dynamic').hide();
   $(`.type-${mode}`).show();
 
-  // call a plugin
-  try {
-    qr.toCanvas({
+
+  if (mode === 'basic') {
+    config = {
       to,
       value,
       gas,
       from,
+    };
+  }
+
+  if (mode === 'erc20__transfer') {
+    config = {
+      to,
+      gas,
+      from,
+      argsDefaults,
+      mode,
+    };
+  }
+
+  if (mode === 'contract_function') {
+    config = {
+      to,
+      gas,
+      from,
       functionSignature,
       mode,
-    }, {
+    };
+  }
+  // call a plugin
+  try {
+    qr.toCanvas(config, {
       size,
       toJSON,
       selector: '#ethereum-qr-code',
