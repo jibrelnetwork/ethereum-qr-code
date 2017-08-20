@@ -1,6 +1,6 @@
 /*!
  * Ethereum adress QR Code generator
- * v 0.1.4 - Sun Aug 20 2017 20:00:24 GMT+0200 (CEST)
+ * v 0.1.5 - Sun Aug 20 2017 20:32:45 GMT+0200 (CEST)
  * https://github.com/jibrelnetwork/ethereum-qr-code
  * file:build/ethereum-qr-code.js
  */
