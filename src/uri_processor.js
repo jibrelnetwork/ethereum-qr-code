@@ -308,7 +308,7 @@ const decodeEthSend = (encodedStr) => {
   // bitcoin example  -  bitcoin:1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2?amount=1
 
   const addressBlockParams = ['gas', 'value'];
-  const requiredElements = new RegExp(/[\[\]]/);
+  const requiredElements = new RegExp(/[[\]]/);
 
   const result = {};
   if (!encodedStr || encodedStr.substr(0, 9) !== 'ethereum:') {
