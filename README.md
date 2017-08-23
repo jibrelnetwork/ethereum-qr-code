@@ -7,6 +7,11 @@ The plugin generates the string based on the provided parameters and translates 
 Demo: [https://jibrelnetwork.github.io/ethereum-qr-code/](https://jibrelnetwork.github.io/ethereum-qr-code/)
 
 
+
+[![Build Status](https://travis-ci.org/jibrelnetwork/ethereum-qr-code.svg?branch=master)](https://travis-ci.org/jibrelnetwork/ethereum-qr-code) ![DEPENDENCIES status](https://david-dm.org/jibrelnetwork/ethereum-qr-code.svg)
+
+
+
 ## Getting started
 
  1. Install from NPM: `npm install ethereum-qr-code --save`
