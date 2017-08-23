@@ -7,7 +7,7 @@ global.describe('URI for ETH send', () => {
     ({
       to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
       from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      value: 10000000,
+      value: '10000000',
       gas: 21000,
     })
   ;
@@ -130,7 +130,7 @@ global.describe('URI for invocation of a function', () => {
     ({
       to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
       from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      value: 0,
+      value: '0',
       gas: 100000,
       mode: 'contract_function',
       functionSignature: {
@@ -866,7 +866,7 @@ global.describe('Encode URI for ETH send', () => {
     ({
       to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
       from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      value: 10000000,
+      value: '10000000',
       gas: 21000,
     })
   ;
@@ -891,7 +891,7 @@ global.describe('Encode URI for invocation of a function', () => {
     ({
       to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
       from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      value: 10000000,
+      value: '10000000',
       gas: 100000,
       mode: 'contract_function',
       functionSignature: {

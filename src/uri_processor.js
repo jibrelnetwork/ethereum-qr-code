@@ -312,12 +312,12 @@ const decodeEthSend = (encodedStr) => {
   const addressBlockParams = {
     gas: {
       convert(value) {
-        return new BigNumber(value);
+        return parseInt(value, 10);
       },
     },
     value: {
       convert(value) {
-        return new BigNumber(value);
+        return new BigNumber(value).toString(10);
       },
     },
     from: {
