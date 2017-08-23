@@ -5,7 +5,7 @@ let invalidCodeDetails;
 
 const validCodeDetails = {
   to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
-  value: 150,
+  value: 15000000000000000000000,
   gas: 4200
 };
 
@@ -24,11 +24,11 @@ describe('main public EthereumQRplugin class', () => {
 
   it('should generate simple encoded string with required addess', () => {
     const str = qr.toAddressString(validCodeDetails);
-    expect(str).toBe('ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=150?gas=4200');
+    expect(str).toBe('ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=15000000000000000000000?gas=4200');
   });
 
   it('should generate DataURI and return string', () => qr.toDataUrl(validCodeDetails, validConfigDetails).then((result) => {
-    return expect(result.value).toBe("ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=150?gas=4200");
+    return expect(result.value).toBe("ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=15000000000000000000000?gas=4200");
 }));
 
 

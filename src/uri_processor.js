@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 /**
  * Supported modes
  */
@@ -25,7 +26,10 @@ export const uriModes = {
  */
 const isValidAddress = (address) => /^0x[0-9a-f]{40}$/i.test(address);
 
-const isValidEthValue = (value) => Number.isInteger(value) && value >= 0;
+const isValidEthValue = (value) => {
+  const ethWeiValue = new BigNumber(value);
+  return ethWeiValue.isInteger() && ethWeiValue >= 0;
+};
 const isValidGasAmount = (gas) => Number.isInteger(gas) && gas >= 0;
 const isValidContractFunctionName = (str) => str.length > 0 && /^[a-z0-9\-_]*$/i.test(str);
 const isValidSolidityType = (str) => str.length > 0 && /^[a-z0-9]*$/.test(str);
@@ -282,7 +286,11 @@ export const validateEthereumUri = (data) => {
 
 const encodeEthSend = (data) => {
   const fromBlock = isValueDefined(data.from) ? `?from=${data.from}` : '';
-  const valueBlock = isValueDefined(data.value) ? `?value=${data.value}` : '';
+  let valueBlock;
+  if (isValueDefined(data.value)) {
+    const weiValue = new BigNumber(data.value).toString(10);
+    valueBlock = isValueDefined(data.value) ? `?value=${weiValue}` : '';
+  }
   const gasBlock = isValueDefined(data.gas) ? `?gas=${data.gas}` : '';
   return `ethereum:${data.to}${fromBlock}${valueBlock}${gasBlock}`;
 };
@@ -303,17 +311,17 @@ export const encodeEthereumUri = (data) => {
 const decodeEthSend = (encodedStr) => {
   const addressBlockParams = {
     gas: {
-      convert: function(value){
-        return parseInt(value, 10);
+      convert(value) {
+        return new BigNumber(value);
       },
     },
     value: {
-      convert: function(value){
-        return parseInt(value, 10);
+      convert(value) {
+        return new BigNumber(value);
       },
     },
     from: {
-      convert: function(value){
+      convert(value) {
         return value;
       },
     },

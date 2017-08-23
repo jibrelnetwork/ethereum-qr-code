@@ -110,6 +110,17 @@ global.describe('URI for ETH send', () => {
     testObj.test2 = 'test';
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
+
+
+  global.it('should handle big number correctly', () => {
+    let testObj = getValidUriData();
+    testObj.value = '1000000000000000000000';
+    global.expect(validateEthereumUri(testObj)).toEqual(undefined);
+
+    testObj = getValidUriData();
+    testObj.value = '100000034000000505000000';
+    global.expect(validateEthereumUri(testObj)).toEqual(undefined);
+  });
 });
 
 
