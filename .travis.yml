@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - "6"
+
+install:
+  - npm install
+  - npm install -g webpack
+
+script:
+  - npm run test
+  - npm run build 
+
+cache:
+  directories:
+    - "node_modules"
