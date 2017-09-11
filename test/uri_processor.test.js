@@ -101,6 +101,21 @@ global.describe('URI for ETH send', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
+  global.it('should not accept wrong "chainId"', () => {
+    let testObj = getValidUriData();
+    testObj.chainId = 0;
+    global.expect(() => validateEthereumUri(testObj)).toThrow();
+
+    testObj = getValidUriData();
+    testObj.chainId = -1;
+    global.expect(() => validateEthereumUri(testObj)).toThrow();
+
+    testObj = getValidUriData();
+    testObj.chainId = '34';
+    global.expect(() => validateEthereumUri(testObj)).toThrow();
+
+  });
+
   global.it('should not accept not allowed properties', () => {
     let testObj = getValidUriData();
     testObj.test1 = 1.1;

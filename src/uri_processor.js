@@ -31,6 +31,8 @@ const isValidEthValue = (value) => {
   return ethWeiValue.isInteger() && ethWeiValue >= 0;
 };
 const isValidGasAmount = (gas) => Number.isInteger(gas) && gas >= 0;
+const isValidChainId = (chainId) => Number.isInteger(chainId) && chainId > 0;
+
 const isValidContractFunctionName = (str) => str.length > 0 && /^[a-z0-9\-_]*$/i.test(str);
 const isValidSolidityType = (str) => str.length > 0 && /^[a-z0-9]*$/.test(str);
 const isValidFunctionArgumentName = (str) => str.length > 0 && /^[a-z0-9\-_]*$/i.test(str);
@@ -122,7 +124,7 @@ const validateArgsDefaults = (argsDefaults, functionArgs) => {
 };
 
 const validateUriSchemaBasic = (data) => {
-  validateAllowedProperties(data, ['to', 'from', 'value', 'gas']);
+  validateAllowedProperties(data, ['to', 'from', 'value', 'gas', 'chainId']);
   if (isValidRequiredParam(data.to, isValidAddress) === false) {
     throw new Error(`Property "to" is not an valid Ethereum address: ${data.to}`);
   }
@@ -131,6 +133,9 @@ const validateUriSchemaBasic = (data) => {
   }
   if (isValidOptionalParam(data.value, isValidEthValue) === false) {
     throw new Error(`Property "value" is not an valid Ethereum amount: ${data.value}`);
+  }
+  if (isValidOptionalParam(data.chainId, isValidChainId) === false) {
+    throw new Error(`Property "chainId" is not an valid Ethereum chainId: ${data.chainId}`);
   }
   if (isValidOptionalParam(data.gas, isValidGasAmount) === false) {
     throw new Error(`Property "gas" is not an valid gas amount: ${data.gas}`);
@@ -138,7 +143,7 @@ const validateUriSchemaBasic = (data) => {
 };
 
 const validateUriSchemaFunction = (data) => {
-  validateAllowedProperties(data, ['to', 'from', 'value', 'gas', 'mode', 'functionSignature', 'argsDefaults']);
+  validateAllowedProperties(data, ['to', 'from', 'value', 'gas', 'mode', 'chainId', 'functionSignature', 'argsDefaults']);
   if (isValidRequiredParam(data.to, isValidAddress) === false) {
     throw new Error(`Property "to" is not an valid Ethereum address: ${data.to}`);
   }
@@ -150,6 +155,9 @@ const validateUriSchemaFunction = (data) => {
   }
   if (isValidOptionalParam(data.gas, isValidGasAmount) === false) {
     throw new Error(`Property "gas" is not an valid gas amount: ${data.gas}`);
+  }
+  if (isValidOptionalParam(data.chainId, isValidChainId) === false) {
+    throw new Error(`Property "chainId" is not an valid Ethereum chainId: ${data.chainId}`);
   }
   if (data.mode !== uriModes.contractFunction) {
     throw new Error(`Chosen URI mode is not supported: ${data.mode}`);
@@ -164,7 +172,7 @@ const validateUriSchemaFunction = (data) => {
 };
 
 const validateUriSchemaERC20Transfer = (data) => {
-  validateAllowedProperties(data, ['to', 'from', 'gas', 'mode', 'argsDefaults']);
+  validateAllowedProperties(data, ['to', 'from', 'gas', 'mode', 'chainId', 'argsDefaults']);
   if (isValidRequiredParam(data.to, isValidAddress) === false) {
     throw new Error(`Property "to" is not an valid Ethereum address: ${data.to}`);
   }
@@ -176,6 +184,9 @@ const validateUriSchemaERC20Transfer = (data) => {
   }
   if (isValidOptionalParam(data.gas, isValidGasAmount) === false) {
     throw new Error(`Property "gas" is not an valid gas amount: ${data.gas}`);
+  }
+  if (isValidOptionalParam(data.chainId, isValidChainId) === false) {
+    throw new Error(`Property "chainId" is not an valid Ethereum chainId: ${data.chainId}`);
   }
   if (data.mode !== uriModes.erc20Transfer) {
     throw new Error(`Chosen URI mode is not supported: ${data.mode}`);
@@ -196,7 +207,7 @@ const validateUriSchemaERC20Transfer = (data) => {
 };
 
 const validateUriSchemaERC20Approve = (data) => {
-  validateAllowedProperties(data, ['to', 'from', 'gas', 'mode', 'argsDefaults']);
+  validateAllowedProperties(data, ['to', 'from', 'gas', 'mode', 'chainId', 'argsDefaults']);
   if (isValidRequiredParam(data.to, isValidAddress) === false) {
     throw new Error(`Property "to" is not an valid Ethereum address: ${data.to}`);
   }
@@ -208,6 +219,9 @@ const validateUriSchemaERC20Approve = (data) => {
   }
   if (isValidOptionalParam(data.gas, isValidGasAmount) === false) {
     throw new Error(`Property "gas" is not an valid gas amount: ${data.gas}`);
+  }
+  if (isValidOptionalParam(data.chainId, isValidChainId) === false) {
+    throw new Error(`Property "chainId" is not an valid Ethereum chainId: ${data.chainId}`);
   }
   if (data.mode !== uriModes.erc20Approve) {
     throw new Error(`Chosen URI mode is not supported: ${data.mode}`);
@@ -228,7 +242,7 @@ const validateUriSchemaERC20Approve = (data) => {
 };
 
 const validateUriSchemaERC20TransferFrom = (data) => {
-  validateAllowedProperties(data, ['to', 'from', 'gas', 'mode', 'argsDefaults']);
+  validateAllowedProperties(data, ['to', 'from', 'gas', 'mode', 'chainId', 'argsDefaults']);
   if (isValidRequiredParam(data.to, isValidAddress) === false) {
     throw new Error(`Property "to" is not an valid Ethereum address: ${data.to}`);
   }
@@ -240,6 +254,9 @@ const validateUriSchemaERC20TransferFrom = (data) => {
   }
   if (isValidOptionalParam(data.gas, isValidGasAmount) === false) {
     throw new Error(`Property "gas" is not an valid gas amount: ${data.gas}`);
+  }
+  if (isValidOptionalParam(data.chainId, isValidChainId) === false) {
+    throw new Error(`Property "chainId" is not an valid Ethereum chainId: ${data.chainId}`);
   }
   if (data.mode !== uriModes.erc20TransferFrom) {
     throw new Error(`Chosen URI mode is not supported: ${data.mode}`);
@@ -292,7 +309,8 @@ const encodeEthSend = (data) => {
     valueBlock = isValueDefined(data.value) ? `?value=${weiValue}` : '';
   }
   const gasBlock = isValueDefined(data.gas) ? `?gas=${data.gas}` : '';
-  return `ethereum:${data.to}${fromBlock}${valueBlock}${gasBlock}`;
+  const chainIdBlock = (isValueDefined(data.chainId) && isValidChainId(data.chainId)) ? `?chainId=${data.chainId}` : '';
+  return `ethereum:${data.to}${fromBlock}${valueBlock}${gasBlock}${chainIdBlock}`;
 };
 
 export const encodeEthereumUri = (data) => {
@@ -323,6 +341,11 @@ const decodeEthSend = (encodedStr) => {
     from: {
       convert(value) {
         return value;
+      },
+    },
+    chainId: {
+      convert(value) {
+        return parseInt(value, 10);
       },
     },
   };
