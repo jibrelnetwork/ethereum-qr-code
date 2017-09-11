@@ -73,7 +73,7 @@ class EthereumQRplugin {
    *
    * @param {String} valueString
    */
-  readStringToJSON(valueString) {
+  static readStringToJSON(valueString) {
     return decodeEthereumUri(valueString);
   }
   getJSON() {
