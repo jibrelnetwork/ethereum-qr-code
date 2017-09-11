@@ -27,9 +27,19 @@ const validConfigDetails = {
     expect(str).toBe('ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=15000000000000000000000?gas=4200');
   });
 
-  global.it('should generate DataURI and return string', () => qr.toDataUrl(validCodeDetails, validConfigDetails).then((result) => {
-    return expect(result.value).toBe("ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=15000000000000000000000?gas=4200");
-}));
+  global.it('should generate simple encoded string with allowed params', () => {
+    
+    const str = qr.toAddressString(Object.assign({}, validCodeDetails, {
+      chainId: 34
+    }));
+    expect(str).toBe('ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=15000000000000000000000?gas=4200?chainId=34');
+  });
+
+  global.it('should generate DataURI and return string', () => {
+    return qr.toDataUrl(validCodeDetails, validConfigDetails).then((result) => {
+      return expect(result.value).toBe("ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=15000000000000000000000?gas=4200");
+  })
+});
 
 global.it('should generate DataURI string with correct symbols', () => qr.toDataUrl(validCodeDetails, validConfigDetails).then((result) => {
       //lets' take first N symbols from the base64 string
@@ -70,5 +80,13 @@ global.it('should generate DataURI string with correct symbols', () => qr.toData
       value: '1200000'
     });
     expect(qr.readStringToJSON(str4)).toEqual(getValidJSONData4());
+
+    const str5 = 'ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=1200000?chainId=34';
+    const getValidJSONData5 = () => ({
+      to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
+      value: '1200000',
+      chainId: 34
+    });
+    expect(qr.readStringToJSON(str5)).toEqual(getValidJSONData5());
   });
 });
