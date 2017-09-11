@@ -343,6 +343,11 @@ const decodeEthSend = (encodedStr) => {
         return value;
       },
     },
+    chainId: {
+      convert(value) {
+        return parseInt(value, 10);
+      },
+    },
   };
 
   const result = {};
