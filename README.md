@@ -141,6 +141,8 @@ Parameters:
 
  4. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
 
+ 5. `chainId` | Number | optional - Contains id of a selected blockchain to which transaction should be limited [see EIP155 for details](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md).
+
 
 These are the only parameters needed for this use-case.
 
@@ -205,9 +207,11 @@ Parameters:
 
  4. `gas` | Number | optional - Recommended amount of gas. Defaults to 21000.
 
- 5. `mode` | String | **required** - Mode of invocation. Expected value: `contract_function`
+ 5. `chainId` | Number | optional - Contains id of a selected blockchain to which transaction should be limited [see EIP155 for details](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md).
 
- 6. `functionSignature` | Object | **required** - Object that defines signature of invoked function. It is used only if `"mode" == "function"`
+ 6. `mode` | String | **required** - Mode of invocation. Expected value: `contract_function`
+
+ 7. `functionSignature` | Object | **required** - Object that defines signature of invoked function. It is used only if `"mode" == "function"`
 
     1. `name` | String | **required** - Name of the invoked function
 
@@ -222,7 +226,7 @@ Parameters:
         But QR codes are used to pass tx details between different wallets and GUI must be nice.
         Therefore unnamed input fields in GUI are not possible. Therefore this parameter is required.
 
- 7. `argsDefaults` | Array | optional - Array with default values for function arguments. If this parameter is present - it must contain at least one element. We do not require to provide defaults of all args. 
+ 8. `argsDefaults` | Array | optional - Array with default values for function arguments. If this parameter is present - it must contain at least one element. We do not require to provide defaults of all args. 
 
     1. `name` | String | **required** - Name of the argument. Should be equal to the name of one of arguments from `functionSignature`
 
@@ -268,7 +272,9 @@ Parameters:
 
  4. `mode` | String | **required** - Mode of invocation. Expected value: `erc20__transfer`, `erc20__approve`, `erc20__transferFrom`
 
- 5. `argsDefaults` | Array | optional - Array with default values for function arguments.
+ 5. `chainId` | Number | optional - Contains id of a selected blockchain to which transaction should be limited [see EIP155 for details](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md).
+
+ 6. `argsDefaults` | Array | optional - Array with default values for function arguments.
 
     1. `name` | String | **required** - Name of the argument. Should be equal to the name of one of arguments from `functionSignature`
 
