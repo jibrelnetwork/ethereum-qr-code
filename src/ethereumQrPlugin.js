@@ -18,14 +18,15 @@ class EthereumQRplugin {
   toAddressString(config) {
     return this.produceEncodedValue(config);
   }
+
   /**
-     *
-     * Draws QR code to canvas tag inside specified DOM selector
-     *
-     * @public
-     * @param {Object} config
-     * @returns Promise
-     */
+   *
+   * Draws QR code to canvas tag inside specified DOM selector
+   *
+   * @public
+   * @param {Object} config
+   * @returns Promise
+   */
   toCanvas(config, options) {
     const generatedValue = this.produceEncodedValue(config, options);
     const parentEl = document.querySelector(options.selector);
@@ -36,16 +37,17 @@ class EthereumQRplugin {
 
     return new Promise((resolve, reject) => {
       QRCode.toCanvas(generatedValue, this.options, (err, canvas) => {
-        if (err) reject(err);
+        if (err) return reject(err);
 
-        resolve({
-          value: generatedValue,
-        });
+        parentEl.innerHTML = null;
         parentEl.appendChild(canvas);
         canvas.setAttribute('style', `width: ${this.size}px`);
+
+        return resolve({ value: generatedValue });
       });
     });
   }
+
   /**
      *
      * Generates DataURL for a QR code
