@@ -1,13 +1,17 @@
 {
   "name": "ethereum-qr-code",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "utitlity library to deal with ethereum adresses",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose",
-    "build": "webpack",
-    "lint": "eslint --ext .js src",
-    "demo": "cd docs && watch-http-server -o"
+    "test": "npm run lint && npm run compile && ./node_modules/.bin/jest --verbose",
+    "lint": "./node_modules/.bin/eslint src",
+    "demo": "cd docs && watch-http-server -o",
+    "clean": "rm -rf ./lib",
+    "compile": "npm run clean && ./node_modules/.bin/babel ./src --out-dir ./lib",
+    "build:standalone": "./node_modules/.bin/webpack && npm run minify:standalone",
+    "minify:standalone": "./node_modules/.bin/minify ./build/ethereum-qr-code.js --mangle -o ./build/ethereum-qr-code.min.js",
+    "build": "npm run lint && npm run compile && npm test"
   },
   "repository": {
     "type": "git",
@@ -19,27 +23,28 @@
     "qr",
     "cryptocurrency"
   ],
-  "author": "jibrelnetwork",
+  "author": "Jibrel Network",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jibrelnetwork/ethereum-qr-code/issues"
   },
   "homepage": "https://github.com/jibrelnetwork/ethereum-qr-code#readme",
   "dependencies": {
-    "babel-eslint": "^7.2.3",
-    "bignumber.js": "^4.0.2",
-    "eslint-config-airbnb-base": "^11.3.1",
-    "eslint-plugin-import": "^2.7.0",
-    "qrcode": "^0.9.0"
+    "bignumber.js": "4.1.0",
+    "qrcode": "0.9.0"
   },
   "devDependencies": {
-    "babel-core": "^6.25.0",
-    "babel-loader": "^7.1.1",
-    "babel-preset-env": "^1.6.0",
-    "eslint": "^4.4.1",
-    "jest": "^20.0.4",
-    "uglifyjs-webpack-plugin": "^0.4.6",
-    "watch-http-server": "^0.7.6",
-    "webpack": "^3.4.1"
+    "babel-cli": "6.26.0",
+    "babel-core": "6.26.0",
+    "babel-eslint": "8.0.1",
+    "babel-loader": "7.1.2",
+    "babel-minify": "0.2.0",
+    "babel-preset-env": "1.6.0",
+    "eslint": "4.8.0",
+    "eslint-config-airbnb-base": "12.0.2",
+    "eslint-plugin-import": "2.7.0",
+    "jest": "21.2.1",
+    "watch-http-server": "0.7.6",
+    "webpack": "3.6.0"
   }
 }

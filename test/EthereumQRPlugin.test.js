@@ -1,4 +1,4 @@
-const EthereumQRplugin = require('../src/ethereumQrPlugin').default;
+const EthereumQRPlugin = require('../index');
 
 let qr;
 let invalidCodeDetails;
@@ -6,7 +6,7 @@ let invalidCodeDetails;
 const validCodeDetails = {
   to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
   value: 15000000000000000000000,
-  gas: 4200
+  gas: 4200,
 };
 
 const validConfigDetails = {
@@ -17,9 +17,9 @@ const validConfigDetails = {
     },
   };
 
-  global.describe('main public EthereumQRplugin class', () => {
+  global.describe('main public EthereumQRPlugin class', () => {
   beforeEach(() => {
-    qr = new EthereumQRplugin();
+    qr = new EthereumQRPlugin();
   });
 
   global.it('should generate simple encoded string with required addess', () => {
@@ -42,13 +42,12 @@ const validConfigDetails = {
 });
 
 global.it('should generate DataURI string with correct symbols', () => qr.toDataUrl(validCodeDetails, validConfigDetails).then((result) => {
-      //lets' take first N symbols from the base64 string
-      return expect(result.dataURL.substr(0, 80)).toBe("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNCAYAAAAbvPRpAAAAAklEQVR4Ae");
+    //lets' take first N symbols from the base64 string
+    return expect(result.dataURL.substr(0, 80)).toBe("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM0AAADNCAYAAAAbvPRpAAAAAklEQVR4Ae");
   }));
 
-
   global.it('should parse endcoded string to JSON', () => {
-    
+
     const str = 'ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8?value=15000000000000000000000?gas=4200000';
     const getValidJSONData = () => ({
       to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',

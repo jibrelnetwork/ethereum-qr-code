@@ -1,5 +1,3 @@
-import ethereumQRplugin from './src/ethereumQrPlugin';
+var EthereumQRplugin = require('./lib').default
 
-export default ethereumQRplugin
-
-export { ethereumQRplugin }
+module.exports = EthereumQRplugin

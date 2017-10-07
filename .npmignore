@@ -1,0 +1,15 @@
+node_modules
+src
+build
+docs
+test
+
+.babelrc
+.editorconfig
+.eslintignore
+.eslintrc.json
+.gitignore
+.jetbrains_js_codestyle.xml
+.travis.yml
+
+webpack.config.js

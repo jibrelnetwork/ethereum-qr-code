@@ -1,11 +1,10 @@
-const DEFAULTS = {
+export default {
   size: 128,
-  qrCodeOptions: {
+  options: {
+    scale: 5,
     color: {
       dark: '#000000',
       light: '#ffffff',
     },
-    scale: 5,
   },
-};
-export default DEFAULTS;
+}
