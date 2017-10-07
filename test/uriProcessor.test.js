@@ -1,17 +1,13 @@
-import { encodeEthereumUri, decodeEthereumUri, validateEthereumUri } from '../src/uri_processor';
-
+import { encodeEthereumUri, decodeEthereumUri, validateEthereumUri } from '../lib/uriProcessor';
 
 global.describe('URI for ETH send', () => {
-  const getValidUriData = () =>
-    // it is easier to use function than to make deep clone
-    ({
-      to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
-      from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      value: '10000000',
-      gas: 21000,
-    })
-  ;
-
+  // it is easier to use function than to make deep clone
+  const getValidUriData = () => ({
+    to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
+    from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
+    value: '10000000',
+    gas: 21000,
+  });
 
   global.it('should accept valid URI', () => {
     global.expect(validateEthereumUri(getValidUriData())).toEqual(undefined);
@@ -19,9 +15,11 @@ global.describe('URI for ETH send', () => {
 
   global.it('should accept without optional args', () => {
     const testObj = getValidUriData();
+
     delete testObj.from;
     delete testObj.value;
     delete testObj.gas;
+
     global.expect(validateEthereumUri(testObj)).toEqual(undefined);
   });
 
@@ -43,7 +41,9 @@ global.describe('URI for ETH send', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.to;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -113,7 +113,6 @@ global.describe('URI for ETH send', () => {
     testObj = getValidUriData();
     testObj.chainId = '34';
     global.expect(() => validateEthereumUri(testObj)).toThrow();
-
   });
 
   global.it('should not accept not allowed properties', () => {
@@ -125,7 +124,6 @@ global.describe('URI for ETH send', () => {
     testObj.test2 = 'test';
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
-
 
   global.it('should handle big number correctly', () => {
     let testObj = getValidUriData();
@@ -140,41 +138,26 @@ global.describe('URI for ETH send', () => {
 
 
 global.describe('URI for invocation of a function', () => {
-  const getValidUriData = () =>
-    // it is easier to use function than to make deep clone
-    ({
-      to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
-      from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      value: '0',
-      gas: 100000,
-      mode: 'contract_function',
-      functionSignature: {
-        name: 'transfer',
-        payable: false,
-        args: [
-          {
-            name: 'to',
-            type: 'address',
-          },
-          {
-            name: 'value',
-            type: 'uint',
-          },
-        ],
-      },
-      argsDefaults: [
-        {
-          name: 'to',
-          value: '0xtokensrecipient',
-        },
-        {
-          name: 'value',
-          value: 1000000000000000000,
-        },
+  // it is easier to use function than to make deep clone
+  const getValidUriData = () => ({
+    to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
+    from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
+    value: '0',
+    gas: 100000,
+    mode: 'contract_function',
+    functionSignature: {
+      name: 'transfer',
+      payable: false,
+      args: [
+        { name: 'to', type: 'address' },
+        { name: 'value', type: 'uint' },
       ],
-    })
-  ;
-
+    },
+    argsDefaults: [
+      { name: 'to', value: '0xtokensrecipient' },
+      { name: 'value', value: 1000000000000000000 },
+    ],
+  });
 
   global.it('should accept valid URI', () => {
     global.expect(validateEthereumUri(getValidUriData())).toEqual(undefined);
@@ -182,11 +165,13 @@ global.describe('URI for invocation of a function', () => {
 
   global.it('should accept without optional args', () => {
     const testObj = getValidUriData();
+
     delete testObj.from;
     delete testObj.value;
     delete testObj.gas;
     delete testObj.functionSignature.args;
     delete testObj.argsDefaults;
+
     global.expect(validateEthereumUri(testObj)).toEqual(undefined);
   });
 
@@ -208,7 +193,9 @@ global.describe('URI for invocation of a function', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.to;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -286,7 +273,9 @@ global.describe('URI for invocation of a function', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.mode;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -300,7 +289,9 @@ global.describe('URI for invocation of a function', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.functionSignature.name;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -318,39 +309,53 @@ global.describe('URI for invocation of a function', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.functionSignature.payable;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
   global.it('should not accept wrong "args" array', () => {
     let testObj = getValidUriData();
     testObj.functionSignature.args = 'test';
+
     delete testObj.argsDefaults;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
     testObj.functionSignature.args = [{}];
+
     delete testObj.argsDefaults;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
     testObj.functionSignature.args = [{ name: 'test' }];
+
     delete testObj.argsDefaults;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
     testObj.functionSignature.args = [{ type: 'test' }];
+
     delete testObj.argsDefaults;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
     testObj.functionSignature.args[0].name = '*^&^$';
+
     delete testObj.argsDefaults;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
     testObj.functionSignature.args[0].type = '*^&^$';
+
     delete testObj.argsDefaults;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -380,29 +385,19 @@ global.describe('URI for invocation of a function', () => {
     global.expect(validateEthereumUri(testObj)).toEqual(undefined); // should accept any value
   });
 });
-
 
 global.describe('URI for ERC20 Transfer', () => {
-  const getValidUriData = () =>
-    // it is easier to use function than to make deep clone
-    ({
-      to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
-      from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      gas: 100000,
-      mode: 'erc20__transfer',
-      argsDefaults: [
-        {
-          name: 'to',
-          value: '0xtokensrecipient',
-        },
-        {
-          name: 'value',
-          value: 1000000000000000000,
-        },
-      ],
-    })
-  ;
-
+  // it is easier to use function than to make deep clone
+  const getValidUriData = () => ({
+    to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
+    from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
+    gas: 100000,
+    mode: 'erc20__transfer',
+    argsDefaults: [
+      { name: 'to', value: '0xtokensrecipient' },
+      { name: 'value', value: 1000000000000000000 },
+    ],
+  });
 
   global.it('should accept valid URI', () => {
     global.expect(validateEthereumUri(getValidUriData())).toEqual(undefined);
@@ -410,10 +405,12 @@ global.describe('URI for ERC20 Transfer', () => {
 
   global.it('should accept without optional args', () => {
     const testObj = getValidUriData();
+
     delete testObj.from;
     delete testObj.value;
     delete testObj.gas;
     delete testObj.argsDefaults;
+
     global.expect(validateEthereumUri(testObj)).toEqual(undefined);
   });
 
@@ -435,7 +432,9 @@ global.describe('URI for ERC20 Transfer', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.to;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -513,7 +512,9 @@ global.describe('URI for ERC20 Transfer', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.mode;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -543,29 +544,19 @@ global.describe('URI for ERC20 Transfer', () => {
     global.expect(validateEthereumUri(testObj)).toEqual(undefined); // should accept any value
   });
 });
-
 
 global.describe('URI for ERC20 Approve', () => {
-  const getValidUriData = () =>
-    // it is easier to use function than to make deep clone
-    ({
-      to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
-      from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      gas: 100000,
-      mode: 'erc20__approve',
-      argsDefaults: [
-        {
-          name: 'spender',
-          value: '0xtokensrecipient',
-        },
-        {
-          name: 'value',
-          value: 1000000000000000000,
-        },
-      ],
-    })
-  ;
-
+  // it is easier to use function than to make deep clone
+  const getValidUriData = () => ({
+    to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
+    from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
+    gas: 100000,
+    mode: 'erc20__approve',
+    argsDefaults: [
+      { name: 'spender', value: '0xtokensrecipient' },
+      { name: 'value', value: 1000000000000000000 },
+    ],
+  });
 
   global.it('should accept valid URI', () => {
     global.expect(validateEthereumUri(getValidUriData())).toEqual(undefined);
@@ -573,10 +564,12 @@ global.describe('URI for ERC20 Approve', () => {
 
   global.it('should accept without optional args', () => {
     const testObj = getValidUriData();
+
     delete testObj.from;
     delete testObj.value;
     delete testObj.gas;
     delete testObj.argsDefaults;
+
     global.expect(validateEthereumUri(testObj)).toEqual(undefined);
   });
 
@@ -598,7 +591,9 @@ global.describe('URI for ERC20 Approve', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.to;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -676,7 +671,9 @@ global.describe('URI for ERC20 Approve', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.mode;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -706,33 +703,20 @@ global.describe('URI for ERC20 Approve', () => {
     global.expect(validateEthereumUri(testObj)).toEqual(undefined); // should accept any value
   });
 });
-
 
 global.describe('URI for ERC20 TransferFrom', () => {
-  const getValidUriData = () =>
-    // it is easier to use function than to make deep clone
-    ({
-      to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
-      from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      gas: 100000,
-      mode: 'erc20__transferFrom',
-      argsDefaults: [
-        {
-          name: 'from',
-          value: '0xaddress1',
-        },
-        {
-          name: 'to',
-          value: '0xaddress2',
-        },
-        {
-          name: 'value',
-          value: 1000000000000000000,
-        },
-      ],
-    })
-  ;
-
+  // it is easier to use function than to make deep clone
+  const getValidUriData = () => ({
+    to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
+    from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
+    gas: 100000,
+    mode: 'erc20__transferFrom',
+    argsDefaults: [
+      { name: 'from', value: '0xaddress1' },
+      { name: 'to', value: '0xaddress2' },
+      { name: 'value', value: 1000000000000000000 },
+    ],
+  });
 
   global.it('should accept valid URI', () => {
     global.expect(validateEthereumUri(getValidUriData())).toEqual(undefined);
@@ -740,10 +724,12 @@ global.describe('URI for ERC20 TransferFrom', () => {
 
   global.it('should accept without optional args', () => {
     const testObj = getValidUriData();
+
     delete testObj.from;
     delete testObj.value;
     delete testObj.gas;
     delete testObj.argsDefaults;
+
     global.expect(validateEthereumUri(testObj)).toEqual(undefined);
   });
 
@@ -765,7 +751,9 @@ global.describe('URI for ERC20 TransferFrom', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.to;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -843,7 +831,9 @@ global.describe('URI for ERC20 TransferFrom', () => {
     global.expect(() => validateEthereumUri(testObj)).toThrow();
 
     testObj = getValidUriData();
+
     delete testObj.mode;
+
     global.expect(() => validateEthereumUri(testObj)).toThrow();
   });
 
@@ -874,18 +864,14 @@ global.describe('URI for ERC20 TransferFrom', () => {
   });
 });
 
-
 global.describe('Encode URI for ETH send', () => {
-  const getValidUriData = () =>
-    // it is easier to use function than to make deep clone
-    ({
-      to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
-      from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      value: '10000000',
-      gas: 21000,
-    })
-  ;
-
+  // it is easier to use function than to make deep clone
+  const getValidUriData = () => ({
+    to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
+    from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
+    value: '10000000',
+    gas: 21000,
+  });
 
   global.it('should encode valid data', () => {
     global.expect(encodeEthereumUri(getValidUriData()))
@@ -899,134 +885,88 @@ global.describe('Encode URI for ETH send', () => {
   });
 });
 
-
 global.describe('Encode URI for invocation of a function', () => {
-  const getValidUriData = () =>
-    // it is easier to use function than to make deep clone
-    ({
-      to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
-      from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      value: '10000000',
-      gas: 100000,
-      mode: 'contract_function',
-      functionSignature: {
-        name: 'transfer',
-        payable: false,
-        args: [
-          {
-            name: 'to',
-            type: 'address',
-          },
-          {
-            name: 'value',
-            type: 'uint',
-          },
-        ],
-      },
-      argsDefaults: [
-        {
-          name: 'to',
-          value: '0xtokensrecipient',
-        },
-        {
-          name: 'value',
-          value: 1000000000000000000,
-        },
+  // it is easier to use function than to make deep clone
+  const getValidUriData = () => ({
+    to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
+    from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
+    value: '10000000',
+    gas: 100000,
+    mode: 'contract_function',
+    functionSignature: {
+      name: 'transfer',
+      payable: false,
+      args: [
+        { name: 'to', type: 'address' },
+        { name: 'value', type: 'uint' },
       ],
-    })
-  ;
+    },
+    argsDefaults: [
+      { name: 'to', value: '0xtokensrecipient' },
+      { name: 'value', value: 1000000000000000000 },
+    ],
+  });
 
   global.it('should encode and decode valid data', () => {
     const encodedData = encodeEthereumUri(getValidUriData());
     global.expect(decodeEthereumUri(encodedData)).toEqual(getValidUriData());
   });
 });
-
 
 global.describe('Encode URI for ERC20 Transfer', () => {
-  const getValidUriData = () =>
-    // it is easier to use function than to make deep clone
-    ({
-      to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
-      from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      gas: 100000,
-      mode: 'erc20__transfer',
-      argsDefaults: [
-        {
-          name: 'to',
-          value: '0xtokensrecipient',
-        },
-        {
-          name: 'value',
-          value: 1000000000000000000,
-        },
-      ],
-    })
-  ;
+  // it is easier to use function than to make deep clone
+  const getValidUriData = () => ({
+    to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
+    from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
+    gas: 100000,
+    mode: 'erc20__transfer',
+    argsDefaults: [
+      { name: 'to', value: '0xtokensrecipient' },
+      { name: 'value', value: 1000000000000000000 },
+    ],
+  });
 
   global.it('should encode and decode valid data', () => {
     const encodedData = encodeEthereumUri(getValidUriData());
     global.expect(decodeEthereumUri(encodedData)).toEqual(getValidUriData());
   });
 });
-
 
 global.describe('Encode URI for ERC20 Approve', () => {
-  const getValidUriData = () =>
-    // it is easier to use function than to make deep clone
-    ({
-      to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
-      from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      gas: 100000,
-      mode: 'erc20__approve',
-      argsDefaults: [
-        {
-          name: 'spender',
-          value: '0xtokensrecipient',
-        },
-        {
-          name: 'value',
-          value: 1000000000000000000,
-        },
-      ],
-    })
-  ;
+  // it is easier to use function than to make deep clone
+  const getValidUriData = () => ({
+    to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
+    from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
+    gas: 100000,
+    mode: 'erc20__approve',
+    argsDefaults: [
+      { name: 'spender', value: '0xtokensrecipient' },
+      { name: 'value', value: 1000000000000000000 },
+    ],
+  });
 
   global.it('should encode and decode valid data', () => {
     const encodedData = encodeEthereumUri(getValidUriData());
     global.expect(decodeEthereumUri(encodedData)).toEqual(getValidUriData());
   });
 });
-
 
 global.describe('Encode URI for ERC20 TransferFrom', () => {
-  const getValidUriData = () =>
-    // it is easier to use function than to make deep clone
-    ({
-      to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
-      from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
-      gas: 100000,
-      mode: 'erc20__transferFrom',
-      argsDefaults: [
-        {
-          name: 'from',
-          value: '0xaddress1',
-        },
-        {
-          name: 'to',
-          value: '0xaddress2',
-        },
-        {
-          name: 'value',
-          value: 1000000000000000000,
-        },
-      ],
-    })
-  ;
+  // it is easier to use function than to make deep clone
+  const getValidUriData = () => ({
+    to: '0xf661e08b763d4906457d54c302669ec5e8a24e37',
+    from: '0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98',
+    gas: 100000,
+    mode: 'erc20__transferFrom',
+    argsDefaults: [
+      { name: 'from', value: '0xaddress1' },
+      { name: 'to', value: '0xaddress2' },
+      { name: 'value', value: 1000000000000000000 },
+    ],
+  });
 
   global.it('should encode and decode valid data', () => {
     const encodedData = encodeEthereumUri(getValidUriData());
     global.expect(decodeEthereumUri(encodedData)).toEqual(getValidUriData());
   });
 });
-

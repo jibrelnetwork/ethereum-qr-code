@@ -52,11 +52,34 @@
         }
       }
     ],
-    "max-len": "off",
+    "semi": [
+      "error",
+      "never"
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "multiline": true,
+        "consistent": true
+      }
+    ],
+    "max-len": [
+      "error",
+      100
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ],
     "newline-per-chained-call": "off",
     "no-console": "warn",
-    "prefer-template": "error",
+    "prefer-template": "off",
     "class-methods-use-this": "warn",
-    "require-yield": "warn"
+    "require-yield": "warn",
+    "newline-before-return": "error",
+    "brace-style": "error",
+    "function-paren-newline": "off"
   }
 }
