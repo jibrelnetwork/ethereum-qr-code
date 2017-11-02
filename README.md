@@ -19,10 +19,10 @@ Demo: [https://jibrelnetwork.github.io/ethereum-qr-code/](https://jibrelnetwork.
  2. Use in your code
 
 ```
-import EthereumQRplugin from 'ethereum-qr-code';
+import EthereumQRPlugin from 'ethereum-qr-code';
 
 // later in code
-const qr = new EthereumQRplugin(codeContainer);
+const qr = new EthereumQRPlugin(codeContainer);
 const qrCode = qr.toCanvas({
     selector: '#my-qr-code',
     to,

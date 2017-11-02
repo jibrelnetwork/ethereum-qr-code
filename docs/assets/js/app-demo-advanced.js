@@ -72,7 +72,7 @@ const updateQR = () => {
 };
 const init = () => {
   // instantiate the plugin
-  qr = new EthereumQRplugin.ethereumQRplugin();
+  qr = new EthereumQRPlugin();
 
   // signup for input data update
   $('.qr-input').keyup(updateQR);

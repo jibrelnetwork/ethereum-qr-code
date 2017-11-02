@@ -343,19 +343,22 @@ export const validateEthereumUri = (data) => {
  * Encoders
  */
 const encodeEthSend = (data) => {
-  const fromBlock = isValueDefined(data.from) ? `?from=${data.from}` : ''
-  let valueBlock
+  const { to, from, value, gas, chainId } = data
 
-  if (isValueDefined(data.value)) {
-    const weiValue = new BigNumber(data.value).toString(10)
-    valueBlock = isValueDefined(data.value) ? `?value=${weiValue}` : ''
+  const params = {
+    from: isValueDefined(from) ? from : null,
+    value: isValueDefined(value) ? new BigNumber(value).toString(10) : null,
+    gas: isValueDefined(gas) ? gas : null,
+    chainId: (isValueDefined(chainId) && isValidChainId(chainId)) ? chainId : null,
   }
 
-  const gasBlock = isValueDefined(data.gas) ? `?gas=${data.gas}` : ''
-  const isChainIdValid = (isValueDefined(data.chainId) && isValidChainId(data.chainId))
-  const chainIdBlock = isChainIdValid ? `?chainId=${data.chainId}` : ''
+  const paramsStr = Object
+    .keys(params)
+    .map((param) => (params[param] ? `${param}=${params[param]}` : null))
+    .filter((item) => !!item)
+    .join('&')
 
-  return `ethereum:${data.to}${fromBlock}${valueBlock}${gasBlock}${chainIdBlock}`
+  return `ethereum:${to}?${paramsStr}`
 }
 
 export const encodeEthereumUri = (data) => {
@@ -406,7 +409,7 @@ const decodeEthSend = (encodedStr) => {
   }
 
   if (encodedStr.length > 51) {
-    const uriSegments = encodedStr.substr(51).split('?')
+    const uriSegments = encodedStr.substr(51).split(/\?|&/)
     uriSegments.shift()
 
     uriSegments.forEach((segment) => {

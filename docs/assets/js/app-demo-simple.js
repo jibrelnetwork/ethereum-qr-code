@@ -3,7 +3,7 @@ const init = () => {
   highlightCodeBlocks();
 
   // instantiate the plugin
-  const qr = new EthereumQRplugin.ethereumQRplugin();
+  const qr = new EthereumQRPlugin();
 
   // static config value
   const sendDetails = {

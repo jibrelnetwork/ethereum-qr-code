@@ -1,3 +1,3 @@
-var EthereumQRplugin = require('./lib').default
+var EthereumQRPlugin = require('./lib').default
 
-module.exports = EthereumQRplugin
+module.exports = EthereumQRPlugin

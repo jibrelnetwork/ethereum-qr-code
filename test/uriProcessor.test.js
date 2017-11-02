@@ -876,7 +876,7 @@ global.describe('Encode URI for ETH send', () => {
   global.it('should encode valid data', () => {
     global.expect(encodeEthereumUri(getValidUriData()))
       .toEqual(
-        'ethereum:0xf661e08b763d4906457d54c302669ec5e8a24e37?from=0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98?value=10000000?gas=21000');
+        'ethereum:0xf661e08b763d4906457d54c302669ec5e8a24e37?from=0xfbb1b73c4f0bda4f67dca266ce6ef42f520fbb98&value=10000000&gas=21000');
   });
 
   global.it('should decode valid data', () => {

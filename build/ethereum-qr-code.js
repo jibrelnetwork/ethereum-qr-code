@@ -1,7 +1,7 @@
 /*!
  * 
  *   Ethereum adress QR Code generator
- *   v 0.2.0 - Sat Oct 07 2017 21:47:52 GMT+0300 (MSK)
+ *   v 0.2.1 - Thu Nov 02 2017 13:04:34 GMT+0300 (MSK)
  *   https://github.com/jibrelnetwork/ethereum-qr-code
  *   file:build/ethereum-qr-code.js
  * 
@@ -1297,9 +1297,9 @@ exports.qrToImageData = function qrToImageData (imgData, qr, margin, scale, colo
 "use strict";
 
 
-var EthereumQRplugin = __webpack_require__(10).default;
+var EthereumQRPlugin = __webpack_require__(10).default;
 
-module.exports = EthereumQRplugin;
+module.exports = EthereumQRPlugin;
 
 /***/ }),
 /* 10 */
@@ -3968,19 +3968,26 @@ var validateEthereumUri = exports.validateEthereumUri = function validateEthereu
  * Encoders
  */
 var encodeEthSend = function encodeEthSend(data) {
-  var fromBlock = isValueDefined(data.from) ? '?from=' + data.from : '';
-  var valueBlock = void 0;
+  var to = data.to,
+      from = data.from,
+      value = data.value,
+      gas = data.gas,
+      chainId = data.chainId;
 
-  if (isValueDefined(data.value)) {
-    var weiValue = new _bignumber2.default(data.value).toString(10);
-    valueBlock = isValueDefined(data.value) ? '?value=' + weiValue : '';
-  }
+  var params = {
+    from: isValueDefined(from) ? from : null,
+    value: isValueDefined(value) ? new _bignumber2.default(value).toString(10) : null,
+    gas: isValueDefined(gas) ? gas : null,
+    chainId: isValueDefined(chainId) && isValidChainId(chainId) ? chainId : null
+  };
 
-  var gasBlock = isValueDefined(data.gas) ? '?gas=' + data.gas : '';
-  var isChainIdValid = isValueDefined(data.chainId) && isValidChainId(data.chainId);
-  var chainIdBlock = isChainIdValid ? '?chainId=' + data.chainId : '';
+  var paramsStr = Object.keys(params).map(function (param) {
+    return params[param] ? param + '=' + params[param] : null;
+  }).filter(function (item) {
+    return !!item;
+  }).join('&');
 
-  return 'ethereum:' + data.to + fromBlock + valueBlock + gasBlock + chainIdBlock;
+  return 'ethereum:' + to + '?' + paramsStr;
 };
 
 var encodeEthereumUri = exports.encodeEthereumUri = function encodeEthereumUri(data) {
@@ -4031,7 +4038,7 @@ var decodeEthSend = function decodeEthSend(encodedStr) {
   }
 
   if (encodedStr.length > 51) {
-    var uriSegments = encodedStr.substr(51).split('?');
+    var uriSegments = encodedStr.substr(51).split(/\?|&/);
     uriSegments.shift();
 
     uriSegments.forEach(function (segment) {
