@@ -15,20 +15,20 @@ Demo: [https://jibrelnetwork.github.io/ethereum-qr-code/](https://jibrelnetwork.
 ## Getting started
 
  1. Install from NPM: `npm install ethereum-qr-code --save`
-
  2. Use in your code
 
-```
-import EthereumQRPlugin from 'ethereum-qr-code';
+```javascript
+import EthereumQRPlugin from 'ethereum-qr-code'
 
 // later in code
-const qr = new EthereumQRPlugin(codeContainer);
-const qrCode = qr.toCanvas({
-    selector: '#my-qr-code',
-    to,
-    gas
-});
+const qr = new EthereumQRPlugin()
 
+const qrCode = qr.toCanvas({
+  to: '0xsomeaddress',
+  gas: 21000,
+}, {
+  selector: '#my-qr-code',
+})
 ```
 
 ## Usage
@@ -40,20 +40,17 @@ const qrCode = qr.toCanvas({
 An encoder to translate your data into a string. Use if you want to generate a string.
 
 Example:
-
-```
+```javascript
 qr.toAddressString({
-“to”: 0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8,
-“value”: 100,
-})
-//ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=21000][?value=100]
+  to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
+  value: 100,
+}) //> ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=21000][?value=100]
 
 qr.toAddressString({
-    “to”: 0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8,
-    “value”: 10,
-    “gas”: 42000,
-})
-//ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=42000][?value=10]
+  to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
+  value: 10,
+  gas: 42000,
+}) //> ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=42000][?value=10]
 ```
 
 
@@ -63,17 +60,17 @@ Generates the canvas tag with the QR code. In this case the `selector` field bec
 Returns a Promise object that is resolved when the code is successfully generated.
 
 Example:
-
-```
+```javascript
 const qrCode = qr.toCanvas({
-    to,
-    gas
+  to,
+  gas,
 }, {
   selector: '#my-qr-code',
-});
-qrCode.then(function(code){
-    console.log('Your QR is generated!');
-    console.log(code.value);
+})
+
+qrCode.then((code) => {
+  console.log('Your QR is generated!')
+  console.log(code.value)
 })
 ```
 
@@ -84,15 +81,15 @@ A more flexible method that returns a QR in a dataUrl.
 This method returns a Promise that is resolved when the code is successfully generated.
 
 Example:
-
-```
+```javascript
 const qrCode = qr.toDataUrl({
-    adres,
-    gas,
-    amount
-});
-qrCode.then(function(qrCodeDataUri){
-    console.log('Your QR id generated:', code.value); //'data:image/png;base64,iVBORw0KGgoA....'
+  to,
+  gas,
+  amount,
+})
+
+qrCode.then((qrCodeDataUri) => {
+  console.log('Your QR id generated:', code.value) //> 'data:image/png;base64,iVBORw0KGgoA....'
 })
 ```
 
@@ -102,16 +99,18 @@ qrCode.then(function(qrCodeDataUri){
 A method to convert the EIP67 string back to the JSON object.
 
 Example:
+```javascript
+const paymentParams = qr.readStringToJSON(
+  'ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=4200][?value=150]',
+)
 
-```
-const paymentParams = qr.readStringToJSON(ethereum:0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8[?gas=4200][?value=150]');
-console.log(paymentParams);
+console.log(paymentParams) //>
 /*
 {
-    to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
-    gas: '4200',
-    value: '150'
-  }
+  gas: '4200',
+  value: '150',
+  to: '0x7cB57B5A97eAbe94205C07890BE4c1aD31E486A8',
+}
 */
 ```
 
@@ -303,9 +302,6 @@ Contact us via [slack.com/jibrelnetwork](https://join.slack.com/jibrelnetwork/si
 Or follow us on Twitter: [@JibrelNetwork](https://twitter.com/JibrelNetwork).
 
 If you have a proposal, feature request, or are having trouble running the plugin,  please [submit an issue](https://github.com/jibrelnetwork/ethereum-qr-code/issues).
-
-
-Developed by Qubist Labs Inc. / Jibrel Network (2017)
 
 ## License 
 
